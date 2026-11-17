@@ -25,13 +25,17 @@
   };
   const currency = value => new Intl.NumberFormat("ru-RU").format(value) + " ₽";
   const localDate = date => [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-");
+  const times = ["12:20", "15:00", "17:40", "20:20"];
+  const now = new Date();
+  const lastSessionToday = new Date(localDate(now) + "T" + times.at(-1) + ":00");
+  const firstDateOffset = now >= lastSessionToday ? 1 : 0;
   const dates = Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
     d.setHours(12, 0, 0, 0);
-    d.setDate(d.getDate() + i);
+    d.setDate(d.getDate() + i + firstDateOffset);
     return d;
   });
-  const times = ["12:20", "15:00", "17:40", "20:20"];
+  const isUpcomingSession = session => new Date(session.date + "T" + session.time + ":00").getTime() > Date.now();
   const fullDate = date => new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "long", weekday: "long" }).format(date);
 
   function sessionsForDay(dayIndex) {
@@ -71,13 +75,14 @@
       button.setAttribute("aria-pressed", String(index === selectedDate));
       const weekday = new Intl.DateTimeFormat("ru-RU", { weekday: "short" }).format(date).replace(".", "").toUpperCase();
       const month = new Intl.DateTimeFormat("ru-RU", { month: "short" }).format(date).replace(".", "").toUpperCase();
-      button.innerHTML = '<span class="date-day">' + date.getDate() + '</span><span class="date-meta">' + (index === 0 ? "СЕГОДНЯ" : weekday) + '<br>' + month + '</span>';
+      button.innerHTML = '<span class="date-day">' + date.getDate() + '</span><span class="date-meta">' + (localDate(date) === localDate(new Date()) ? "СЕГОДНЯ" : weekday) + '<br>' + month + '</span>';
       fragment.append(button);
     });
     dateStrip.replaceChildren(fragment);
   }
   function renderSchedule() {
-    const sessions = sessionsForDay(selectedDate).filter(session => selectedGenre === "all" || session.film.genre === selectedGenre);
+    const upcoming = sessionsForDay(selectedDate).filter(isUpcomingSession);
+    const sessions = upcoming.filter(session => selectedGenre === "all" || session.film.genre === selectedGenre);
     document.querySelector("#film-count").textContent = sessions.length + (sessions.length === 1 ? " ПОКАЗ" : " ПОКАЗА");
     const fragment = document.createDocumentFragment();
     sessions.forEach(session => {
@@ -88,9 +93,16 @@
       fragment.append(card);
     });
     filmGrid.replaceChildren(fragment);
-    document.querySelector("#empty-schedule").hidden = sessions.length > 0;
+    const empty = document.querySelector("#empty-schedule");
+    empty.hidden = sessions.length > 0;
+    empty.textContent = upcoming.length ? "На этот день фильмов выбранного жанра нет. Попробуйте другой фильтр." : "Сеансы на выбранную дату уже начались. Выберите другой день.";
   }
   function openSession(session) {
+    if (!isUpcomingSession(session)) {
+      window.alert("Сеанс уже начался. Выберите другое время.");
+      renderSchedule();
+      return;
+    }
     activeSession = session;
     selectedSeats = new Set();
     document.querySelector("#dialog-title").textContent = session.film.title.toUpperCase();
@@ -169,6 +181,12 @@
   dialog.addEventListener("click", event => { if (event.target === dialog) dialog.close(); });
   document.querySelector("#book-seats").addEventListener("click", () => {
     if (!activeSession || !selectedSeats.size) return;
+    if (!isUpcomingSession(activeSession)) {
+      dialog.close();
+      window.alert("Сеанс уже начался. Выберите другое время.");
+      renderSchedule();
+      return;
+    }
     const unavailable = new Set([...fixtureSold(activeSession.key), ...bookedSeats(activeSession.key)]);
     if ([...selectedSeats].some(seat => unavailable.has(seat))) {
       window.alert("Одно из мест уже занято. Выберите другое.");
