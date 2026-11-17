@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Превью портфолио</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 1200px; height: 630px; }
+    body { color: #282923; background: #eae7df; font-family: Arial, sans-serif; }
+    .sheet { height: 100%; padding: 32px; display: grid; grid-template-columns: 500px 1fr; gap: 22px; }
+    .copy { border: 1px solid #77766d; padding: 29px 30px 25px; display: flex; flex-direction: column; }
+    .label { display: flex; align-items: center; justify-content: space-between; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { font: normal 66px/.98 Georgia, serif; letter-spacing: -.055em; margin: auto 0 22px; }
+    h1 em { font-weight: normal; }
+    .description { max-width: 380px; font-size: 20px; line-height: 1.35; margin: 0 0 30px; }
+    .foot { border-top: 1px solid #77766d; padding-top: 17px; display: flex; justify-content: space-between; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+    .photos { display: grid; grid-template-columns: repeat(2, 1fr); grid-template-rows: repeat(3, 1fr); gap: 8px; overflow: hidden; }
+    .photos img { display: block; width: 100%; height: 100%; min-height: 0; object-fit: cover; filter: saturate(.8); }
+    .photos img:nth-child(1) { object-position: center 31%; }
+    .photos img:nth-child(2) { object-position: center 53%; }
+    .photos img:nth-child(3) { object-position: center 50%; }
+    .photos img:nth-child(4) { object-position: center 58%; }
+    .photos img:nth-child(5) { object-position: center 50%; }
+    .photos img:nth-child(6) { object-position: center 58%; }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <section class="copy">
+      <div class="label"><span>Портфолио сайтов</span><span>01—10</span></div>
+      <h1>Сайты,<br>которые<br><em>можно</em><br>попробовать.</h1>
+      <p class="description">Десять самостоятельных проектов с работающими сценариями и своим характером.</p>
+      <div class="foot"><span>Дизайн · код · сценарии</span><span>2026</span></div>
+    </section>
+    <div class="photos" aria-hidden="true">
+      <img src="assets/nocturne.jpg" alt="">
+      <img src="assets/pollen.jpg" alt="">
+      <img src="assets/roam.jpg" alt="">
+      <img src="assets/hem.jpg" alt="">
+      <img src="assets/beryl.jpg" alt="">
+      <img src="assets/coral-house.jpg" alt="">
+    </div>
+  </main>
+</body>
+</html>
