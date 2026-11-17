@@ -17,7 +17,8 @@ if (owner) {
 grid.innerHTML = config.projects.map((project, index) => {
   const number = String(index + 1).padStart(2, '0');
   const url = `sites/${encodeURIComponent(project.slug)}/`;
-  const source = owner ? `<a class="source-link" href="https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(project.repo)}" target="_blank" rel="noopener noreferrer">Исходный код ↗</a>` : '';
+  const sourceUrl = project.sourceUrl || (owner ? `https://github.com/${encodeURIComponent(owner)}/${encodeURIComponent(project.repo)}` : '');
+  const source = sourceUrl ? `<a class="source-link" href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener noreferrer">Исходный код ↗</a>` : '';
   return `<article class="project-card">
     <div class="card-index"><span>${number} / ${escapeHtml(project.category)}</span><span>${escapeHtml(project.slug)}</span></div>
     <a class="card-image" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="Открыть сайт ${escapeHtml(project.name)}">
