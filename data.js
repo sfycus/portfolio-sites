@@ -11,6 +11,6 @@ window.PORTFOLIO_CONFIG = {
     {slug:'northstar', repo:'portfolio-severnaya-tochka', name:'Северная точка', category:'Экспедиционное бюро', description:'Пешие маршруты с выбором поездки и списком вещей для неё.', features:'Маршруты · план · список вещей', image:'northstar.jpg', alt:'Горный пейзаж Хибин'},
     {slug:'grain', repo:'portfolio-zhito', name:'Жито', category:'Ремесленная пекарня', description:'Витрина хлеба и подписка с выбором состава и дней получения.', features:'Витрина · подписка · график', image:'grain.jpg', alt:'Свежий хлеб крупным планом'},
     {slug:'frame', repo:'portfolio-frame', name:'Фрейм', category:'Фотолаборатория', description:'Фотопечать с загрузкой кадра, выбором бумаги и расчётом стоимости.', features:'Превью · материалы · расчёт', image:'frame.jpg', alt:'Человек держит фотоснимки'},
-    {slug:'hem', repo:'portfolio-hem', sourceUrl:'https://github.com/sfycus/portfolio-sites/tree/main/sites/hem', name:'HEM', category:'Жилой квартал', description:'Каталог квартир с фильтрами, сравнением и расчётом ежемесячного платежа.', features:'Квартиры · сравнение · расчёт', image:'hem.jpg', alt:'Кирпичный жилой дом среди деревьев'}
+    {slug:'hem', repo:'portfolio-hem', name:'HEM', category:'Жилой квартал', description:'Каталог квартир с фильтрами, сравнением и расчётом ежемесячного платежа.', features:'Квартиры · сравнение · расчёт', image:'hem.jpg', alt:'Кирпичный жилой дом среди деревьев'}
   ]
 };
