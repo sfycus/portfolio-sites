@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172d28">
+  <meta name="description" content="Северная точка — авторские маршруты и экспедиции по России.">
+  <title>Северная точка — пешие маршруты по России</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Северная точка — главная"><span class="brand-mark">✳</span><span>СЕВЕРНАЯ<br>ТОЧКА</span></a>
+    <nav aria-label="Главная навигация"><a href="#routes">Маршруты</a><a href="#approach">Как идём</a><a href="#plan">Собрать поездку</a></nav>
+    <a class="header-action" href="#plan">Мой маршрут <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="top">
+    <section class="hero section-pad">
+      <div class="hero-copy">
+        <p class="eyebrow light">Полевой журнал № 01 / сезон 2027</p>
+        <h1>Хибины.<br><em>Горный круг.</em></h1>
+        <p class="hero-lead">За четыре дня пройдём 38 км: долина Малой Белой, перевал Южный Чорргор и ночёвка у озера. Стартуем из Кировска 12 июля.</p>
+        <div class="journal-facts"><div><span>12—15 июля</span><small>Ближайший выход</small></div><div><span>38 км / 4 дня</span><small>Пеший маршрут</small></div><div><span>до 8 человек</span><small>Размер группы</small></div></div>
+        <a class="button button-light" href="#plan">Рассчитать поездку <span aria-hidden="true">↗</span></a>
+        <div class="hero-meta"><span>Маршрут 01 / 04</span><span>67°38′ N &nbsp; 33°40′ E</span></div>
+      </div>
+      <div class="hero-map">
+        <img src="assets/khibiny-hero.jpg" alt="Горный массив Хибин летом" fetchpriority="high">
+        <div class="map-stamp"><span>КОЛЬСКИЙ ПОЛУОСТРОВ · 01 / 04</span><strong>38 км пешком</strong><small>Кировск → Малая Белая → Чорргор → Кировск</small><a href="https://www.openstreetmap.org/#map=11/67.635/33.670" target="_blank" rel="noopener noreferrer">Посмотреть район на карте ↗</a></div>
+      </div>
+    </section>
+
+    <section class="routes section-pad" id="routes">
+      <div class="section-heading"><div><p class="eyebrow">Каталог / сезон 2027</p><h2>Четыре<br><em>маршрута.</em></h2></div><p>Длина, дни в пути и стоимость каждой поездки указаны сразу. Нажмите на карточку, чтобы добавить маршрут в расчёт.</p></div>
+      <div class="filter-bar" role="group" aria-label="Фильтр маршрутов"><button class="filter active" data-filter="all" aria-pressed="true">Все маршруты</button><button class="filter" data-filter="short" aria-pressed="false">На выходные</button><button class="filter" data-filter="trek" aria-pressed="false">Треккинг</button><button class="filter" data-filter="far" aria-pressed="false">Дальняя экспедиция</button></div>
+      <div class="route-grid" id="routeGrid"></div>
+    </section>
+
+    <section class="approach section-pad" id="approach">
+      <div class="approach-intro"><p class="eyebrow light">Что включено</p><h2>Маршрут<br>без мелкого<br><em>шрифта.</em></h2></div>
+      <div class="approach-list"><div><span>01</span><h3>До 8 человек</h3><p>Идём небольшим составом. В пути хватает и разговоров, и тишины.</p></div><div><span>02</span><h3>Всё важное включено</h3><p>Гид, ночёвки и программа уже в цене маршрута. Дополнения видны в расчёте.</p></div><div><span>03</span><h3>Понятный темп</h3><p>Каждый день размечен заранее: километраж и сложность можно посмотреть до выбора.</p></div></div>
+    </section>
+
+    <section class="planner section-pad" id="plan">
+      <div class="section-heading"><div><p class="eyebrow">Планирование / 01</p><h2>Соберите<br><em>свой маршрут.</em></h2></div><p>Рассчитайте поездку и сохраните план на этом устройстве. Никакой заявки без вашего действия не отправляется.</p></div>
+      <div class="planner-layout">
+        <form id="tripForm" class="trip-form">
+          <label>Маршрут<select id="tripRoute" name="route"></select></label>
+          <div class="form-row"><label>Дата начала<input id="tripDate" type="date" required></label><label>Участников<input id="tripPeople" type="number" min="1" max="8" value="2" required></label></div>
+          <fieldset><legend>Добавить к маршруту</legend><label class="check-row"><input id="equipment" type="checkbox"><span>Аренда снаряжения <small>+ 2 500 ₽ / человек</small></span></label><label class="check-row"><input id="transfer" type="checkbox"><span>Трансфер от вокзала/аэропорта <small>+ 4 500 ₽ / человек</small></span></label></fieldset>
+          <button class="button button-dark" type="submit">Сохранить маршрут <span aria-hidden="true">↗</span></button>
+          <p class="form-status" id="tripStatus" role="status"></p>
+        </form>
+        <aside class="trip-summary" aria-live="polite"><p class="eyebrow">Ваша экспедиция</p><h3 id="summaryTitle">Хибины · Горный круг</h3><div id="summaryFacts"></div><div class="total-line"><span>Итого за группу</span><strong id="summaryPrice">—</strong></div><p class="summary-note">План и список вещей сохраняются только в вашем браузере.</p><button class="text-action" id="downloadPlan" type="button">Скачать план поездки ↓</button><div class="packing"><h4>В дорогу</h4><div id="packingList"></div></div></aside>
+      </div>
+    </section>
+  </main>
+  <footer><div class="footer-brand">СЕВЕРНАЯ<br>ТОЧКА <span>✳</span></div><p>Пешие маршруты малыми группами.<br>Экспедиционное бюро, Москва.</p><a href="#top">Наверх ↑</a><small>© 2026 Северная точка</small></footer>
+</body>
+</html>

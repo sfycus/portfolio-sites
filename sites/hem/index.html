@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ece9e2">
+  <meta name="description" content="HEM — камерный квартал у воды. Выберите и сравните квартиры, рассчитайте бюджет покупки.">
+  <title>HEM — квартал у воды</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">К содержанию</a>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="HEM — наверх"><span class="brand-mark">H<span>⊙</span>M</span><span class="brand-caption">Квартал у воды<br>Новая Река</span></a>
+    <nav aria-label="Основная навигация"><a href="#idea">Идея</a><a href="#homes">Квартиры</a><a href="#place">Район</a><a href="#finance">Расчёт</a></nav>
+    <a class="header-action" href="#homes">Выбрать квартиру <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="live-dot"></span> HEM · Набережная Новой Реки, 12</p>
+        <h1 id="hero-title">Новая<br>Река.<br><em>Дом 12.</em></h1>
+        <p class="hero-intro">Четыре корпуса и 128 квартир у набережной. Закрытый двор без машин, мастерская для соседей и общая рабочая гостиная.</p>
+        <div class="hero-actions"><a class="button button-dark" href="#homes">Смотреть квартиры <span>↗</span></a><a class="text-link" href="#idea">О квартале <span>↓</span></a></div>
+        <div class="hero-meta"><span><b>04</b><small>корпуса</small></span><span><b>128</b><small>квартир</small></span><span><b>2027</b><small>год завершения</small></span></div>
+      </div>
+      <div class="hero-art">
+        <img src="assets/hero.jpg" alt="Кирпичный жилой дом среди деревьев, архитектурный референс квартала" fetchpriority="high">
+        <div class="art-label">АРХИТЕКТУРНОЕ НАСТРОЕНИЕ / ФОТОРЕФЕРЕНС</div>
+        <span class="art-stamp">01 / 04</span>
+      </div>
+    </section>
+
+    <section class="statement section-pad" id="idea">
+      <div class="section-kicker">01 — Идея</div>
+      <div class="statement-main"><p class="overline">Новая Река / участок 12</p><h2>Четыре корпуса.<br><span>Один двор.</span></h2><p>Корпуса стоят по периметру сада. Квартиры первого этажа выходят на собственные террасы, а с общей крыши открыт вид на реку. Пешеходный вход — со стороны набережной.</p></div>
+      <div class="statement-aside"><div class="circle-icon" aria-hidden="true">↗</div><p>На первом этаже: мастерская для соседей, колясочная и рабочая гостиная.</p></div>
+    </section>
+
+    <section class="features" aria-label="Особенности квартала">
+      <article class="feature feature-courtyard"><div class="feature-visual visual-yard"><img src="assets/courtyard.jpg" alt="Зелёный внутренний двор с людьми" loading="lazy"></div><div class="feature-copy"><span>01 / Тихо внутри</span><h3>Двор без машин</h3><p>Пешеходные дорожки, яблони, длинный стол под навесом и место, где детям можно быть громкими.</p></div></article>
+      <article class="feature feature-water"><div class="feature-visual visual-water"><img src="assets/riverside.jpg" alt="Тихая дорожка среди деревьев ведёт к воде" loading="lazy"></div><div class="feature-copy"><span>02 / Открыто наружу</span><h3>Берег рядом</h3><p>Кофе у воды утром, пробежка после работы или просто короткая дорога домой без лишнего шума.</p></div></article>
+      <article class="feature feature-work"><div class="feature-visual visual-work"><img src="assets/interior.jpg" alt="Светлая общая гостиная с окнами во всю стену" loading="lazy"></div><div class="feature-copy"><span>03 / Всё под рукой</span><h3>Комната для дел</h3><p>Общая рабочая гостиная для звонков, небольших встреч и дней, когда дома хочется оставить только дом.</p></div></article>
+    </section>
+
+    <section class="homes section-pad" id="homes">
+      <div class="section-heading"><div><p class="section-kicker">02 — Квартиры</p><h2>Первая очередь.<br><em>12 планировок.</em></h2></div><p>В каталоге — квартиры от 39,6 до 96,4 м². Фильтруйте по комнатности и цене, сохраняйте понравившиеся варианты.</p></div>
+      <div class="catalog-toolbar">
+        <div class="filter-group" role="group" aria-label="Количество комнат"><button type="button" class="filter-btn active" data-rooms="all" aria-pressed="true">Все</button><button type="button" class="filter-btn" data-rooms="1" aria-pressed="false">1 комната</button><button type="button" class="filter-btn" data-rooms="2" aria-pressed="false">2 комнаты</button><button type="button" class="filter-btn" data-rooms="3" aria-pressed="false">3 комнаты</button></div>
+        <label class="sort-label">Сортировка <select id="sort"><option value="price-asc">По цене ↑</option><option value="area-desc">По площади ↓</option><option value="floor-asc">По этажу ↑</option></select></label>
+      </div>
+      <div class="range-row"><label for="priceMax">Бюджет до <strong id="priceValue"></strong></label><input id="priceMax" type="range" min="8000000" max="24000000" step="500000" value="24000000"><span id="resultsCount" aria-live="polite"></span></div>
+      <div class="unit-grid" id="unitGrid"></div>
+      <div class="catalog-footer"><button class="button button-outline" id="showMore" type="button">Показать ещё <span>↓</span></button><button class="text-link" id="downloadFavorites" type="button">Скачать избранное <span>↗</span></button></div>
+    </section>
+
+    <section class="place" id="place"><div class="place-map" role="img" aria-label="Схематичная карта квартала и набережной"><div class="map-water"></div><div class="map-road road-one"></div><div class="map-road road-two"></div><div class="map-road road-three"></div><div class="map-park"></div><div class="map-marker marker-home"><b>H</b><span>HEM</span></div><div class="map-marker marker-river"><span>НАБЕРЕЖНАЯ</span></div><div class="map-marker marker-market"><span>РЫНОК</span></div><div class="map-marker marker-metro"><span>СТАНЦИЯ</span></div><span class="map-coordinate">55°41' N / 37°38' E</span></div><div class="place-copy"><p class="section-kicker">03 — Место</p><h2>Пешком<br><em>от HEM.</em></h2><div class="distance"><b>05<span> мин</span></b><p>до набережной<br>по тихой улице</p></div><div class="distance"><b>12<span> мин</span></b><p>до продуктового рынка<br>и соседских кафе</p></div><div class="distance"><b>22<span> мин</span></b><p>до центра<br>на городской электричке</p></div></div></section>
+
+    <section class="finance section-pad" id="finance"><div class="finance-intro"><p class="section-kicker">04 — Расчёт</p><h2>Стоимость<br><em>в месяц.</em></h2><p>Выберите квартиру из каталога или задайте стоимость вручную. Расчёт ориентировочный: условия кредита зависят от банка.</p><div class="calc-note"><span>↗</span> Любую ставку можно изменить под ваше предложение банка.</div></div><div class="calculator"><div class="calc-field"><label for="calcPrice">Стоимость квартиры</label><div class="input-suffix"><input id="calcPrice" type="number" inputmode="numeric" min="1000000" max="100000000" step="100000" value="10900000"><span>₽</span></div></div><div class="calc-field"><label for="calcDown">Первый взнос <b id="downPct">30%</b></label><input id="calcDown" type="range" min="20" max="80" step="5" value="30"><small id="downAmount"></small></div><div class="calc-row"><div class="calc-field"><label for="calcYears">Срок, лет</label><select id="calcYears"><option>5</option><option>10</option><option>15</option><option selected>20</option><option>25</option><option>30</option></select></div><div class="calc-field"><label for="calcRate">Ставка банка, %</label><input id="calcRate" type="number" min="0" max="50" step="0.1" value="12"></div></div><div class="calc-result"><span>Ориентир в месяц</span><strong id="monthlyPayment">—</strong><small id="loanAmount"></small></div></div></section>
+
+    <section class="closing"><span class="closing-overline">HEM / НОВАЯ РЕКА</span><h2>Квартира<br><em>в доме 12.</em></h2><a href="#homes" class="button button-light">Открыть каталог <span>↗</span></a><div class="closing-line"><span>4 корпуса / 128 квартир</span><span>Набережная Новой Реки, 12</span></div></section>
+  </main>
+
+  <footer class="site-footer"><div class="footer-logo">H<span>⊙</span>M</div><p>Квартал у воды · Новая Река<br>Архитектура для жизни.</p><div><a href="#top">Наверх ↑</a><a href="#homes">Квартиры</a><a href="#finance">Расчёт</a></div><small>© HEM 2026</small></footer>
+
+  <aside class="compare-tray" id="compareTray" aria-live="polite" hidden><div><strong>Сравнение <span id="compareCount">0</span>/3</strong><span id="compareNames"></span></div><button type="button" id="compareOpen">Сравнить ↗</button></aside>
+  <dialog id="compareDialog" class="compare-dialog"><div class="dialog-top"><h2>Сравнение квартир</h2><button type="button" id="compareClose" aria-label="Закрыть">×</button></div><div id="compareContent"></div></dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

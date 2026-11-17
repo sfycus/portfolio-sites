@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1c1d1b">
+  <meta name="description" content="Орбита — независимый кинотеатр с вечерними показами, необычной программой и собственным залом.">
+  <title>Орбита — независимый кинотеатр</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="topline"><span>НЕЗАВИСИМЫЙ КИНОТЕАТР</span><span>ОДИН ЗАЛ / СОРОК ВОСЕМЬ ИСТОРИЙ В МЕСЯЦ</span><span>МОСКВА, КРАСНАЯ ПРЕСНЯ</span></div>
+  <header class="header" id="top"><a href="#top" class="logo" aria-label="Орбита, наверх">ОРБИТА<span>✳</span></a><nav aria-label="Основная навигация"><a href="#schedule">Афиша</a><a href="#space">Наш зал</a><a href="#tickets">Мои билеты</a></nav><a href="#schedule" class="header-button">ВЫБРАТЬ СЕАНС <span aria-hidden="true">↗</span></a></header>
+  <main>
+    <section class="hero" aria-labelledby="hero-title"><div class="hero-title"><p class="label"><span class="pulse"></span> ЧЕТЫРЕ СЕАНСА КАЖДЫЙ ДЕНЬ</p><h1 id="hero-title">54 МЕСТА.<br>ОДИН<br><em>ЭКРАН.</em></h1><div class="hero-bottom"><p>Шесть фильмов в программе: игровые и документальные. Первый сеанс в 12:20, последний — в 20:20. Места выбираете сами.</p><a href="#schedule" class="circle-cta" aria-label="Смотреть афишу">↓</a></div></div><div class="hero-poster"><img src="assets/cinema-hall.jpg" alt="Тёмный кинозал с экраном и рядами кресел" loading="eager"><span class="poster-corner">ТИШИНА ПЕРЕД СЕАНСОМ / ОРБИТА</span></div></section>
+    <div class="ticker" aria-hidden="true"><span>НЕЗАВИСИМОЕ КИНО ✳ СМОТРЕТЬ ВМЕСТЕ ✳ ИСКАТЬ НОВОЕ ✳ НЕЗАВИСИМОЕ КИНО ✳ СМОТРЕТЬ ВМЕСТЕ ✳ ИСКАТЬ НОВОЕ ✳ </span></div>
+    <section id="schedule" class="schedule" aria-labelledby="schedule-title"><div class="section-head"><div><p class="label">01 / ПРОГРАММА</p><h2 id="schedule-title">НА ЭКРАНЕ<span class="star">✳</span></h2></div><p>Выбирайте дату, находите фильм и занимайте свои места. В нашей программе каждый вечер — отдельная история.</p></div><div class="date-strip" id="date-strip" role="group" aria-label="Выбор даты"></div><div class="schedule-toolbar"><div class="genre-filters" role="group" aria-label="Жанр"><button type="button" data-genre="all" class="active" aria-pressed="true">ВСЁ</button><button type="button" data-genre="drama" aria-pressed="false">ДРАМА</button><button type="button" data-genre="fantasy" aria-pressed="false">ФАНТАСТИКА</button><button type="button" data-genre="documentary" aria-pressed="false">ДОКУМЕНТАЛЬНОЕ</button></div><span id="film-count" class="film-count"></span></div><div id="film-grid" class="film-grid" aria-live="polite"></div><p id="empty-schedule" class="empty-schedule" hidden>На этот день фильмов выбранного жанра нет. Попробуйте другой фильтр.</p></section>
+    <section class="space" id="space" aria-labelledby="space-title"><div class="space-copy"><p class="label">02 / НАШ ЗАЛ</p><h2 id="space-title">ШЕСТЬ РЯДОВ.<br><em>ДЕВЯТЬ МЕСТ<br>В КАЖДОМ.</em></h2><p>Места A1–F9, проход по центру фойе, один экран. У задних рядов больше пространства для ног; у первых — полное погружение в кадр. Цена зависит от ряда.</p><dl><div><dt>54</dt><dd>места</dd></div><div><dt>06</dt><dd>рядов</dd></div><div><dt>09</dt><dd>мест в ряду</dd></div></dl></div><div class="space-graphic" role="img" aria-label="Схема кинозала с экраном и рядами кресел"><div class="graphic-screen">ЭКРАН</div><div class="graphic-seats" aria-hidden="true"></div><div class="graphic-caption">ПЕРВЫЙ РЯД — А / ПОСЛЕДНИЙ — F</div></div></section>
+    <section class="tickets" id="tickets" aria-labelledby="tickets-title"><div><p class="label">03 / ВАШИ ПОКАЗЫ</p><h2 id="tickets-title">МОИ БИЛЕТЫ<span class="star">✳</span></h2><p>Сохранённые места остаются в этом браузере. Их можно скачать или освободить.</p></div><div id="ticket-list" class="ticket-list"></div></section>
+    <section class="outro"><p>ВСТРЕТИМСЯ<br>ПОСЛЕ ТИТРОВ.</p><a href="#schedule">СМОТРЕТЬ АФИШУ ↗</a></section>
+  </main>
+  <footer><a href="#top" class="logo">ОРБИТА<span>✳</span></a><p>НЕЗАВИСИМЫЙ КИНОТЕАТР<br>МОСКВА · КРАСНАЯ ПРЕСНЯ</p><a href="#top">НАВЕРХ ↑</a><small>© ОРБИТА, 2026</small></footer>
+
+  <dialog id="seat-dialog" aria-labelledby="dialog-title"><div class="dialog-inner"><button type="button" class="dialog-close" id="close-dialog" aria-label="Закрыть выбор мест">×</button><p class="label">ВЫБОР МЕСТ</p><h2 id="dialog-title">—</h2><p id="dialog-info" class="dialog-info"></p><div class="screen-label">ЭКРАН</div><div id="seat-grid" class="seat-grid" role="group" aria-label="Места в зале"></div><div class="seat-legend"><span><i class="free"></i> СВОБОДНО</span><span><i class="selected"></i> ВЫБРАНО</span><span><i class="taken"></i> ЗАНЯТО</span></div><div class="dialog-bottom"><div><small>ВЫБРАНО</small><strong id="selected-seats">МЕСТА НЕ ВЫБРАНЫ</strong></div><div><small>ИТОГО</small><strong id="seat-total">0 ₽</strong></div><button id="book-seats" type="button" disabled>СОХРАНИТЬ БИЛЕТЫ ↗</button></div><p class="dialog-note">Билеты сохраняются на устройстве; оплата и передача данных не выполняются.</p></div></dialog>
+</body>
+</html>

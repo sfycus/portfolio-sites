@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eee9df">
+  <meta name="description" content="Beryl — предметная мастерская модульной мебели. Соберите стеллаж под вашу комнату и рассчитайте стоимость.">
+  <title>Beryl — предметная мастерская</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header" id="top">
+    <a class="wordmark" href="#top" aria-label="Beryl, наверх">beryl<span class="wordmark-dot">.</span></a>
+    <nav aria-label="Основная навигация">
+      <a href="#collection">Коллекция</a><a href="#builder">Конструктор</a><a href="#stories">В интерьере</a>
+    </nav>
+    <a class="header-cta" href="#builder">Создать свой предмет <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-heading">
+        <div class="catalog-id"><span>BERYL / ПРЕДМЕТ 001</span><span>КОЛЛЕКЦИЯ SŌL · 2026</span></div>
+        <h1 id="hero-title">Sōl <span>Модульный стеллаж</span></h1>
+      </div>
+      <div class="hero-art"><img src="assets/interior.jpg" alt="Тёплый интерьер с деревянными полками и книгами" loading="eager"><span class="art-index">Дерево, книги, дневной свет / 001</span></div>
+      <div class="hero-specs">
+        <p class="spec-kicker">01 / ПРЕДМЕТ</p>
+        <h2>Система<br>хранения Sōl</h2>
+        <p>Каркас из массива, секции с открытыми полками и закрытыми ячейками. Пропорции задаются под конкретную стену.</p>
+        <dl>
+          <div><dt>Ширина</dt><dd>74–182 см</dd></div>
+          <div><dt>Высота</dt><dd>82–199 см</dd></div>
+          <div><dt>Глубина</dt><dd>36 см</dd></div>
+          <div><dt>Материалы</dt><dd>дуб / орех / ясень</dd></div>
+          <div><dt>Изготовление</dt><dd>от 21 дня</dd></div>
+        </dl>
+        <p class="spec-price">от 24 100 ₽</p>
+        <a class="spec-action" href="#builder">Настроить конфигурацию <span aria-hidden="true">↗</span></a>
+        <small>Выберите секции, покрытие и количество закрытых ячеек ниже.</small>
+      </div>
+    </section>
+
+    <section class="intro-band" id="collection">
+      <p class="section-index">01 — Коллекция</p>
+      <div><h2>Шаг секции — 36 см.<br><em>Остальное решаете вы.</em></h2><p>Два, три, четыре или пять вертикальных пролётов. Стеллаж собирается из повторяющихся ячеек высотой 39 см; дверцы можно добавить только там, где нужно скрыть вещи.</p></div>
+    </section>
+
+    <section class="principles" aria-label="Особенности коллекции">
+      <article><span class="principle-number">01</span><div class="principle-mark mark-frame" aria-hidden="true"><i></i><i></i><i></i></div><h3>Размер под комнату</h3><p>Ширина от 74 до 182 см. Выбирайте от двух до пяти секций и столько уровней, сколько нужно.</p></article>
+      <article><span class="principle-number">02</span><div class="principle-mark mark-material" aria-hidden="true"><i></i><i></i><i></i></div><h3>Честные материалы</h3><p>Дуб, орех или окрашенный ясень. Каждая поверхность приятна на ощупь и стареет красиво.</p></article>
+      <article><span class="principle-number">03</span><div class="principle-mark mark-change" aria-hidden="true"><i></i><i></i></div><h3>Готова меняться</h3><p>Система растёт вместе с коллекцией книг, новой работой и новой квартирой.</p></article>
+    </section>
+
+    <section class="builder" id="builder" aria-labelledby="builder-title">
+      <div class="builder-head"><p class="section-index">02 — Конструктор</p><h2 id="builder-title">Создайте свою<br><em>конфигурацию.</em></h2><p>Пара параметров — и будущий предмет уже обретает форму. Расчёт обновляется сразу.</p></div>
+      <div class="builder-grid">
+        <form class="controls" id="config-form">
+          <fieldset><legend>Габариты</legend><label for="cols">Секций по ширине <strong id="cols-value">3</strong></label><input id="cols" name="cols" type="range" min="2" max="5" value="3"><div class="range-ends"><span>2 секции</span><span>5 секций</span></div><label for="rows">Уровней по высоте <strong id="rows-value">4</strong></label><input id="rows" name="rows" type="range" min="2" max="5" value="4"><div class="range-ends"><span>2 уровня</span><span>5 уровней</span></div></fieldset>
+          <fieldset><legend>Материал</legend><div class="swatches"><label><input type="radio" name="material" value="oak" checked><span class="swatch oak"></span><span>Натуральный дуб</span></label><label><input type="radio" name="material" value="walnut"><span class="swatch walnut"></span><span>Тёмный орех</span></label><label><input type="radio" name="material" value="ash"><span class="swatch ash"></span><span>Светлый ясень</span></label></div></fieldset>
+          <fieldset><legend>Детали</legend><label for="doors">Закрытых ячеек <strong id="doors-value">2</strong></label><input id="doors" name="doors" type="range" min="0" max="12" value="2"><div class="range-ends"><span>Открытый стеллаж</span><span id="doors-max-label">До 12 дверец</span></div><label class="select-label" for="finish">Покрытие</label><select id="finish" name="finish"><option value="oil">Натуральное масло</option><option value="lacquer">Матовый лак (+8%)</option></select></fieldset>
+          <div class="preset-row"><span>Начать с идеи:</span><button type="button" data-preset="library">Библиотека</button><button type="button" data-preset="console">Консоль</button></div>
+        </form>
+        <div class="preview-panel">
+          <div class="preview-top"><span>Ваша система Sōl</span><span id="preview-material">Дуб / масло</span></div>
+          <div class="preview-scene"><div id="shelf" class="shelf" role="img" aria-label="Предпросмотр стеллажа"></div><div class="preview-floor"></div></div>
+          <div class="preview-details"><div><small>Размеры, Ш × В × Г</small><strong id="dimensions">110 × 160 × 36 см</strong></div><div><small>Срок изготовления</small><strong>от 21 дня</strong></div></div>
+          <div class="price-row"><div><small>Ориентировочная стоимость</small><strong id="price" aria-live="polite">—</strong></div><span>Включает изготовление и покрытие. Доставка рассчитывается отдельно.</span></div>
+          <div class="builder-actions"><button type="button" class="primary-btn" id="save-config">Сохранить конфигурацию <span aria-hidden="true">↗</span></button><button type="button" class="secondary-btn" id="download-spec">Скачать спецификацию ↓</button></div>
+          <p class="status" id="config-status" role="status"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="stories" id="stories" aria-labelledby="stories-title">
+      <div class="stories-title"><p class="section-index">03 — В интерьере</p><h2 id="stories-title">Вещи обретают смысл<br><em>в жизни.</em></h2></div>
+      <div class="story-grid">
+        <article class="story story-one"><div class="story-art"><img src="assets/workroom.jpg" alt="Деревянные полки, посуда и цветы в жилом интерьере" loading="lazy"></div><div class="story-caption"><span>01 / Атмосфера</span><h3>Дерево, к которому хочется возвращаться</h3><p>Идея для пространства, где всё на своём месте</p></div></article>
+        <article class="story story-two"><div class="story-art"><img src="assets/craft.jpg" alt="Столяр работает ручным рубанком в мастерской" loading="lazy"></div><div class="story-caption"><span>02 / Ремесло</span><h3>Форма начинается с материала</h3><p>Точность рук, натуральная фактура, спокойная отделка</p></div></article>
+      </div>
+    </section>
+    <section class="closing"><p>Хороший предмет не просит внимания.<br>Он просто становится частью жизни.</p><a href="#builder">Собрать свой Sōl <span aria-hidden="true">↗</span></a></section>
+  </main>
+  <footer><a class="wordmark" href="#top">beryl<span class="wordmark-dot">.</span></a><p>Предметная мастерская · Москва<br>Мебель с характером, без лишнего.</p><span>© Beryl, 2026</span></footer>
+</body>
+</html>

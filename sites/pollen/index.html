@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#d4d0c5">
+  <meta name="description" content="Пыльца — цветочная мастерская. Собираем живые букеты для обычных и особенных дней.">
+  <title>Пыльца — цветочная мастерская</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="announcement">Доставка по Москве каждый день · Дату выбираете при оформлении</div>
+  <header id="top" class="header">
+    <a class="logo" href="#top" aria-label="Пыльца, на главную">пыльца<span class="flower-dot" aria-hidden="true">✳</span></a>
+    <nav aria-label="Основная навигация"><a href="#flowers">Букеты</a><a href="#process">Как мы работаем</a><a href="#about">О мастерской</a></nav>
+    <a class="cart-link" href="#basket">Корзина <span id="cart-count" aria-live="polite">0</span></a>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <div class="hero-stamp">СЕЗОН<br>2026 / 11</div>
+        <p class="kicker">ВИТРИНА / БУКЕТЫ ЭТОЙ НЕДЕЛИ</p>
+        <h1 id="hero-title">Цветы<br>в городе.</h1>
+        <p class="hero-intro">Восемь сезонных букетов. Собираем в мастерской утром и доставляем по Москве на следующий день.</p>
+      </div>
+      <div class="hero-art"><img src="assets/florist.jpg" alt="Флорист собирает букет за рабочим столом" loading="eager"><div class="art-label">ЦВЕТЫ В РАБОТЕ / МАСТЕРСКАЯ</div></div>
+      <div class="hero-featured">
+        <div class="featured-index">ВЫБОР НЕДЕЛИ <span>01 / 08</span></div>
+        <div class="featured-main"><span class="featured-mark" aria-hidden="true">✳</span><p>Розы, хризантемы,<br>гвоздики и зелень.</p><h2>Полдень</h2><div class="featured-meta"><span>ЯРКИЙ / СЕЗОННЫЙ</span><strong>3 400 ₽</strong></div></div>
+        <button type="button" id="featured-add">Добавить в корзину <span aria-hidden="true">＋</span></button>
+        <a href="#flowers">Смотреть все 8 букетов ↘</a>
+      </div>
+    </section>
+
+    <section id="flowers" class="catalog" aria-labelledby="catalog-title">
+      <div class="catalog-heading"><div><p class="kicker">Наши цветы</p><h2 id="catalog-title">Букеты на<br><i>любой повод.</i></h2></div><p>Каждый букет мы собираем утром в день доставки. Палитра остаётся верной, а цветы могут немного отличаться — сезон всегда вносит своё.</p></div>
+      <div class="catalog-toolbar"><div class="filters" role="group" aria-label="Фильтр букетов"><button type="button" class="active" data-filter="all" aria-pressed="true">Все <span>08</span></button><button type="button" data-filter="bright" aria-pressed="false">Яркие</button><button type="button" data-filter="soft" aria-pressed="false">Нежные</button><button type="button" data-filter="green" aria-pressed="false">Зелёные</button></div><label class="search"><span class="sr-only">Поиск букета</span><input type="search" id="search" placeholder="Найти букет"><span aria-hidden="true">⌕</span></label></div>
+      <div id="product-grid" class="product-grid" aria-live="polite"></div>
+      <p id="empty-products" class="empty" hidden>Таких букетов пока нет. Попробуйте другое название или категорию.</p>
+    </section>
+
+    <section class="interlude"><span>✳</span><p>Цветы — самый красивый способ<br>сказать <em>«я подумал о тебе».</em></p><span>✳</span></section>
+
+    <section class="two-column" id="process"><div class="process-visual"><img src="assets/florist-detail.jpg" alt="Руки флориста собирают композицию из живых цветов" loading="lazy"><div class="visual-note">Каждый стебель<br>на своём месте</div></div><div class="process-copy"><p class="kicker">Всё просто</p><h2>От нашей<br>мастерской —<br><i>к вам.</i></h2><ol><li><b>Вы выбираете.</b><span>Покажем состав и настроение каждого букета.</span></li><li><b>Мы собираем.</b><span>Утром в день доставки выбираем свежие цветы.</span></li><li><b>Курьер привозит.</b><span>Бережно, в воде и с открыткой от вас.</span></li></ol><a href="#flowers" class="inline-link">Перейти к букетам ↗</a></div></section>
+
+    <section class="basket-section" id="basket" aria-labelledby="basket-title"><div class="basket-title"><p class="kicker">Ваш заказ</p><h2 id="basket-title">Подарить<br><i>цветы.</i></h2><p>Добавьте букет в корзину, выберите день и сохраните детали заказа.</p></div><div class="basket-card"><div id="basket-items" class="basket-items"></div><div class="basket-summary"><div><span>Букеты</span><strong id="subtotal">0 ₽</strong></div><div><span>Доставка</span><strong id="delivery">—</strong></div><div class="total"><span>Итого</span><strong id="total">0 ₽</strong></div></div><form id="order-form"><div class="form-grid"><label>Дата доставки<input type="date" id="delivery-date" required></label><label>Имя получателя<input type="text" id="recipient" placeholder="Как обратиться?" required maxlength="60"></label><label class="full">Адрес доставки<input type="text" id="address" placeholder="Улица, дом, квартира" required maxlength="160"></label><label class="full">Текст открытки <small>необязательно</small><textarea id="message" rows="3" placeholder="Напишите несколько тёплых слов" maxlength="300"></textarea></label></div><button class="order-button" type="submit">Сохранить заказ <span aria-hidden="true">↗</span></button><p class="form-note">Заказ останется в этом браузере; данные можно скачать для передачи мастерской.</p></form><div class="order-result" id="order-result" hidden role="status"><p id="order-result-text"></p><button type="button" id="download-order">Скачать детали заказа ↓</button></div></div></section>
+
+    <section class="about" id="about"><p class="kicker">Про мастерскую</p><div><h2>Немного странные.<br>Очень <i>живые.</i></h2><p>Мы верим в цветы без строгих правил. В букетах Пыльцы садовая нежность встречается с дерзкими оттенками, а привычный повод становится личным. Собираем небольшими партиями и выбираем сезонные цветы.</p></div><div class="about-stamp">ПЫЛЬЦА<br><span>ЦВЕТЫ ДЛЯ ЖИЗНИ</span></div></section>
+  </main>
+  <footer><a class="logo" href="#top">пыльца<span class="flower-dot" aria-hidden="true">✳</span></a><p>Цветочная мастерская · Москва<br>Цветы для обычных и особенных дней.</p><a href="#flowers">Вернуться к букетам ↑</a><small>© Пыльца, 2026</small></footer>
+</body>
+</html>
