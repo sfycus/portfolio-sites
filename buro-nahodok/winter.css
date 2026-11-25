@@ -1,0 +1,315 @@
+/* A bright Christmas post office: cranberry, ribbon blue, warm white. */
+.winter-ui {
+  --paper: #fff9ee;
+  --white: #fffefb;
+  --ink: #263443;
+  --green: #245a49;
+  --red: #bd2041;
+  --yellow: #efc153;
+  --blue: #3864af;
+  --muted: #637078;
+  --line: #dedbd1;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
+.winter-ui::before {content:'';display:block;height:8px;background:repeating-linear-gradient(115deg,#bd2041 0 22px,#fff9ee 22px 32px,#3864af 32px 54px,#fff9ee 54px 64px);}
+.winter-ui .wrap {max-width:1320px;padding:0 52px;}
+.winter-ui .header {height:105px;border-bottom:1px solid #dcd8cd;gap:24px;}
+.winter-ui .brand {color:var(--red);gap:11px;}
+.winter-ui .brand-symbol {width:43px;height:43px;}
+.winter-ui .brand-name {font:700 25px/1.05 var(--sans);letter-spacing:-.055em;}
+.winter-ui .brand-sub {font:600 9px/1.4 var(--sans);letter-spacing:.16em;margin-top:7px;color:var(--blue);}
+.winter-ui .header .quiet {font-size:12px;color:#68716d;}
+.winter-ui .header-right>.text-button {color:var(--red);font-weight:600;text-decoration:none;border:1px solid #bd204147;border-radius:30px;padding:11px 21px;font-size:13px;}
+.winter-ui .eyebrow {font-size:11px;letter-spacing:.11em;}
+.winter-ui .button {background:var(--red);border-color:var(--red);border-radius:10px;color:#fff;box-shadow:0 3px 0 #8d1930;min-height:52px;font-size:15px;padding:14px 22px;transition:background .15s,transform .15s;}
+.winter-ui .button:hover {background:#a91333;filter:none;}
+.winter-ui .button.paper {color:var(--ink);background:#fff;border-color:#cdd4d6;box-shadow:0 2px 0 #dfe2e0;}
+.winter-ui .button.paper:hover {background:#eef4fb;}
+.winter-ui .button.small {min-height:41px;font-size:13px;padding:10px 15px;border-radius:8px;}
+.winter-ui .text-button {color:var(--blue);font-weight:500;}
+.winter-ui button:focus-visible,.winter-ui summary:focus-visible {outline-color:var(--blue);outline-offset:5px;}
+/* The invitation. */
+.winter-ui .hero {grid-template-columns:minmax(0,1fr) minmax(0,1.07fr);gap:52px;padding:54px 0 66px;align-items:center;}
+.winter-ui .hero-copy {padding:6px 0;min-width:0;}
+.winter-ui .hero .eyebrow {display:inline-flex;gap:9px;align-items:center;color:var(--red);letter-spacing:.09em;}
+.winter-ui .hero .eyebrow>span {font-size:21px;line-height:1;}
+.winter-ui .hero h1 {font-family:var(--sans);font-size:clamp(45px,4.6vw,66px);font-weight:730;line-height:1.07;letter-spacing:-.064em;margin:25px 0 26px;color:#263443;}
+.winter-ui .hero h1 em {display:block;font:italic 1.04em/1.15 Georgia,'Times New Roman',serif;letter-spacing:-.06em;color:var(--red);margin-top:5px;}
+.winter-ui .hero .lead {font-size:20px;color:#364553;line-height:1.6;max-width:435px;margin-bottom:16px;}
+.winter-ui .hero-description {font-size:15px;line-height:1.7;color:#637078;max-width:410px;}
+.winter-ui .hero .actions {gap:20px;margin-top:29px;}
+.winter-ui .hero .button {min-height:56px;gap:16px;border-radius:11px;}
+.winter-ui .hero .button>span {font-size:20px;font-weight:400;}
+.winter-ui .hero .text-button {font-size:14px;}
+.hero-facts {display:flex;gap:18px;flex-wrap:wrap;margin-top:29px;align-items:center;font-size:11px;color:#6c7376;}
+.hero-facts span+span {border-left:1px solid #cfcfc3;padding-left:18px;}
+.holiday-art {width:100%;height:536px;position:relative;margin:0;min-width:0;isolation:isolate;}
+.holiday-photo {width:100%;height:100%;display:block;object-fit:cover;object-position:66% 50%;border-radius:150px 150px 20px 20px;box-shadow:0 10px 32px #5d3c201a;}
+.holiday-art::before {content:'';position:absolute;inset:11px;border:1px solid #fff6;border-radius:141px 141px 12px 12px;pointer-events:none;z-index:1;}
+.photo-caption {position:absolute;bottom:20px;left:20px;right:20px;color:white;font:italic 16px Georgia,serif;text-align:center;z-index:2;text-shadow:0 1px 8px #191510;background:#22291e9c;border-radius:20px;padding:8px 10px;}
+.holiday-envelope {position:absolute;left:-33px;bottom:65px;width:237px;min-height:151px;background:#fffefa;padding:19px 21px 18px;transform:rotate(-8deg);box-shadow:0 9px 25px #47362336;color:#314767;border:7px solid transparent;border-image:repeating-linear-gradient(135deg,#c42b43 0 12px,#fffefa 12px 24px,#3864af 24px 36px,#fffefa 36px 48px) 7;z-index:3;}
+.holiday-envelope>span:first-child {display:block;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#aa1f37;margin-bottom:10px;font-weight:700;}
+.holiday-envelope>b {font:italic 24px/1.2 Georgia,serif;font-weight:400;display:block;}
+.holiday-envelope>i {font-size:9px;font-style:normal;display:block;margin-top:11px;color:#6b788a;}
+.envelope-stamp {position:absolute;right:11px;top:37px;color:#bd2041;border:1px dashed #bd2041;font-size:24px;line-height:1;padding:8px 7px;transform:rotate(11deg);}
+.holiday-seal {position:absolute;right:-14px;top:30px;width:104px;height:104px;display:flex;align-items:center;justify-content:center;text-align:center;color:#1e426f;background:#f5cf67;font-size:12px;font-weight:650;line-height:1.35;border-radius:50%;transform:rotate(13deg);box-shadow:0 3px 0 #c5a451;z-index:2;}
+.holiday-seal::before {content:'';position:absolute;inset:7px;border:1px dashed #8a6b2d;border-radius:50%;}
+/* An uninterrupted blue ribbon ties the instructions together. */
+.winter-ui .how {position:relative;grid-template-columns:.95fr 1fr 1fr 1fr;background:#355a9d;color:#fff;border:0;border-radius:17px;gap:25px;padding:32px 30px;margin:0 0 66px;}
+.winter-ui .how-intro .eyebrow {font-size:9px;letter-spacing:.1em;color:#d9e4f7;}
+.winter-ui .how-intro h2 {font:italic 28px/1.17 Georgia,serif;margin:10px 0 0;}
+.winter-ui .how-item {display:block;border-left:1px solid #ffffff42;padding-left:24px;}
+.winter-ui .step-mark {font:500 12px var(--sans);display:inline-block;width:auto;color:#ffe09d;margin-bottom:13px;}
+.winter-ui .how h3 {font-size:14px;font-weight:650;margin-bottom:8px;}
+.winter-ui .how p {font-size:12px;line-height:1.65;color:#e0e8f6;max-width:210px;}
+.winter-ui .bottom-band {padding:0 0 52px;border:0;gap:70px;align-items:flex-start;}
+.faq-intro {position:relative;width:42%;min-width:0;}
+.faq-intro h2 {font:600 35px/1.15 var(--sans);letter-spacing:-.04em;margin:14px 0 24px;}
+.faq-intro h2 em {font:italic 1.15em Georgia,serif;color:var(--red);}
+.faq-intro img {width:180px;height:120px;object-fit:cover;object-position:50% 24%;border-radius:65px 65px 8px 8px;display:block;}
+.winter-ui .faq {padding-top:2px;max-width:620px;}
+.winter-ui .faq details {padding:19px 0;border-color:#d9d7cd;}
+.winter-ui .faq details:first-child {border-top:1px solid #d9d7cd;}
+.winter-ui .faq summary {font-size:15px;font-weight:600;list-style:none;position:relative;padding-right:26px;}
+.winter-ui .faq summary::-webkit-details-marker {display:none;}
+.winter-ui .faq summary::after {content:'+';position:absolute;right:1px;top:0;color:var(--red);font-size:21px;line-height:1;}
+.winter-ui .faq details[open] summary::after {content:'−';}
+.winter-ui .faq p {font-size:14px;line-height:1.75;color:#647079;margin-top:14px;}
+.winter-ui .footer {padding:22px 0;color:#697479;font-size:11px;border-color:#d9d7cd;}
+/* The adult's desk: clean and light, with post-office blue details. */
+.winter-ui[data-screen='editor'] {background:#f5f7fb;}
+.winter-ui .editor-head {padding:35px 0 27px;}
+.winter-ui .editor-head h1 {font:700 40px/1.15 var(--sans);letter-spacing:-.045em;max-width:650px;margin:10px 0 10px;}
+.winter-ui .editor-head p {font-size:15px;}
+.winter-ui .editor-tools {display:flex;flex-direction:column;gap:15px;align-items:flex-end;flex-shrink:0;}
+.winter-ui .editor-tools .quiet {font-size:12px;text-align:right;}
+.winter-ui .wizard {border-color:#d5dde5;margin-bottom:30px;}
+.winter-ui .wizard button {font-size:14px;margin-right:40px;padding-bottom:15px;}
+.winter-ui .wizard-number {border:0;background:#e1e8f3;color:#526b8b;width:27px;height:27px;}
+.winter-ui .wizard .current {border-color:var(--red);color:var(--red);}
+.winter-ui .wizard .current .wizard-number {background:var(--red);color:#fff;}
+.winter-ui .editor-grid {grid-template-columns:minmax(0,1fr) 310px;gap:68px;}
+.winter-ui .editor-grid>div:first-child {background:#fff;border:1px solid #e1e6eb;border-radius:16px;padding:30px;min-width:0;}
+.winter-ui .label {font-size:15px;color:#2d3f53;}
+.winter-ui .input {background:#fff;border-color:#c9d3de;border-radius:8px;min-height:52px;}
+.winter-ui .input:focus {border-color:var(--blue);}
+.winter-ui .label-note,.winter-ui .privacy-note {line-height:1.6;color:#687789;}
+.winter-ui .form-section {margin-bottom:27px;}
+.winter-ui .radio-box {border-radius:10px;border-color:#dce2e9;padding:14px 8px;background:#f8fafe;}
+.winter-ui .radio-box b {font-size:18px;color:#30465f;}
+.winter-ui input:checked+.radio-box,.winter-ui input:checked+.theme-box {background:#eaf0fc;border-color:#3864af;box-shadow:inset 0 0 0 1px #3864af;}
+.winter-ui .theme-box {position:relative;min-height:133px;border-color:#dce2e9;border-radius:10px;background:#f8fafe;padding:17px;}
+.winter-ui .theme-box b {font:600 20px/1.2 var(--sans);letter-spacing:-.03em;color:#30465f;}
+.winter-ui .theme-box small {display:block;line-height:1.6;margin-top:10px;}
+.winter-ui .theme-label input[value='winter']+.theme-box {padding-right:28px;}
+.winter-ui .theme-label input[value='winter']+.theme-box::after {content:none;}
+.winter-ui .notebook {position:sticky;top:25px;transform:none;background:#fff6d9;border-top:5px solid #ecc265;border-radius:0 0 14px 14px;padding:27px;box-shadow:0 6px 20px #576b7d0c;}
+.winter-ui .notebook::after {content:'✦';position:absolute;right:20px;top:18px;color:var(--red);font-size:28px;}
+.winter-ui .notebook h2 {font:600 26px/1.2 var(--sans);letter-spacing:-.04em;}
+.winter-ui .notebook .eyebrow {font-size:10px;}
+.winter-ui .notebook dl>div {border-color:#e6dcbf;font-size:13px;}
+.winter-ui .notebook p {color:#70674c;line-height:1.65;}
+.winter-ui .notebook .notebook-number {color:var(--red);}
+.winter-ui .location-box {border-radius:9px;background:#f8fafe;border-color:#dce2e9;}
+.winter-ui .location-label input:checked+.location-box {background:#edf3ff;border-color:var(--blue);}
+.winter-ui .location-label input:checked+.location-box svg {color:var(--blue);}
+.winter-ui .location-label input:checked+.location-box .check {background:var(--blue);border-color:var(--blue);}
+.winter-ui .route-order {color:var(--blue);}
+.winter-ui .icon-button {border-radius:7px;border-color:#cdd7e3;}
+.winter-ui .notice {background:#fff5d9;border-color:#e5b44b;color:#6b5830;border-radius:0 8px 8px 0;}
+.winter-ui .prep-summary {background:#355a9d;border-radius:11px;padding:23px;}
+.winter-ui .prep-summary h2 {font:600 24px/1.2 var(--sans);}
+.winter-ui .prep-summary p {color:#e5edfa;}
+.winter-ui .code-ticket {border-color:#5980b9;background:#f2f6ff;color:#355a9d;border-radius:7px;}
+.winter-ui .prep-row.final {background:#fff1ed;border-color:#e2b3ad;border-radius:9px;}
+.winter-ui .ready-check input {accent-color:var(--red);}
+.winter-ui .restart-link {display:block;font-size:14px;margin-top:13px;}
+.winter-ui .save-note {font-size:12px;}
+/* The player's letter, on fresh snow rather than a dark background. */
+.winter-ui[data-screen='game'] {background:#eff5fc;background-image:radial-gradient(circle at 12px 24px,#fff 2px,transparent 2.5px),radial-gradient(circle at 81px 67px,#fff 1.5px,transparent 2px);background-size:127px 113px,173px 163px;}
+.winter-ui .game-shell {position:relative;isolation:isolate;overflow:hidden;}
+.winter-ui .game-shell::before {content:'';position:absolute;z-index:-1;left:0;right:0;top:0;height:235px;background:#355a9d;border-radius:0 0 46% 46%/0 0 28% 28%;}
+.winter-ui .game-shell::after {content:'✦';position:absolute;z-index:-1;right:calc(50% - 360px);top:135px;font:80px/1 Georgia,serif;color:#efc153;transform:rotate(12deg);}
+.winter-ui .game-header {color:#fff;max-width:740px;min-height:83px;padding:25px 28px 17px;gap:18px;}
+.winter-ui .game-wordmark {font:700 24px/1 var(--sans);letter-spacing:-.05em;}
+.winter-ui .game-header .eyebrow {font-size:10px;color:#e5edfa;max-width:165px;line-height:1.4;}
+.winter-ui .game-demo {background:#ffe2a0;color:#3b4560;border-radius:20px;letter-spacing:.04em;font-size:10px;padding:6px 12px;}
+.winter-ui .game-main {max-width:654px;padding:15px 25px 42px;}
+.winter-ui .game-topline {margin-bottom:24px;gap:14px;}
+.winter-ui .game-topline .quiet {color:#e6edf8;font-size:12px;}
+.winter-ui .dot {border-color:#c0cde8;width:9px;height:9px;}
+.winter-ui .dot.complete {background:#ffd26b;border-color:#ffd26b;}
+.winter-ui .dot.active {background:#fff;border-color:#fff;box-shadow:0 0 0 3px #ffffff26;}
+.winter-ui .game-card {background:#fffefb;border:1px solid #e2e7ee;border-radius:17px;padding:34px 37px 37px;box-shadow:0 7px 0 #dae3ef,0 14px 30px #2849680b;color:var(--ink);overflow:hidden;}
+.winter-ui .game-card::before {top:0;left:0;right:0;height:7px;width:auto;transform:none;background:repeating-linear-gradient(120deg,#c42b43 0 15px,#fffefa 15px 25px,#3864af 25px 40px,#fffefa 40px 50px);}
+.winter-ui .game-card h1 {font:700 36px/1.15 var(--sans);letter-spacing:-.045em;margin:17px 0 22px;}
+.winter-ui .game-card h2 {font:600 28px/1.25 var(--sans);letter-spacing:-.035em;}
+.winter-ui .game-prompt {font-size:19px;line-height:1.65;color:#3e4d5e;}
+.winter-ui .game-card>p:not(.game-prompt) {color:#647184;font-size:14px;line-height:1.65;}
+.winter-ui .intro-seal {width:91px;height:91px;border:2px solid #bd2041;outline:1px solid #bd204140;outline-offset:5px;color:#bd2041;font-size:10px;background:#fff2ee;line-height:1.5;margin:11px 0 31px;}
+.winter-ui .choice {background:#f5f7fd;border:1px solid #d6deeb;border-radius:10px;min-height:57px;padding:13px 16px;font-size:18px;}
+.winter-ui .choice:hover {background:#eaf0fc;border-color:#3864af;}
+.winter-ui .choice-letter {width:28px;height:28px;background:#fff;border-color:#c1cde0;color:#5f7596;}
+.winter-ui .feedback {color:#a7273e;font-size:14px;}
+.winter-ui .game-card>.feedback {color:#a7273e!important;}
+.winter-ui .hint-button {color:#3864af;}
+.winter-ui .hint-text {background:#fff4d9;color:#6e5a32!important;border-radius:8px;font-size:15px;}
+.winter-ui .game-code {background:#f6f8fc;letter-spacing:.22em;border-radius:10px;}
+.winter-ui .game-caption {color:#617286;font-size:12px;line-height:1.7;}
+.winter-ui .location-symbol {color:#bd2041;width:70px;height:70px;margin:19px 0;}
+.winter-ui .ending {background:#fffefb;border-color:#e2e7ee;color:var(--ink);}
+.winter-ui .ending h1 {font-size:40px;}
+.winter-ui .ending p {color:#647184;}
+.winter-ui .ending .button {background:var(--red);border-color:var(--red);color:#fff;}
+.winter-ui .ending .hint-button {display:block;margin:12px auto 0;color:var(--blue);}
+.winter-ui .success-ribbon {font-size:37px;color:#e8b343;letter-spacing:.2em;}
+.winter-ui .ending .certificate-line {background:#dbe1e9;}
+.winter-ui .dialog-backdrop {background:#243a60b8;backdrop-filter:blur(4px);}
+.winter-ui .dialog {background:#fffdf8;border-top:7px solid #bd2041;border-radius:14px;}
+.winter-ui .dialog h2 {font:700 29px/1.2 var(--sans);letter-spacing:-.04em;}
+.winter-ui .dialog p {line-height:1.75;}
+.winter-ui .storage-notice {background:#ffdf93;color:#59461c;padding:11px 20px;font-size:13px;}
+.winter-ui .empty-state {border-radius:16px;}
+@media(min-width:761px) and (max-width:1100px) {
+  .winter-ui .wrap {padding:0 32px;}
+  .winter-ui .hero {gap:35px;}
+  .winter-ui .hero h1 {font-size:49px;}
+  .holiday-art {height:500px;}
+  .holiday-envelope {width:205px;left:-17px;padding:17px;}
+  .holiday-envelope>b {font-size:21px;}
+  .winter-ui .hero .actions {gap:12px;}
+  .winter-ui .how {gap:18px;padding:28px 22px;}
+  .winter-ui .how-item {padding-left:18px;}
+  .winter-ui .how-intro h2 {font-size:24px;}
+  .winter-ui .editor-grid {grid-template-columns:minmax(0,1fr) 270px;gap:28px;}
+  .winter-ui .editor-grid>div:first-child {padding:24px;}
+}
+@media(max-width:760px) {
+  .winter-ui .wrap {padding:0 22px;}
+  .winter-ui .header {height:87px;gap:15px;}
+  .winter-ui .brand-symbol {width:32px;height:32px;}
+  .winter-ui .brand-name {font-size:22px;}
+  .winter-ui .brand-sub {font-size:8px;letter-spacing:.12em;margin-top:5px;}
+  .winter-ui .header-right {max-width:115px;text-align:right;}
+  .winter-ui .header-right>.text-button {font-size:11px;line-height:1.4;padding:9px 13px;}
+  .winter-ui .hero {grid-template-columns:minmax(0,1fr);padding:32px 0 40px;gap:32px;}
+  .winter-ui .hero .eyebrow {font-size:10px;letter-spacing:.045em;}
+  .winter-ui .hero h1 {font-size:clamp(39px,10vw,55px);line-height:1.08;letter-spacing:-.06em;margin:22px 0;}
+  .winter-ui .hero h1 br {display:initial;}
+  .winter-ui .hero .lead {font-size:19px;line-height:1.6;}
+  .winter-ui .hero-description {font-size:14px;max-width:460px;}
+  .winter-ui .hero .actions {gap:17px;margin-top:25px;}
+  .winter-ui .hero .button {font-size:14px;padding:14px 17px;gap:10px;}
+  .winter-ui .hero .text-button {font-size:13px;}
+  .hero-facts {gap:12px;font-size:10px;margin-top:25px;}
+  .hero-facts span+span {padding-left:12px;}
+  .holiday-art {max-width:520px;height:410px;margin:0 auto;}
+  .holiday-photo {border-radius:110px 110px 16px 16px;object-position:66% 50%;}
+  .holiday-art::before {inset:9px;border-radius:102px 102px 10px 10px;}
+  .holiday-envelope {left:8px;bottom:62px;width:203px;min-height:135px;padding:16px;transform:rotate(-6deg);}
+  .holiday-envelope>b {font-size:21px;}
+  .holiday-envelope>span:first-child {font-size:8px;}
+  .envelope-stamp {right:9px;top:39px;font-size:19px;padding:6px;}
+  .holiday-seal {right:2px;top:19px;width:84px;height:84px;font-size:10px;}
+  .photo-caption {font-size:13px;bottom:16px;left:16px;right:16px;}
+  .winter-ui .how {grid-template-columns:1fr;gap:25px;padding:28px 24px;margin-bottom:38px;border-radius:14px;}
+  .winter-ui .how-intro h2 {font-size:30px;}
+  .winter-ui .how-intro h2 br {display:none;}
+  .winter-ui .how-item {display:flex;gap:17px;padding:0;border:0;}
+  .winter-ui .step-mark {width:24px;flex:none;margin-top:2px;}
+  .winter-ui .how h3 {font-size:15px;}
+  .winter-ui .how p {font-size:13px;max-width:430px;}
+  .winter-ui .bottom-band {flex-direction:column;gap:27px;padding-bottom:35px;}
+  .faq-intro {width:100%;}
+  .faq-intro h2 {font-size:29px;margin:12px 0 0;max-width:calc(100% - 95px);}
+  .faq-intro h2 br {display:none;}
+  .faq-intro img {position:absolute;right:0;top:6px;width:82px;height:110px;border-radius:45px 45px 6px 6px;}
+  .winter-ui .faq {width:100%;padding-top:7px;}
+  .winter-ui .faq summary {font-size:14px;}
+  .winter-ui .faq details {padding:17px 0;}
+  .winter-ui .footer {font-size:10px;gap:7px;padding:19px 0;}
+  .winter-ui .editor-head {padding-top:28px;flex-wrap:wrap;}
+  .winter-ui .editor-head h1 {font-size:33px;}
+  .winter-ui .editor-head p {font-size:14px;line-height:1.65;}
+  .winter-ui .editor-tools {margin:0 0 3px auto;}
+  .winter-ui .editor-tools .quiet {display:none;}
+  .winter-ui .editor-grid {grid-template-columns:minmax(0,1fr);gap:25px;}
+  .winter-ui .editor-grid>div:first-child {padding:22px 18px;border-radius:12px;}
+  .winter-ui .notebook {position:relative;top:auto;transform:none;padding:24px;}
+  .winter-ui .wizard button {margin-right:17px;font-size:12px;padding-right:0;}
+  .winter-ui .wizard-number {width:23px;height:23px;}
+  .winter-ui .radio-box b {font-size:16px;}
+  .winter-ui .theme-box {padding:13px;}
+  .winter-ui .theme-box b {font-size:19px;}
+  .winter-ui .theme-box small {font-size:12px;}
+  .winter-ui .segments {gap:7px;}
+  .winter-ui .form-bottom .button {width:100%;}
+  .winter-ui .location-grid {grid-template-columns:1fr;}
+  .winter-ui .location-box {min-height:62px;padding:12px;}
+  .winter-ui .location-box b {font-size:14px;}
+  .winter-ui .location-box svg {width:28px;height:28px;}
+  .winter-ui .prep-row.final {padding:12px;}
+  .winter-ui .prep-row:not(.final) {display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:9px 8px;align-items:start;}
+  .winter-ui .prep-row:not(.final) .prep-place {display:contents;}
+  .winter-ui .prep-row:not(.final) .route-order {grid-column:1;grid-row:1;align-self:center;}
+  .winter-ui .prep-row:not(.final) .prep-place>b {grid-column:2;grid-row:1;align-self:center;}
+  .winter-ui .prep-row:not(.final) .prep-place>span {grid-column:2 / 4;grid-row:2;line-height:1.65;}
+  .winter-ui .prep-row:not(.final) .code-ticket {grid-column:3;grid-row:1;align-self:center;}
+  .winter-ui .prep-summary {gap:12px;padding:17px;}
+  .winter-ui .prep-summary h2 {font-size:21px;}
+  .winter-ui .code-ticket {font-size:18px;letter-spacing:.1em;padding:10px 8px;}
+  .winter-ui .download-section .actions {flex-direction:column;align-items:stretch;gap:13px;}
+  .winter-ui .download-section .actions>.button {flex:none;width:100%;}
+  .winter-ui .download-section .text-button {align-self:flex-start;}
+  .winter-ui .game-header {padding:23px 20px 15px;min-height:80px;}
+  .winter-ui .game-wordmark {font-size:22px;white-space:nowrap;}
+  .winter-ui .game-header .eyebrow {font-size:9px;max-width:130px;}
+  .winter-ui .game-demo {font-size:9px;padding:6px 9px;}
+  .winter-ui .game-main {padding:15px 19px 35px;}
+  .winter-ui .game-card {padding:29px 23px 30px;border-radius:13px;}
+  .winter-ui .game-card h1 {font-size:31px;}
+  .winter-ui .game-card h2 {font-size:27px;}
+  .winter-ui .game-prompt {font-size:18px;}
+  .winter-ui .ending h1 {font-size:34px;}
+  .winter-ui .game-topline .quiet {font-size:11px;}
+  .winter-ui .dots {gap:6px;}
+  .winter-ui .dot {width:8px;height:8px;}
+}
+@media(max-width:370px) {
+  .winter-ui .wrap {padding:0 17px;}
+  .winter-ui .brand {gap:7px;}
+  .winter-ui .brand-name {font-size:19px;}
+  .winter-ui .brand-sub {font-size:7px;}
+  .winter-ui .brand-symbol {width:28px;height:28px;}
+  .winter-ui .header-right>.text-button {font-size:10px;padding:8px 10px;}
+  .winter-ui .hero h1 {font-size:38px;}
+  .winter-ui .hero .eyebrow {font-size:9px;}
+  .winter-ui .hero .actions {align-items:flex-start;flex-direction:column;gap:12px;}
+  .hero-facts {gap:9px;font-size:9px;}
+  .hero-facts span+span {padding-left:9px;}
+  .holiday-art {height:365px;}
+  .holiday-envelope {width:183px;padding:13px;}
+  .holiday-envelope>b {font-size:19px;}
+  .holiday-envelope>span:first-child {font-size:7px;}
+  .envelope-stamp {top:35px;font-size:17px;right:8px;}
+  .photo-caption {font-size:11px;}
+  .faq-intro h2 {max-width:calc(100% - 82px);font-size:26px;}
+  .faq-intro img {width:65px;height:100px;}
+  .winter-ui .wizard button {min-width:0;flex-direction:column;gap:6px;align-items:center;font-size:11px;margin-right:12px;}
+  .winter-ui .wizard button:last-child {margin-right:0;}
+  .winter-ui .themes {grid-template-columns:1fr;}
+  .winter-ui .theme-box {min-height:110px;}
+  .winter-ui .game-wordmark {font-size:19px;}
+  .winter-ui .game-header {gap:10px;padding-left:17px;padding-right:17px;}
+  .winter-ui .game-main {padding-left:15px;padding-right:15px;}
+  .winter-ui .game-card {padding:27px 19px;}
+  .winter-ui .game-card h1 {font-size:29px;}
+}
+@media print {
+  .winter-ui {background:#fff!important;color:#263443!important;}
+  .winter-ui::before {display:none;}
+  .winter-ui .print-card {background:#fff;border-color:#778392;}
+  .winter-ui .print-card h2 {color:#263443;font-size:24px;}
+}

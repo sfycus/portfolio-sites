@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# This open test uses a page-level noindex directive until the full release.

@@ -1,0 +1,316 @@
+import { LOCATIONS, AGE_GROUPS, THEMES, validateConfig, encodeConfig, decodeConfig, createQuest } from './engine.js';
+import { cardCodes, freshProgress, readProgress, answerMission, confirmCard, continueScreenQuest } from './flow.js';
+
+const app = document.querySelector('#app');
+document.body.classList.add('winter-ui');
+const printRoot = document.querySelector('#print-root');
+const RELEASE = { version: '1.4.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
+const DRAFT_KEY = 'bureau:draft:v1';
+const LAST_GAME_KEY = 'bureau:last-game:v1';
+let storageAvailable = true;
+const storageMemory = new Map();
+const storage = {
+  get(key) {
+    if (storageMemory.has(key)) return JSON.parse(storageMemory.get(key));
+    try {
+      const saved = localStorage.getItem(key);
+      if (saved === null) return null;
+      const value = JSON.parse(saved);
+      storageMemory.set(key, saved);
+      return value;
+    } catch { return null; }
+  },
+  set(key, value) {
+    const saved = JSON.stringify(value);
+    storageMemory.set(key, saved);
+    try { localStorage.setItem(key, saved); } catch { storageAvailable = false; }
+  }
+};
+try { localStorage.setItem('bureau:check', '1'); localStorage.removeItem('bureau:check'); } catch { storageAvailable = false; }
+const escape = value => String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const place = id => LOCATIONS.find(item => item.id === id);
+const isLocalAddress = () => ['localhost','127.0.0.1','[::1]'].includes(location.hostname);
+const pluralWord = (n, one, few, many) => n % 100 >= 11 && n % 100 <= 14 ? many : n % 10 === 1 ? one : n % 10 >= 2 && n % 10 <= 4 ? few : many;
+const randomSeed = () => { const n = new Uint32Array(1); if (globalThis.crypto?.getRandomValues) crypto.getRandomValues(n); else n[0] = Date.now(); return n[0] % 2147483646 + 1; };
+const isScreenMode = config => config.mode === 'screen';
+const initialDraft = () => ({ v:1, name:'', age:'8-10', theme:'winter', mode:'screen', route:['books','sofa','toys','desk','bed','wardrobe'], seed:randomSeed(), giftNote:'', step:1 });
+function loadDraft() {
+  const saved = storage.get(DRAFT_KEY), fallback = initialDraft();
+  if (!saved || typeof saved !== 'object') return fallback;
+  try {
+    const config = validateConfig({...saved,name:saved.name || 'Исследователь',route:['books','sofa','desk','bed']});
+    const pendingRoute = Array.isArray(saved.route) && saved.route.length <= 8 && new Set(saved.route).size === saved.route.length && saved.route.every(id=>typeof id==='string' && place(id)) ? [...saved.route] : [...fallback.route];
+    const name = saved.name ? config.name : '';
+    const restoredStep = [1,2,3].includes(saved.step) ? saved.step : 1;
+    return {...config,name,route:pendingRoute,step:name ? Math.min(restoredStep,pendingRoute.length>=4?3:2) : 1};
+  }
+  catch { return {...fallback, name:typeof saved.name === 'string' ? saved.name.slice(0,24).replace(/[\p{C}]/gu,'') : ''}; }
+}
+let draft = loadDraft();
+let step = draft.step;
+let quest = null;
+let progress = null;
+let isDemo = false;
+let ready = false;
+let toastTimer;
+let lastFocus = null;
+function saveDraft() { draft.step = step; storage.set(DRAFT_KEY, draft); }
+function notify(message) { const el=document.querySelector('#toast'); el.textContent=message; el.classList.add('visible'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('visible'),3500); }
+function svg(content, cls='') { return `<svg class="${cls}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${content}</svg>`; }
+const drawings = {
+  books:'<path d="M8 11h8v29H8zm10-4h8v33h-8zm10 6l7-2 8 27-7 2zM8 18h8m2-3h8M8 34h8m2 0h8"/>',
+  sofa:'<path d="M10 24V14a4 4 0 014-4h20a4 4 0 014 4v10M9 23H6v15h36V23h-4a4 4 0 00-4 4v4H14v-4a4 4 0 00-5-4zM12 38v4m24-4v4M24 12v17"/>',
+  wardrobe:'<path d="M10 7h28v35H10zM24 7v35m-5-20v6m10-6v6M8 42h32"/>',
+  shoes:'<path d="M7 24l11 3 4 7h19v7H6v-9zM10 12l10 3 3 7h17v7H25m-5 3l4-3M12 23l3-5"/>',
+  desk:'<path d="M5 22h38v5H5zM10 27v15m28-15v15M13 9h11v13H13zm17 1l6 12m-4-13l5 12"/>',
+  bed:'<path d="M7 13v28m34-20v20M7 21h29a5 5 0 015 5v10H7M12 15h10v7H12zM8 36h32"/>',
+  toys:'<path d="M8 24h32v18H8zM6 19h36v5H6zM19 29h10M14 19V9l8 3v7m4 0l2-12 9 3-2 9"/>',
+  mirror:'<path d="M24 5c-10 0-15 7-15 17s5 17 15 17 15-7 15-17S34 5 24 5zM17 15l9-5M17 23l14-8M24 39v4m-9 0h18"/>',
+  drawer:'<path d="M10 7h28v35H10zM10 24h28m-19-9h10m-10 17h10M8 42h32"/>',
+  blanket:'<path d="M9 8h30v31H9zM9 16h30M9 31h30M17 8v31M31 8v31m-22 0v5m7-5v5m8-5v5m8-5v5m7-5v5"/>',
+  screen:'<rect x="5" y="7" width="38" height="27" rx="3"/><path d="M17 42h14m-7-8v8M11 14h26M11 21h16"/>',
+  gift:'<path d="M8 20h32v8H8zM11 28v15h26V28M24 20v23M24 20C9 20 9 6 16 7c7 0 8 13 8 13zm0 0c15 0 15-14 8-13-7 0-8 13-8 13z"/>',
+  up:'<path d="M12 29l12-12 12 12"/>', down:'<path d="M12 19l12 12 12-12"/>',
+};
+const icon = (id, cls='') => svg(drawings[id] || drawings.gift, cls);
+const brand = () => `<span class="brand-symbol">${svg('<path d="M6 10l12-4 13 5 11-4v31l-11 4-13-5-12 4zM18 6v31m13-26v31M21 20l7 9m0-9l-7 9"/>')}</span><span class="brand-name">Бюро находок<span class="brand-sub">новогодняя почта</span></span>`;
+function shell(content, mode='home') {
+  document.body.dataset.screen=mode;
+  app.innerHTML=`${!storageAvailable ? '<div class="storage-notice">Сохранение доступно только в этой вкладке. Не закрывайте и не обновляйте вкладку.</div>' : ''}<div class="wrap"><header class="header"><button class="brand" data-action="home" aria-label="Бюро находок, на главную">${brand()}</button><div class="header-right"><span class="quiet beta-label">Открытый тест · бесплатно</span><button class="text-button" data-action="${mode==='home'?'create':'home'}">${mode==='home'?(draft.name?'Продолжить подготовку':'Собрать квест'):'На главную'}</button></div></header>${content}<footer class="footer"><span>Бюро находок · новогодние приключения дома</span><div class="footer-links">${RELEASE.feedbackUrl?`<a href="${escape(RELEASE.feedbackUrl)}" target="_blank" rel="noopener noreferrer">Оставить отзыв</a>`:'<button class="footer-button" data-action="beta-info">Об открытом тесте</button>'}<button class="footer-button" data-action="data-info">Как хранятся данные</button></div></footer></div>`;
+}
+function mapArt() {
+  return `<figure class="holiday-art"><img class="holiday-photo" src="./assets/christmas-room.jpg" width="3000" height="2000" alt="Настоящая ёлка с золотыми огнями и подарками в уютной комнате" fetchpriority="high"><figcaption class="photo-caption">Здесь начинается маленькое чудо</figcaption><div class="holiday-envelope" aria-hidden="true"><span>Секретная новогодняя почта</span><b>Кому: тому,<br>кто ждёт чудес</b><i>Открыть перед праздником</i><span class="envelope-stamp">✦</span></div><span class="holiday-seal" aria-hidden="true">Подарок<br>где-то<br>рядом!</span></figure>`;
+}
+function resumableDraft() {
+  for(const config of [storage.get(LAST_GAME_KEY),draft]) {
+    try { const q=createQuest(config); const saved=readProgress(storage.get(`bureau:progress:v1:${q.id}`),q.missions.length); if(!['intro','done'].includes(saved.phase))return {quest:q,progress:saved}; } catch {}
+  }
+  return null;
+}
+function renderHome() {
+  quest=null;
+  const resume=resumableDraft();
+  shell(`<main>${resume?`<section class="resume-banner" aria-label="Начатая игра"><div><b>${escape(resume.quest.config.name)}, игра уже начата</b><p>Можно продолжить с сохранённого места.</p></div><button class="button small" data-action="resume-home">Продолжить игру</button></section>`:''}<section class="hero"><div class="hero-copy"><span class="eyebrow red"><span aria-hidden="true">✦</span> Новогодний квест · бесплатно</span><h1>Спрячьте подарок.<br><em>Добавьте чудо.</em></h1><p class="lead">Ребёнок решает загадки в браузере и находит спрятанный вами подарок.</p><p class="hero-description">Играйте целиком на экране или добавьте поиск бумажных карточек по дому. Формат выбираете вы — принтер не обязателен.</p><div class="actions"><button class="button" data-action="create">${draft.name?'Продолжить подготовку':'Создать игру'}</button><button class="text-button" data-action="demo">Попробовать без настройки</button></div><div class="hero-facts"><span>5–13 лет</span><span>4–8 загадок</span><span>С карточками или без</span></div></div>${mapArt()}</section><section class="how" aria-label="Как это работает"><div class="how-intro"><span class="eyebrow">Всё по шагам</span><h2>От настроек<br> до сюрприза</h2></div><div class="how-item"><span class="step-mark">1</span><div><h3>Выберите формат</h3><p>Только загадки в браузере — или поиск карточек с кодами по дому.</p></div></div><div class="how-item"><span class="step-mark">2</span><div><h3>Спрячьте подарок</h3><p>Приложение покажет, что подготовить именно для вашей игры.</p></div></div><div class="how-item"><span class="step-mark">3</span><div><h3>Нажмите «Запустить»</h3><p>Передайте ребёнку устройство. В игре есть подсказки, помощь и пауза.</p></div></div></section><section class="bottom-band"><div class="faq-intro"><span class="eyebrow red">Перед первым чудом</span><h2>Вопросы<br> из родительского<br> <em>чата</em></h2><img src="./assets/christmas-details.jpg" width="3000" height="4491" alt="Красные подарочные коробки и золотые ёлочные шары" loading="lazy"></div><div class="faq"><details><summary>Можно совсем без карточек и принтера?</summary><p>Да. Выберите «В браузере»: ребёнок будет решать загадки на экране. Ни карточек, ни ввода кодов не будет. Только в финале появится место, где вы спрятали подарок.</p></details><details><summary>А если хочется ходить по тайникам?</summary><p>Выберите «С карточками». Приложение подготовит коды и план: карточки нужно распечатать или написать от руки, затем разложить по выбранным местам. Последнее место — для подарка.</p></details><details><summary>Что нужно приготовить?</summary><p>Для игры в браузере — устройство и спрятанный подарок. Для варианта с карточками дополнительно понадобятся от 3 до 7 бумажных листков. Взрослый помогает читать и проверяет безопасность места.</p></details><details><summary>Как дать игру ребёнку на другом устройстве?</summary><p>В последнем шаге подготовки раскройте «Открыть на другом устройстве или сохранить». Там можно скачать готовый HTML-файл. На компьютере он открывается в браузере без интернета; работу такого файла на конкретном телефоне проверьте заранее. Локальная ссылка на этот компьютер для передачи не подходит.</p></details><details><summary>Если закрыть игру, всё пропадёт?</summary><p>${storageAvailable?'Прогресс сохраняется в этом браузере. Вернитесь по той же ссылке или нажмите «Продолжить игру» на главной.':'Сейчас сохранение доступно только в памяти вкладки. Не закрывайте и не обновляйте её до конца игры.'} На другом устройстве прогресс начинается заново.</p></details></div></section></main>`);
+}
+const wizard = () => `<nav class="wizard" aria-label="Этапы подготовки">${['Формат и возраст',isScreenMode(draft)?'Подарок':'Тайники','Запуск'].map((label,i)=>`<button data-action="step" data-step="${i+1}" class="${step===i+1?'current':''}" ${i+1>step?'disabled':''} ${step===i+1?'aria-current="step"':''}><span class="wizard-number">${i+1}</span>${label}</button>`).join('')}</nav>`;
+function notebook() {
+  const screen=isScreenMode(draft), count=draft.route.length;
+  return `<aside class="notebook"><span class="eyebrow">Ваша игра</span><h2>${escape(draft.name || 'Для вашего ребёнка')}</h2><dl><div><dt>Формат</dt><dd>${screen?'В браузере':'С карточками'}</dd></div><div><dt>Возраст</dt><dd>${escape(AGE_GROUPS.find(g=>g.id===draft.age)?.title||'')}</dd></div><div><dt>Загадки</dt><dd>${count}</dd></div><div><dt>Бумажные карточки</dt><dd>${screen?'Не нужны':Math.max(0,count-1)+' шт.'}</dd></div></dl><div class="notebook-tip"><b>Как это будет</b><p>${screen?'Ребёнок решит загадки на экране. В финале игра подскажет, где вы спрятали подарок.':'Каждая загадка откроет тайник с бумажной карточкой. Её код откроет следующую загадку.'}</p></div><p>${step===3?'Передайте ребёнку уже запущенную игру: подготовка содержит место подарка и ответы.':'Все настройки можно изменить до запуска. Загадки подбираются по возрасту.'}</p></aside>`;
+}
+function settingsForm() {
+  const screen=isScreenMode(draft);
+  return `<form id="settings-form" novalidate>
+    <fieldset class="form-section mode-fieldset"><legend class="label">Как вы хотите играть?</legend><div class="mode-options">
+      <label class="mode-label"><input type="radio" name="mode" value="screen" aria-label="В браузере, без карточек" ${screen?'checked':''}><span class="mode-box">${icon('screen','mode-icon')}<span class="mode-tag">Без печати</span><b>В браузере</b><small>Все загадки — на экране. Взрослому нужно только спрятать подарок.</small><span class="mode-selected" aria-hidden="true">${screen?'Выбрано':'Выбрать'}</span></span></label>
+      <label class="mode-label"><input type="radio" name="mode" value="cards" aria-label="С бумажными карточками" ${screen?'':'checked'}><span class="mode-box">${icon('books','mode-icon')}<span class="mode-tag">С поиском по дому</span><b>С карточками</b><small>Ребёнок ищет бумажные карточки в тайниках и вводит их коды в игру.</small><span class="mode-selected" aria-hidden="true">${screen?'Выбрать':'Выбрано'}</span></span></label>
+    </div><p class="mode-explanation">${screen?'Печать и ввод кодов не понадобятся. Место подарка откроется после последней загадки.':'Карточки можно распечатать или переписать от руки. Их план появится перед запуском.'}</p></fieldset>
+    <section class="form-section"><label class="label" for="child-name">Имя ребёнка</label><p class="label-note">Можно использовать домашнее прозвище.</p><input class="input" id="child-name" name="child-name" maxlength="24" autocomplete="off" value="${escape(draft.name)}" placeholder="Например, Саша" aria-describedby="name-error"><p id="name-error" class="field-error" role="alert"></p></section>
+    <fieldset class="form-section simple-fieldset"><legend class="label">Сколько лет ребёнку?</legend><div class="segments">${AGE_GROUPS.map(g=>`<label class="radio-label"><input type="radio" name="age" value="${g.id}" ${draft.age===g.id?'checked':''}><span class="radio-box"><b>${g.title}</b><small>${g.id==='5-7'?'Читаем вместе':g.id==='8-10'?'Счёт и шифры':'Логика посложнее'}</small></span></label>`).join('')}</div></fieldset>
+    <details class="extra-settings" id="extra-settings" ${draft.giftNote?'open':''}><summary>История и личная записка <span>Необязательно</span></summary><div class="extra-settings-body"><fieldset class="form-section simple-fieldset"><legend class="label">История</legend><div class="themes">${THEMES.map(t=>`<label class="theme-label"><input type="radio" name="theme" value="${t.id}" ${draft.theme===t.id?'checked':''}><span class="theme-box"><b>${escape(t.title)}</b><small>${escape(t.description)}</small></span></label>`).join('')}</div></fieldset><section class="form-section"><label class="label" for="gift-note">Записка в финале</label><input class="input" id="gift-note" name="gift-note" type="text" aria-describedby="note-error" maxlength="120" value="${escape(draft.giftNote)}" placeholder="Мы знали, что у тебя всё получится!"><p id="note-error" class="field-error" role="alert"></p><p class="label-note note-description">До 120 символов. Ребёнок увидит записку вместе с последним тайником.</p></section></div></details>
+    <div class="form-bottom"><span class="save-note">${storageAvailable?'Настройки сохраняются автоматически':'Не закрывайте и не обновляйте вкладку'}</span><button type="submit" class="button">${screen?'Выбрать место подарка':'Выбрать тайники'}</button></div></form>`;
+}
+function setScreenRoute(giftId,count=draft.route.length) {
+  const safeCount=Number.isInteger(count)&&count>=4&&count<=8?count:6;
+  const gift=place(giftId)?giftId:'wardrobe';
+  const candidates=[...new Set([...draft.route,...LOCATIONS.map(p=>p.id)])].filter(id=>id!==gift);
+  draft.route=[...candidates.slice(0,safeCount-1),gift];
+}
+function routeForm() {
+  if(isScreenMode(draft)) {
+    const gift=draft.route.at(-1), count=draft.route.length;
+    const lengths=[...new Set([4,6,8,count])].sort((a,b)=>a-b);
+    return `<section><h2 class="section-heading">Выберите один тайник</h2><p class="section-description">Спрячьте здесь подарок перед началом. Это место появится только после последней загадки.</p><div class="location-grid gift-grid">${LOCATIONS.map(p=>`<label class="location-label"><input type="radio" name="gift-location" value="${p.id}" aria-label="${escape(p.title)}" ${gift===p.id?'checked':''}><span class="location-box">${icon(p.id)}<b>${escape(p.title)}</b><span class="check" aria-hidden="true">${gift===p.id?'✓':''}</span></span></label>`).join('')}</div><div class="selected-gift-note"><b>${escape(place(gift).title)}</b><p>${escape(place(gift).safety)}</p></div><fieldset class="form-section simple-fieldset length-fieldset"><legend class="label">Сколько загадок?</legend><div class="segments length-options">${lengths.map(n=>`<label class="radio-label"><input type="radio" name="question-count" value="${n}" aria-label="${n} ${pluralWord(n,'загадка','загадки','загадок')}" ${count===n?'checked':''}><span class="radio-box"><b>${n} ${pluralWord(n,'загадка','загадки','загадок')}</b><small>${n===4?'Короткая игра':n===8?'Побольше загадок':'Средняя длина'}</small></span></label>`).join('')}</div></fieldset><p class="browser-mode-note">${icon('screen','small-inline-icon')}Вся игра проходит на экране. Между загадками ничего искать и вводить не нужно.</p><p class="field-error" id="route-error" role="alert"></p><div class="form-bottom"><button class="text-button" data-action="step" data-step="1">Назад</button><button class="button" data-action="prepare">К запуску игры</button></div></section>`;
+  }
+  return `<section><h2 class="section-heading">Выберите от 4 до 8 мест</h2><p class="section-description">В каждом месте, кроме последнего, будет карточка с кодом. В последнем — подарок. Порядок можно изменить ниже.</p><div class="location-grid">${LOCATIONS.map(p=>`<label class="location-label"><input type="checkbox" name="location" value="${p.id}" ${draft.route.includes(p.id)?'checked':''}><span class="location-box">${icon(p.id)}<b>${escape(p.title)}</b><span class="check" aria-hidden="true">${draft.route.includes(p.id)?'✓':''}</span></span></label>`).join('')}</div><div class="notice">Выбирайте безопасные места, доступные ребёнку с пола. Не используйте горячие, острые и тяжёлые предметы.</div><h3 class="label route-list-title">Порядок поиска · ${draft.route.length} ${pluralWord(draft.route.length,'место','места','мест')}</h3><ol class="route-list">${draft.route.map((id,i)=>`<li class="route-row"><span class="route-order">${i+1}</span><span class="route-title">${escape(place(id).title)}<small>${i===draft.route.length-1?'Здесь будет подарок':`Карточка № ${i+1}`}</small></span><span class="order-buttons"><button class="icon-button" data-action="move" data-id="${id}" data-direction="-1" aria-label="Поднять тайник «${escape(place(id).title)}»" ${i===0?'disabled':''}>${icon('up')}</button><button class="icon-button" data-action="move" data-id="${id}" data-direction="1" aria-label="Опустить тайник «${escape(place(id).title)}»" ${i===draft.route.length-1?'disabled':''}>${icon('down')}</button></span></li>`).join('')}</ol><p class="field-error" id="route-error" role="alert"></p><div class="form-bottom"><button class="text-button" data-action="step" data-step="1">К настройкам</button><button class="button" data-action="prepare">Подготовить игру</button></div></section>`;
+}
+function prepareView() {
+  const q=createQuest(draft), screen=isScreenMode(q.config), codes=screen?[]:cardCodes(q), gift=place(draft.route.at(-1));
+  const prior=readProgress(storage.get(`bureau:progress:v1:${q.id}`),q.missions.length);
+  const resume=!['intro','done'].includes(prior.phase);
+  const readyText=screen?'Подарок спрятан в выбранном месте. Можно начинать.':'Карточки разложены, подарок спрятан. Все места безопасны, взрослый будет рядом.';
+  const plan=screen?`<div class="prep-summary browser-prep">${icon('screen','prep-mode-icon')}<div><h2>Всё готово для игры в браузере</h2><p>${q.missions.length} ${pluralWord(q.missions.length,'загадка','загадки','загадок')} на экране · без карточек и кодов</p></div></div><h3 class="label">Спрячьте подарок в этом месте</h3><div class="gift-spot">${icon(gift.id,'location-symbol')}<div><b>${escape(gift.title)}</b><p>${escape(gift.safety)}</p><button class="edit-link" data-action="step" data-step="2">Выбрать другое место</button></div></div><ol class="launch-instructions"><li>Спрячьте подарок, пока ребёнок не видит.</li><li>Нажмите «Запустить игру» и передайте ребёнку устройство.</li><li>Помогайте читать при необходимости. Место подарка откроется в финале.</li></ol>`:`<div class="prep-summary"><span class="big">${q.missions.length-1}+1</span><div><h2>Карточки и подарок</h2><p>${q.missions.length-1} ${pluralWord(q.missions.length-1,'карточка','карточки','карточек')} в тайниках, подарок — в последнем месте.</p></div></div><div class="print-choice"><h3 class="label">Как подготовить карточки?</h3><p>Распечатайте готовый лист или напишите коды на бумаге.</p><div class="actions"><button class="button paper" data-action="print">Распечатать карточки</button><button class="text-button" data-action="handwrite">Переписать коды вручную</button></div></div><h3 class="label" tabindex="-1" id="cards-plan">Куда положить карточки</h3>${q.missions.slice(0,-1).map((m,i)=>`<div class="prep-row"><span class="route-order">${i+1}</span><div class="prep-place"><b>${escape(place(m.locationId).title)}</b><span>Карточка № ${i+1} · ${escape(place(m.locationId).safety)}</span></div><span class="code-ticket" aria-label="Код карточки ${i+1}: ${codes[i]}">${codes[i]}</span></div>`).join('')}<div class="prep-row final">${icon('gift','brand-symbol')}<div class="prep-place"><b>Подарок: ${escape(gift.title)}</b><span>Карточка здесь не нужна. ${escape(gift.safety)}</span></div></div><p class="privacy-note">Без принтера: напишите по одному коду на каждом из ${codes.length} листков и разложите по плану выше.</p><button class="edit-link" data-action="step" data-step="2">Изменить маршрут</button>`;
+  return `<section>${plan}<div class="start-panel"><h3>${resume?'Продолжим с сохранённого места?':'Можно начинать?'}</h3>${resume?'<p>Прогресс этой игры сохранён. При продолжении решённые загадки повторять не придётся.</p>':''}<label class="ready-check"><input type="checkbox" id="ready-check" ${ready?'checked':''}><span>${readyText}</span></label><button class="button red-button start-game-button" data-action="play" ${ready?'':'disabled'}>${resume?'Продолжить игру':prior.phase==='done'?'Сыграть ещё раз':'Запустить игру'} · ${escape(draft.name)}</button><p class="ready-helper" id="ready-helper" ${ready?'hidden':''}>Сначала отметьте галочкой, что ${screen?'подарок спрятан':'карточки и подарок готовы'}.</p>${resume?'<button class="text-button restart-link" data-action="restart-request">Начать этот квест заново</button>':''}</div><details class="answer-key"><summary>Ответы к загадкам · только взрослому</summary><ol>${q.missions.map(m=>`<li><b>${escape(m.title)}:</b> ${escape(m.choices[m.answerIndex])}. ${escape(m.explanation)}</li>`).join('')}</ol></details><details class="transfer-section"><summary>Открыть на другом устройстве или сохранить</summary><div class="download-section"><p>Скачанный HTML-файл содержит готовую игру и фотографии. На компьютере его можно открыть в браузере без интернета.</p><div class="actions"><button class="button paper small" data-action="download">Скачать игру .html</button><button class="text-button" data-action="copy-link">Скопировать ссылку</button></div><p>${isLocalAddress()?'Ссылка с этого локального адреса работает только на этом компьютере при запущенном сервере. Для передачи используйте скачанный файл. На телефоне заранее проверьте, открывает ли его браузер.':'Ссылка работает у тех, кому доступен этот сайт. Для игры без доступа к сайту передайте HTML-файл; на телефоне заранее проверьте его открытие.'}</p><p class="privacy-note">Ссылка и файл содержат имя, место подарка и записку. Передавайте их только участникам игры.</p></div></details><div class="prepare-back"><button class="text-button" data-action="step" data-step="1">Изменить формат игры</button></div></section>`;
+}
+function renderEditor(focusHeading=false) {
+  const screen=isScreenMode(draft);
+  const titles=['Как будем играть?',screen?'Где будет подарок?':'Выберите домашние тайники',screen?'Осталось спрятать подарок':'Подготовьте карточки и подарок'];
+  const descriptions=['Выберите формат и возраст — загадки подстроятся под ребёнка.',screen?'Нужен только один тайник. Между загадками ребёнок остаётся у экрана.':'Загадки проведут ребёнка по выбранным местам в указанном порядке.',screen?'Проверьте место, спрячьте сюрприз и запускайте игру.':'Распечатайте карточки или перепишите коды, затем разложите их по плану.'];
+  shell(`<main><div class="editor-head"><div><span class="eyebrow red">Для взрослого · шаг ${step} из 3</span><h1 tabindex="-1" id="editor-title">${titles[step-1]}</h1><p>${descriptions[step-1]}</p></div><div class="editor-tools"><button class="button paper small" data-action="new-quest">Новый квест</button></div></div>${wizard()}<div class="editor-grid"><div>${step===1?settingsForm():step===2?routeForm():prepareView()}</div>${notebook()}</div></main>`,'editor');
+  if (focusHeading) document.querySelector('#editor-title')?.focus({preventScroll:true});
+}
+function progressKey(){return `bureau:${isDemo?'demo':'progress'}:v1:${quest.id}`;}
+function saveProgress(){storage.set(progressKey(),progress);}
+function gameFrame(content) {
+  document.body.dataset.screen='game';
+  const count=quest.missions.length;
+  const solved=['treasure','done'].includes(progress.phase)?count:progress.index+(progress.phase==='find'?1:0);
+  const screen=isScreenMode(quest.config);
+  const caption=isDemo?'Пробная игра: подарок готовить не нужно.':progress.phase==='done'?'Игра завершена. Можно создать новый квест с другим сюрпризом.':progress.phase==='treasure'?'Проверь указанный тайник вместе со взрослым.':screen?'Играем на экране. Место подарка откроется в финале.':'Ищем карточки спокойно. Взрослый остаётся рядом.';
+  app.innerHTML=`${!storageAvailable?'<div class="storage-notice">Сохранение доступно только в этой вкладке. Не закрывайте и не обновляйте вкладку.</div>':''}<div class="game-shell"><header class="game-header"><div><span class="game-wordmark">Бюро находок</span>${isDemo?'<span class="game-demo">Пробная игра</span>':''}</div><div class="game-tools"><button class="game-tool" data-action="game-help">Как играть</button>${progress.phase!=='done'?'<button class="game-tool" data-action="pause">Пауза</button>':''}</div></header><main class="game-main"><div class="game-topline"><span class="quiet">Разгадано: ${solved} из ${count}</span><div class="dots" aria-label="Разгадано загадок: ${solved} из ${count}">${Array.from({length:count},(_,i)=>`<span class="dot ${i<solved?'complete':i===progress.index?'active':''}"></span>`).join('')}</div></div>${content}<p class="game-caption">${caption}</p></main></div>`;
+  document.querySelector('.game-card h1, .game-card h2')?.setAttribute('tabindex','-1');
+}
+function renderGame(focus=false) {
+  const m=quest.missions[progress.index];
+  const winter=quest.config.theme==='winter';
+  const screen=isScreenMode(quest.config);
+  if(progress.phase==='intro') {
+    gameFrame(`<article class="game-card"><div class="intro-seal">${winter?'Новогодняя<br>почта<br>Особая доставка':'Секретная<br>экспедиция'}</div><span class="eyebrow red">${escape(THEMES.find(t=>t.id===quest.config.theme).title)}</span><h1>${winter?'Пришло письмо<br>с сюрпризом!':'Есть секретное дело!'}</h1><p class="game-prompt">${isDemo?`${escape(quest.config.name)}, попробуй четыре загадки. В конце увидишь, как игра показывает место подарка.`:escape(quest.intro)}</p><p>${screen?'Нажимай на верный ответ. Если будет сложно — открой подсказку. Печатать карточки и вводить коды не нужно.':'Выбирай ответы, находи указанные тайники и вводи четыре цифры с карточек. В последнем месте будет подарок.'}</p><button class="button" data-action="start">Начать приключение</button></article>`);
+  } else if(progress.phase==='puzzle') {
+    gameFrame(`<article class="game-card"><span class="eyebrow red">Загадка ${progress.index+1}</span><h1>${escape(m.title)}</h1><p class="game-prompt">${escape(m.prompt)}</p><div class="choices" role="group" aria-label="Варианты ответа">${m.choices.map((choice,i)=>`<button class="choice" data-action="answer" data-answer="${i}"><span class="choice-letter" aria-hidden="true">${'АБВГДЕ'[i]}</span><span>${escape(choice)}</span></button>`).join('')}</div><p class="feedback" id="answer-feedback" role="status" aria-live="polite"></p><button class="hint-button" data-action="hint" aria-expanded="${progress.hints.includes(progress.index)}" aria-controls="mission-hint">Нужна подсказка?</button><p class="hint-text" id="mission-hint" ${progress.hints.includes(progress.index)?'':'hidden'}>${escape(m.hint)}</p></article>`);
+  } else if(progress.phase==='find') {
+    if(screen) {
+      gameFrame(`<article class="game-card answer-success"><div class="answer-tick" aria-hidden="true">✓</div><span class="eyebrow red">Загадка ${progress.index+1} разгадана</span><h1>Верно!</h1><p class="correct-answer">Ответ: <b>${escape(m.choices[m.answerIndex])}</b></p><p class="answer-explanation">${escape(m.explanation)}</p><p class="success-next-note">Впереди ещё ${quest.missions.length-progress.index-1} ${pluralWord(quest.missions.length-progress.index-1,'загадка','загадки','загадок')}. Продолжаем?</p><button class="button" data-action="next-screen">Следующая загадка</button></article>`);
+    } else {
+    const p=place(m.locationId);
+    gameFrame(`<article class="game-card"><span class="eyebrow red">Верно! Вот следующая зацепка</span>${icon(p.id,'location-symbol')}<h1>${escape(p.title)}</h1><p class="game-prompt">${escape(p.hint)}</p>${isDemo?'<div class="notice">В настоящем квесте здесь будет карточка с кодом. Сейчас её можно пропустить.</div><button class="button" data-action="demo-card">Продолжить без карточки</button>':`<p>Найди там карточку № ${progress.index+1}. На ней четыре цифры.</p><form id="code-form" novalidate><label for="card-code" class="label" style="text-align:center;margin-top:24px">Код с карточки</label><input class="input game-code" id="card-code" name="code" type="text" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" aria-describedby="code-feedback" placeholder="····"><p class="feedback" style="text-align:center" id="code-feedback" role="status" aria-live="polite"></p><button class="button" type="submit">Проверить код</button></form>`}</article>`);
+    }
+  } else if(progress.phase==='treasure') {
+    const p=place(m.locationId);
+    gameFrame(`<article class="game-card"><span class="eyebrow red">Последняя загадка разгадана</span>${icon('gift','location-symbol')}<h1>${isDemo?'Здесь будет<br>подарок':'Сюрприз ждёт!'}</h1><h2>${escape(p.title)}</h2>${isDemo?'':`<p class="game-prompt">${escape(p.hint)}</p>`}${quest.config.giftNote?`<p class="hint-text">${escape(quest.config.giftNote)}</p>`:''}<p>${isDemo?'Это пример финального тайника. В вашей игре здесь будет место, которое выберет взрослый. Настоящий подарок искать сейчас не нужно.':screen?'Все загадки решены! Поищи подарок в указанном месте и возвращайся.':'Больше кодов не нужно. Найди свой подарок и возвращайся!'}</p><button class="button red-button" data-action="finish">${isDemo?'Завершить пробную игру':'Подарок найден!'}</button></article>`);
+  } else if(isDemo) {
+    gameFrame(`<article class="game-card ending"><div class="success-ribbon" aria-hidden="true">✦ ✦ ✦</div><span class="eyebrow">Пробный маршрут пройден</span><h1>Теперь —<br>ваше приключение</h1><p class="game-prompt">Вы попробовали загадки на экране. Теперь можно создать свою игру: без карточек или с поиском по домашним тайникам.</p><button class="button" data-action="create">Собрать свой квест</button><button class="hint-button" data-action="demo-restart">Попробовать ещё раз</button><button class="hint-button" data-action="home">На главную</button></article>`);
+  } else {
+    gameFrame(`<article class="game-card ending"><div class="success-ribbon" aria-hidden="true">✦ ✦ ✦</div><span class="eyebrow">${screen?'Все загадки разгаданы':'Все тайники найдены'}</span><h1>${escape(quest.config.name)},<br>подарок нашёлся!</h1><p class="game-prompt">${escape(quest.ending)}</p><div class="certificate-line"></div><p>Разгадано загадок: ${quest.missions.length}. ${screen?'Подарок найден — приключение удалось!':'Весь маршрут пройден. Вот это приключение!'}</p><button class="button" data-action="certificate">Распечатать диплом</button><button class="hint-button" data-action="home" style="display:block;margin:15px auto 0">На главную</button></article>`);
+  }
+  if(focus){window.scrollTo(0,0);document.querySelector('.game-card h1, .game-card h2')?.focus({preventScroll:true});}
+}
+function showError(message){shell(`<main class="empty-state"><span class="eyebrow red">Не получилось открыть квест</span><h1>Кажется, потерялась часть карты</h1><p>${escape(message)}</p><button class="button" data-action="home">На главную</button></main>`);}
+function route() {
+  closeDialog();
+  const hash=location.hash.slice(1);
+  if(hash==='create'){quest=null;isDemo=false;ready=false;renderEditor();return;}
+  if(hash==='demo'){isDemo=true;quest=createQuest({v:1,name:'Саша',age:'8-10',theme:'winter',mode:'screen',route:['books','sofa','toys','wardrobe'],seed:20261124,giftNote:'Сюрприз — это ещё и время, которое мы провели вместе.'});progress=readProgress(storage.get(progressKey()),quest.missions.length);renderGame();return;}
+  if(hash.startsWith('play=')){
+    try {isDemo=false;quest=createQuest(decodeConfig(hash.slice(5)));storage.set(LAST_GAME_KEY,quest.config);progress=readProgress(storage.get(progressKey()),quest.missions.length);renderGame();}
+    catch(error){showError(error.message);}
+    return;
+  }
+  renderHome();
+}
+function navigate(hash){if(location.hash===hash){route();}else location.hash=hash;window.scrollTo(0,0);}
+function updateDraftField(target){
+  if(target.name==='child-name')draft.name=target.value;
+  if(target.name==='gift-note')draft.giftNote=target.value;
+  if(target.name==='age')draft.age=target.value;
+  if(target.name==='theme')draft.theme=target.value;
+  saveDraft();
+}
+function syncSidebar(){const old=app.querySelector('.notebook');if(old)old.outerHTML=notebook();}
+function setStep(value){step=value;ready=false;saveDraft();renderEditor(true);window.scrollTo(0,0);}
+function makePrintCards(){
+  const q=createQuest(draft), codes=cardCodes(q);
+  printRoot.innerHTML=`<div class="print-document"><header><h1>Карточки квеста · ${escape(q.config.name)}</h1><p>Взрослому: разрежьте карточки и разложите в указанные места. Подарок спрячьте ${escape(place(q.config.route.at(-1)).title.toLowerCase())}. Сохраните план подготовки в приложении.</p></header><div class="print-grid">${q.missions.slice(0,-1).map((m,i)=>`<section class="print-card"><small>Взрослому: ${escape(place(m.locationId).title)}</small><h2>Секретная карточка № ${i+1}</h2><p>Карточка нашлась? Отлично! Введи эти цифры в игру.</p><div class="code">${codes[i]}</div><small>Бюро находок · ${escape(q.config.name)}</small></section>`).join('')}</div></div>`;
+}
+function downloadBlob(content,name,type){const url=URL.createObjectURL(new Blob([content],{type}));const a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);}
+async function downloadGame(button){
+  button.disabled=true;const old=button.textContent;button.textContent='Готовим файл…';
+  try {
+    const token=encodeConfig(draft);
+    let html;
+    if(document.body.dataset.portable==='true'){
+      html='<!doctype html>\n'+document.documentElement.outerHTML;
+      const doc=new DOMParser().parseFromString(html,'text/html');doc.body.dataset.startQuest=token;doc.querySelector('#app').replaceChildren();doc.querySelector('#print-root').replaceChildren();doc.querySelector('#toast').replaceChildren();doc.querySelectorAll('.dialog-backdrop').forEach(el=>el.remove());html='<!doctype html>\n'+doc.documentElement.outerHTML;
+    } else {
+      const response=await fetch(new URL('./portable.html',location.href)).catch(()=>{throw new Error('Не удалось загрузить файл игры. Проверьте, что локальный квест запущен, и попробуйте ещё раз.');});
+      if(!response.ok)throw new Error('Не удалось загрузить файл игры. Попробуйте ещё раз.');
+      const contents=await response.text().catch(()=>{throw new Error('Не удалось прочитать файл игры. Попробуйте скачать его ещё раз.');});
+      html=contents.replace('data-start-quest=""',`data-start-quest="${token}"`);
+      if(!html.includes(`data-start-quest="${token}"`))throw new Error('Файл игры ещё не подготовлен.');
+    }
+    downloadBlob(html,'bureau-quest.html','text/html;charset=utf-8');notify('Игра готова к скачиванию: bureau-quest.html.');
+  }catch(error){notify(error.message||'Не удалось скачать игру.');}
+  finally{button.disabled=false;button.textContent=old;}
+}
+async function copyLink(){
+  const url=new URL(location.href);url.hash='play='+encodeConfig(draft);
+  if(url.protocol==='file:'){notify('Локальный файл нельзя передать ссылкой. Передайте сам HTML-файл.');return;}
+  try{await navigator.clipboard.writeText(url.href);notify(isLocalAddress()?'Ссылка скопирована. Она работает только на этом компьютере.':'Ссылка скопирована. Получателю нужен доступ к этому сайту.');}
+  catch{showDialog('Ссылка на квест',isLocalAddress()?'Эта ссылка работает только на этом компьютере. Для другого устройства скачайте файл игры.':'Выделите и скопируйте ссылку. Она содержит имя, маршрут и финальную записку.',`<label class="label" for="share-url">Ссылка для участников</label><input id="share-url" class="input" value="${escape(url.href)}" readonly><div class="actions"><button class="button" data-action="close-dialog">Готово</button></div>`);document.querySelector('#share-url')?.select();}
+}
+function showDialog(title,text,controls){
+  closeDialog();lastFocus=document.activeElement;
+  const wrap=document.createElement('div');wrap.className='dialog-backdrop';wrap.innerHTML=`<section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><h2 id="dialog-title">${escape(title)}</h2><p>${escape(text)}</p>${controls}</section>`;
+  document.body.append(wrap);wrap.querySelector('button,input')?.focus();
+}
+function closeDialog(){const dialog=document.querySelector('.dialog-backdrop');if(dialog){dialog.remove();lastFocus?.focus?.();}}
+function handleAction(target){
+  const action=target.dataset.action;
+  if(action==='home'){navigate('');return;}
+  if(action==='create'){step=draft.name?draft.step||1:1;navigate('#create');return;}
+  if(action==='demo'){navigate('#demo');return;}
+  if(action==='resume-home'){const saved=resumableDraft();if(saved)navigate('#play='+encodeConfig(saved.quest.config));return;}
+  if(action==='next-screen'){const result=continueScreenQuest(quest,progress);if(result.correct){progress=result.progress;saveProgress();renderGame(true);}return;}
+  if(action==='handwrite'){document.querySelector('#cards-plan')?.scrollIntoView?.({block:'start'});document.querySelector('#cards-plan')?.focus();notify('Перепишите по одному коду на каждом листке и разложите карточки по этому плану.');return;}
+  if(action==='game-help'){showDialog('Как играть',isScreenMode(quest.config)?'Решай загадки по очереди: нажимай на верный ответ, затем на «Следующая загадка». Между заданиями ничего искать и вводить не нужно. Если трудно, открой подсказку. В финале появится место подарка.':'Выбери верный ответ. Игра покажет тайник: найди там бумажную карточку и введи её четыре цифры. Последняя загадка приведёт к подарку — карточка там не нужна.', '<button class="button" data-action="close-dialog">Понятно, играем</button>');return;}
+  if(action==='return-setup'&&!isDemo&&quest){draft={...quest.config,route:[...quest.config.route],step:3};step=3;ready=false;saveDraft();closeDialog();navigate('#create');return;}
+  if(action==='new-quest'){showDialog('Собрать новый квест?',`Текущий черновик будет заменён. Чтобы вернуться к прежнему квесту, сначала сохраните его ссылку или HTML-файл.${storageAvailable?' Прогресс по сохранённой ссылке останется в этом браузере.':' Не закрывайте и не обновляйте вкладку: прогресс хранится только в её памяти.'}`,'<div class="actions"><button class="button" data-action="confirm-new-quest">Создать новый квест</button><button class="text-button" data-action="close-dialog">Отмена</button></div>');return;}
+  if(action==='confirm-new-quest'){draft=initialDraft();step=1;ready=false;saveDraft();closeDialog();renderEditor(true);window.scrollTo(0,0);return;}
+  if(action==='demo-restart'&&isDemo){progress=freshProgress();saveProgress();renderGame(true);return;}
+  if(action==='step'){const value=Number(target.dataset.step);if(value>=1&&value<step)setStep(value);return;}
+  if(action==='move'){
+    const i=draft.route.indexOf(target.dataset.id), next=i+Number(target.dataset.direction);
+    if(i>=0&&next>=0&&next<draft.route.length){[draft.route[i],draft.route[next]]=[draft.route[next],draft.route[i]];saveDraft();renderEditor();const focus=app.querySelector(`[data-action="move"][data-id="${target.dataset.id}"][data-direction="${target.dataset.direction}"]`);(focus&&!focus.disabled?focus:app.querySelector(`[data-action="move"][data-id="${target.dataset.id}"]:not(:disabled)`))?.focus();}
+    return;
+  }
+  if(action==='prepare'){try{validateConfig(draft);setStep(3);}catch(error){document.querySelector('#route-error').textContent=error.message;}return;}
+  if(action==='print'){if(!isScreenMode(draft)){makePrintCards();window.print();}return;}
+  if(action==='download'){downloadGame(target);return;}
+  if(action==='copy-link'){copyLink();return;}
+  if(action==='play'&&ready){
+    const prepared=createQuest(draft);
+    const previous=readProgress(storage.get(`bureau:progress:v1:${prepared.id}`),prepared.missions.length);
+    if(previous.phase==='done'){
+      showDialog('Эта игра уже пройдена',`${isScreenMode(draft)?'Подарок снова спрятан?':'Карточки и подарок снова на своих местах?'} Новый запуск сбросит прогресс только этого квеста.`, '<div class="actions"><button class="button" data-action="restart-prepared">Начать заново</button><button class="text-button" data-action="close-dialog">Вернуться к подготовке</button></div>');
+    }else navigate('#play='+encodeConfig(draft));
+    return;
+  }
+  if(action==='restart-request'){if(!ready){notify(isScreenMode(draft)?'Сначала подтвердите, что подарок спрятан.':'Сначала подтвердите, что карточки и подарок готовы.');return;}showDialog('Начать квест заново?',`${isScreenMode(draft)?'Снова спрячьте подарок в выбранном месте.':'Карточки и подарок должны снова лежать на своих местах.'} Прогресс этого квеста будет сброшен.`,'<div class="actions"><button class="button" data-action="restart-prepared">Начать заново</button><button class="text-button" data-action="close-dialog">Отмена</button></div>');return;}
+  if(action==='restart-prepared'&&ready){const prepared=createQuest(draft);storage.set(`bureau:progress:v1:${prepared.id}`,freshProgress());closeDialog();navigate('#play='+encodeConfig(draft));return;}
+  if(action==='start'){progress={...progress,phase:'puzzle',startedAt:progress.startedAt||Date.now()};saveProgress();renderGame(true);return;}
+  if(action==='answer'){
+    const result=answerMission(quest,progress,Number(target.dataset.answer));
+    if(result.correct){progress=result.progress;saveProgress();renderGame(true);}else{const feedback=document.querySelector('#answer-feedback');feedback.textContent='Пока не сходится. Попробуй ещё раз или открой подсказку.';}
+    return;
+  }
+  if(action==='hint'){const hint=document.querySelector('#mission-hint');hint.hidden=!hint.hidden;target.setAttribute('aria-expanded',String(!hint.hidden));if(!hint.hidden&&!progress.hints.includes(progress.index)){progress.hints.push(progress.index);saveProgress();}return;}
+  if(action==='demo-card'&&isDemo){const result=confirmCard(quest,progress,cardCodes(quest)[progress.index]);progress=result.progress;saveProgress();renderGame(true);return;}
+  if(action==='finish'&&progress.phase==='treasure'){progress.phase='done';saveProgress();renderGame(true);return;}
+  if(action==='certificate'&&!isDemo){
+    printRoot.innerHTML=`<article class="certificate-print"><p>БЮРО НАХОДОК</p><h1>Диплом<br>исследователя</h1><h2>${escape(quest.config.name)}</h2><p>Разгадано загадок: ${quest.missions.length}.<br>${isScreenMode(quest.config)?'Все загадки решены, место подарка найдено.':'Все тайники найдены, маршрут пройден, подарок получен.'}</p><p style="margin-top:40px">${quest.config.theme==='winter'?'С Новым годом! До следующего приключения!':'До следующего приключения!'}</p></article>`;window.print();return;
+  }
+  if(action==='pause'){showDialog('Игра на паузе',storageAvailable?'Прогресс сохраняется в этом браузере. Можно сделать перерыв и вернуться по той же ссылке.':'Прогресс хранится в памяти этой вкладки. Можно вернуться на главную и снова открыть ту же игру. Не закрывайте и не обновляйте вкладку.',`<div class="actions"><button class="button" data-action="close-dialog">Продолжить игру</button><button class="text-button" data-action="home">На главную</button>${!isDemo?'<button class="text-button" data-action="return-setup">Подготовка для взрослого</button>':''}</div>`);return;}
+  if(action==='beta-info'){showDialog('Открытый тест', 'В тестовой версии все функции бесплатны. Попробуйте подготовить квест и пройти его с ребёнком. После игры расскажите тому, кто пригласил вас в тест: был ли понятен запуск, подошла ли сложность и на каком устройстве вы играли. Если что-то не сработало, опишите последний успешный шаг. Имя ребёнка и ссылку на его квест присылать не нужно.', '<button class="button" data-action="close-dialog">Понятно</button>');return;}
+  if(action==='data-info'){showDialog('Как хранятся данные', 'Приложение хранит имя или прозвище, настройки и прогресс в вашем браузере. Оно не отправляет введённые данные на сервер. Ссылка и скачанный файл содержат имя, место подарка или маршрут и финальную записку — передавайте их только участникам игры. Достаточно прозвища; фамилия и адрес не нужны. Очистка данных браузера может удалить сохранения. При предупреждении о недоступном сохранении не закрывайте и не обновляйте вкладку.', '<button class="button" data-action="close-dialog">Понятно</button>');return;}
+  if(action==='close-dialog'){closeDialog();return;}
+}
+document.addEventListener('click',event=>{const target=event.target.closest('[data-action]');if(!target||target.disabled)return;event.preventDefault();handleAction(target);});
+app.addEventListener('input',event=>{const target=event.target;if(['child-name','gift-note'].includes(target.name)){updateDraftField(target);syncSidebar();target.removeAttribute('aria-invalid');document.querySelector(target.name==='gift-note'?'#note-error':'#name-error').textContent='';}});
+app.addEventListener('change',event=>{
+  const target=event.target;
+  if(['age','theme'].includes(target.name)){updateDraftField(target);syncSidebar();}
+  if(target.name==='mode'){draft.mode=target.value;if(isScreenMode(draft))setScreenRoute(draft.route.at(-1),[4,6,8].includes(draft.route.length)?draft.route.length:6);saveDraft();renderEditor();app.querySelector(`input[name="mode"][value="${target.value}"]`)?.focus({preventScroll:true});}
+  if(target.name==='gift-location'||target.name==='question-count'){setScreenRoute(target.name==='gift-location'?target.value:draft.route.at(-1),target.name==='question-count'?Number(target.value):draft.route.length);saveDraft();renderEditor();app.querySelector(`input[name="${target.name}"][value="${target.value}"]`)?.focus({preventScroll:true});}
+  if(target.name==='location'){
+    if(target.checked){if(draft.route.length>=8){target.checked=false;notify('В одном квесте может быть до 8 тайников.');return;}draft.route.push(target.value);}else{draft.route=draft.route.filter(id=>id!==target.value);}
+    saveDraft();renderEditor();app.querySelector(`input[name="location"][value="${target.value}"]`)?.focus({preventScroll:true});
+  }
+  if(target.id==='ready-check'){ready=target.checked;app.querySelector('[data-action="play"]').disabled=!ready;const helper=app.querySelector('#ready-helper');if(helper)helper.hidden=ready;}
+});
+app.addEventListener('submit',event=>{
+  event.preventDefault();
+  if(event.target.id==='settings-form'){
+    try{validateConfig({...draft,route:['books','sofa','desk','bed']});setStep(2);}catch(error){const isNote=error.message.startsWith('Записка');if(isNote){const extra=document.querySelector('#extra-settings');if(extra)extra.open=true;}const input=document.querySelector(isNote?'#gift-note':'#child-name');input.setAttribute('aria-invalid','true');document.querySelector(isNote?'#note-error':'#name-error').textContent=error.message;input.focus();}
+  }
+  if(event.target.id==='code-form'){
+    const input=document.querySelector('#card-code');const result=confirmCard(quest,progress,input.value);
+    if(result.correct){progress=result.progress;saveProgress();renderGame(true);}else{input.setAttribute('aria-invalid','true');document.querySelector('#code-feedback').textContent='Код не совпал. Проверь четыре цифры на найденной карточке.';input.select();}
+  }
+});
+document.addEventListener('keydown',event=>{
+  const dialog=document.querySelector('.dialog-backdrop');if(!dialog)return;
+  if(event.key==='Escape'){event.preventDefault();closeDialog();}
+  if(event.key==='Tab'){const items=[...dialog.querySelectorAll('button,a,input')].filter(el=>!el.disabled);if(!items.length)return;const first=items[0],last=items.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}
+});
+window.addEventListener('hashchange',route);
+if(document.body.dataset.startQuest&&!location.hash)history.replaceState(null,'','#play='+document.body.dataset.startQuest);
+route();
