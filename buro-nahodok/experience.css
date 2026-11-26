@@ -211,3 +211,30 @@
 .boot-screen h1 {font:700 34px/1.2 var(--sans);letter-spacing:-.04em;}
 .boot-screen p {font-size:16px;line-height:1.7;}
 @media(max-width:760px){.footer-links {gap:13px 20px;font-size:12px;}.winter-ui .footer {gap:15px;}}
+/* Reading and help follow the same postcard style as the game. */
+.winter-ui .game-tools{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}
+.winter-ui .game-tool{min-height:44px}
+.winter-ui .choices.compact-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.winter-ui .choice>span:last-child{overflow-wrap:anywhere;min-width:0}
+.winter-ui .choices .tried-choice:disabled{opacity:1;background:#f1f0ea;color:#687078;border-style:dashed}
+.winter-ui .tried-choice>span:last-child{text-decoration:line-through;text-decoration-thickness:1px}
+.winter-ui .game-card>.attempt-feedback{font-size:16px!important;line-height:1.65;color:#304d74!important;background:#edf2fa;border-left:3px solid #7994bc;border-radius:5px;padding:12px 15px;margin:16px 0;text-align:left}
+.winter-ui .attempt-feedback:empty{display:none}
+.puzzle-help{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.puzzle-help .hint-button{font-size:15px;min-height:44px;margin:0;padding:9px 0}
+.prep-tools{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:18px 0;border-bottom:1px solid #dce2e8;margin:10px 0 24px}
+.prep-tools .text-button{font-size:15px;min-height:44px}
+.prep-tools>p{flex-basis:100%;font-size:14px;color:#5e6c76;line-height:1.65;margin:0}
+.dialog{max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto;overscroll-behavior:contain}
+.dialog .preview-title{font:700 22px/1.35 var(--sans);margin:24px 0 12px}
+.dialog .preview-prompt,.dialog .help-explanation{font-size:18px;line-height:1.7}
+.dialog #preview-feedback:empty{display:none}
+.preview-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.preview-choices .choice{padding:14px;font-size:19px;text-align:left;min-height:52px}
+.dialog .help-answer{font-size:21px;line-height:1.6;padding:13px 17px;background:#fbf4dd;border-radius:8px}
+.winter-ui.large-reading .game-card>.game-prompt,.winter-ui.large-reading .game-card>.hint-text{font-size:25px!important;line-height:1.75}
+.winter-ui.large-reading .choice>span:last-child{font-size:24px}
+.winter-ui.large-reading .game-card>.answer-explanation{font-size:23px!important}
+@media(max-width:520px){.winter-ui .game-tools{justify-content:space-between;gap:6px}.winter-ui .game-tools .game-tool{font-size:14px;padding:9px 11px}.puzzle-help{justify-content:space-between;gap:10px}.prep-tools{gap:8px 20px}.preview-choices{grid-template-columns:1fr}.winter-ui.large-reading .choices.compact-choices{grid-template-columns:1fr}.winter-ui .game-card>.attempt-feedback{font-size:15px!important}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.winter-ui .game-card{animation:none}.winter-ui .button{transition:none}}
+@media(max-width:520px){.winter-ui .header .brand{min-width:0}.winter-ui .header-right{flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;gap:4px 10px;max-width:118px}}

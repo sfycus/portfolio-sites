@@ -62,6 +62,8 @@ export function validateConfig(input) {
   if (typeof theme !== 'string' || !THEME_IDS.has(theme)) throw new Error('Выберите тему квеста из списка.');
   const mode = ownValue(input, 'mode');
   if (mode !== undefined && mode !== 'cards' && mode !== 'screen') throw new Error('Выберите формат игры: в браузере или с карточками.');
+  const edition = ownValue(input, 'edition');
+  if (edition !== undefined && edition !== 2) throw new Error('Этот набор загадок не поддерживается. Создайте новый квест.');
   const suppliedRoute = ownValue(input, 'route');
   if (!Array.isArray(suppliedRoute) || suppliedRoute.length < 4 || suppliedRoute.length > 8) {
     throw new Error('Выберите от 4 до 8 разных тайников.');
@@ -79,7 +81,7 @@ export function validateConfig(input) {
   const suppliedNote = ownValue(input, 'giftNote');
   const giftNote = suppliedNote === undefined ? '' : textField(suppliedNote, 'Записка к подарку', 0, 120);
   // Keep the legacy canonical shape (and its IDs) for games with physical cards.
-  return Object.freeze({ v: 1, name, age, theme, route: Object.freeze(route), seed, giftNote, ...(mode === 'screen' ? { mode } : {}) });
+  return Object.freeze({ v: 1, name, age, theme, route: Object.freeze(route), seed, giftNote, ...(mode === 'screen' ? { mode } : {}), ...(edition === 2 ? { edition } : {}) });
 }
 
 function bytesToBase64(bytes) {
@@ -280,6 +282,84 @@ const OLDER_PUZZLES = [
 
 const BANKS = { '5-7': YOUNG_PUZZLES, '8-10': MIDDLE_PUZZLES, '11-13': OLDER_PUZZLES };
 
+// Edition 2 is opt-in. The original arrays and PRNG call order above remain immutable for saved links.
+const distinctNumbers = (answer, ...others) => [...new Set([answer, ...others, answer + 1, answer - 1, answer + 2])].slice(0, 4).map(String);
+const clock = minutes => `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`;
+const entry = (kind, make) => ({kind, make});
+const V2_BANKS = {
+  '5-7': [
+    ...YOUNG_PUZZLES.map((make,index) => entry(['count','count','count','count','logic','word','count','logic'][index], index === 3 ? (r) => {
+      const pairs=integer(r,2,5), total=pairs*2;
+      return puzzle('young-pairs','Варежки для друзей',`На столе ${counted(total,'варежка','варежки','варежек')}. В каждой паре две варежки. Сколько полных пар получится?`,pairs,distinctNumbers(pairs,total,pairs+1),'Собирай варежки по две. Каждая такая группа — одна пара.',`${Array(pairs).fill('2').join(' + ')} = ${total}. Получается ${counted(pairs,'пара','пары','пар')}.`);
+    } : index === 4 ? (r) => {
+      const colors=[['Красный','Синий'],['Зелёный','Жёлтый'],['Синий','Жёлтый']];const [a,b]=colors[integer(r,0,2)];
+      return puzzle('young-pattern','Цветная дорожка',`Цвета повторяются парами: ${a.toLowerCase()}, ${b.toLowerCase()}. Дорожка: ${a.toLowerCase()}, ${b.toLowerCase()}, ${a.toLowerCase()}, ${b.toLowerCase()}, ${a.toLowerCase()}, … Какой цвет следующий?`,b,['Красный','Синий','Зелёный','Жёлтый'],'После первого цвета пары каждый раз идёт второй.',`После цвета «${a.toLowerCase()}» идёт цвет «${b.toLowerCase()}».`);
+    } : make)),
+    entry('logic',(r) => {
+      const animals=shuffle(['Лиса','Заяц','Белка'],r);
+      return puzzle('young-position','Дружная очередь',`Друзья стоят в таком порядке: ${animals.join(', ')}. Кто стоит в середине?`,animals[1],animals,'В середине тот, у кого есть сосед с каждой стороны.',`Сначала ${animals[0]}, в середине ${animals[1]}, в конце ${animals[2]}.`);
+    }),
+    entry('logic',(r) => {
+      const variants=[{corners:0,answer:'Круг'},{corners:3,answer:'Треугольник'},{corners:4,answer:'Квадрат'}];const chosen=variants[integer(r,0,2)];
+      return puzzle('young-shape','Фигуры на открытке',chosen.corners===0?'У какой из этих фигур нет углов?':`У какой из этих фигур ${counted(chosen.corners,'угол','угла','углов')}?`,chosen.answer,['Круг','Квадрат','Треугольник'],'Вспомни, как выглядит каждая фигура. Можешь обвести её пальцем в воздухе.',chosen.corners===0?'У круга плавный край, углов нет.':`${chosen.answer}: ${counted(chosen.corners,'угол','угла','углов')}.`);
+    }),
+    entry('word',(r) => {
+      const sets=[['Нарисовали','Раскрасили','Подписали'],['Открыли','Положили письмо','Закрыли']];const actions=sets[integer(r,0,1)];
+      return puzzle('young-actions','Что было потом?',`Действия идут по порядку: «${actions[0]}», «${actions[1]}», «${actions[2]}». Что делали вторым?`,actions[1],actions,'Назови действия по порядку. Второе находится между первым и третьим.',`Первое — «${actions[0]}», второе — «${actions[1]}», третье — «${actions[2]}».`);
+    }),
+    entry('word',(r) => {
+      const words=['Лиса','Заяц','Кот','Дом'];const answer=words[integer(r,0,3)],letter=answer[0].toUpperCase();
+      return puzzle('young-letter','Буква на конверте',`На конверте буква «${letter}». Какое слово начинается с этой буквы?`,answer,words,'Произнеси каждое слово медленно. Послушай первый звук.',`Слово «${answer}» начинается с буквы «${letter}».`);
+    }),
+  ],
+  '8-10': [
+    ...MIDDLE_PUZZLES.map((make,index)=>entry(['count','count','logic','logic','word','time','count','logic'][index],make)),
+    entry('time',(r)=>{
+      const hour=integer(r,9,17),minute=integer(r,9,11)*5,duration=integer(r,4,7)*5,start=hour*60+minute,end=start+duration;
+      return puzzle('middle-clock','Посылка к сроку',`Мастерская начала работу в ${clock(start)}. На упаковку ушло ${duration} минут. Во сколько закончили?`,clock(end),[clock(end),clock(end+15),clock(end-10),clock(end-60)],`До следующего часа осталось ${60-minute} минут. Сколько времени останется потом?`,`До ${clock((hour+1)*60)} проходит ${60-minute} минут. Ещё ${duration-(60-minute)} минут — и получается ${clock(end)}.`);
+    }),
+    entry('count',(r)=>{
+      const a=integer(r,5,10),b=integer(r,2,4),answer=2*(a+b);
+      return puzzle('middle-perimeter','Рамка для открытки',`У прямоугольной открытки две стороны по ${a} см и две по ${b} см. Какова длина её края по кругу?`,answer,distinctNumbers(answer,a+b,a*b), 'Сложи длины всех четырёх сторон.',`${a} + ${b} + ${a} + ${b} = ${answer} см. Это периметр открытки.`);
+    }),
+    entry('logic',(r)=>{
+      const names=shuffle(['Аня','Вера','Маша'],r),gifts=shuffle([{word:'книгу'},{word:'мяч'},{word:'пазл'}],r);
+      return puzzle('middle-gifts','Три разных подарка',`Аня, Вера и Маша получили разные подарки: книгу, мяч и пазл. ${names[0]} получила ${gifts[0].word}. ${names[1]} не получила ${gifts[1].word}. Кто получил ${gifts[1].word}?`,names[2],names,'Один подарок уже занят. Из двух оставшихся один не подходит второй девочке.',`${names[0]} уже получила ${gifts[0].word}. ${names[1]} не получила ${gifts[1].word}, поэтому этот подарок получила ${names[2]}.`);
+    }),
+    entry('logic',(r)=>{
+      const lower=integer(r,1,5)*10,upper=lower+10,answer=lower+2*integer(r,1,4);
+      return puzzle('middle-conditions','Подходящий номер',`Нужен чётный номер, который больше ${lower} и меньше ${upper}. Какой из предложенных номеров подходит?`,answer,[answer,lower+1,upper,lower-2],'Проверь два условия: номер делится на два и лежит строго между границами.',`${answer} — чётное число. Оно больше ${lower} и меньше ${upper}. Другие варианты нарушают хотя бы одно условие.`);
+    }),
+  ],
+  '11-13': [
+    ...OLDER_PUZZLES.map((make,index)=>entry(['count','count','pattern','pattern','count','logic','count','logic'][index],make)),
+    entry('count',(r)=>{
+      const total=[40,60,80,100,120,160][integer(r,0,5)],percent=[25,50,75][integer(r,0,2)],answer=total*percent/100;
+      return puzzle('older-percent','Цветные жетоны',`В мастерской ${total} жетонов. Из них ${percent}% — синие. Сколько синих жетонов?`,answer,distinctNumbers(answer,total-answer,percent,total),'Найди нужную долю от общего числа. 25% — четверть, 50% — половина, 75% — три четверти.',`${total} × ${percent} ÷ 100 = ${answer}. Столько синих жетонов.`);
+    }),
+    entry('logic',(r)=>{
+      const red=integer(r,2,5),blue=integer(r,1,4),total=red+blue,options=[...new Set([red,red-1,red+1,total,0])].slice(0,4).map(n=>`${n}/${total}`);
+      return puzzle('older-chance','Жетон наугад',`В мешке ${counted(red,'красный жетон','красных жетона','красных жетонов')} и ${counted(blue,'синий жетон','синих жетона','синих жетонов')}. Все одинаковые на ощупь. Один выбирают наугад, не глядя. Какова вероятность достать красный?`,`${red}/${total}`,options,'В числителе — число подходящих жетонов, в знаменателе — общее число.',`Всего ${red} + ${blue} = ${total} жетонов. Красных ${red}, поэтому вероятность равна ${red}/${total}.`);
+    }),
+    entry('pattern',(r)=>{
+      const answer=integer(r,2,5)*12+9;
+      return puzzle('older-remainders','Номер с двумя условиями',`Номер больше ${answer-8} и меньше ${answer+8}. Он делится на 3 без остатка, а при делении на 4 даёт остаток 1. Какой это номер?`,answer,[answer,answer-3,answer-4,answer+2],'Сначала оставь числа, которые делятся на 3. Затем проверь остаток при делении на 4.',`${answer} = 3 × ${answer/3}; ${answer} = 4 × ${Math.floor(answer/4)} + 1. Оба условия выполнены.`);
+    }),
+    entry('logic',(r)=>{
+      const first=integer(r,2,4),second=first+1,duration=first*second,answer=first+second;
+      return puzzle('older-work','Работаем одновременно',`Первый мастер упаковывает один подарок за ${counted(first,'минуту','минуты','минут')}, второй — за ${counted(second,'минуту','минуты','минут')}. Они начали вместе и работали без перерывов. Сколько подарков полностью готовы через ${duration} минут?`,answer,distinctNumbers(answer,duration,second),'Посчитай работу каждого мастера за всё время, затем сложи результаты.',`Первый: ${duration} ÷ ${first} = ${second}. Второй: ${duration} ÷ ${second} = ${first}. Вместе ${second} + ${first} = ${answer} подарков.`);
+    }),
+  ],
+};
+
+function editionTwoMakers(age, count, random) {
+  const shuffled=shuffle(V2_BANKS[age],random);
+  const kinds=age==='5-7'?['count','logic','word']:age==='8-10'?['count','logic','time']:['count','logic','pattern'];
+  const selected=kinds.map(kind=>shuffled.find(record=>record.kind===kind));
+  for(const record of shuffled)if(!selected.includes(record)&&selected.length<count)selected.push(record);
+  return shuffle(selected,random).map(record=>record.make);
+}
+
 function stableHash(value) {
   const bytes = new TextEncoder().encode(value);
   let first = 0x811c9dc5, second = 0x9e3779b9;
@@ -294,7 +374,7 @@ function stableHash(value) {
 export function createQuest(input) {
   const config = validateConfig(input);
   const random = randomSource(config.seed);
-  const makers = shuffle(BANKS[config.age], random).slice(0, config.route.length);
+  const makers = config.edition === 2 ? editionTwoMakers(config.age, config.route.length, random) : shuffle(BANKS[config.age], random).slice(0, config.route.length);
   const missions = makers.map((make, index) => {
     const { answer, ...content } = make(random, config.theme);
     const choices = shuffle(content.choices, random);
