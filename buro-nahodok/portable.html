@@ -888,6 +888,10 @@ button,input,select,textarea{font:inherit}button,a,input,textarea{touch-action:m
 .winter-ui.large-reading .journal-entry p{font-size:20px!important;line-height:1.7!important}.winter-ui.large-reading .read-aloud-controls .text-button{font-size:18px}
 
 .hint-audio{margin:0 0 18px;padding:0 12px}.hint-audio[hidden]{display:none}.hint-audio .text-button{min-height:44px;font-size:15px}.hint-audio .read-status{margin:6px 0;font-size:14px}.task-submit-row .undo-task{font-size:15px}.undo-task:disabled{color:#7a8d9c;opacity:.65;cursor:default;text-decoration:none}
+
+.passport-export{border-top:1px dashed #b8c9d3;padding-top:18px;margin-top:18px;text-align:center}.passport-export>p{font-size:14px;line-height:1.6;margin:8px 0 0;color:#5c7180}.passport-export .export-status:empty{display:none}.passport-export .export-status{font-size:15px;color:#315c4a}.quest-results{margin:24px 0;background:#eef4f3;border:1px solid #c9d8d2;border-radius:8px;padding:18px;text-align:left}.quest-results h2{font:700 20px/1.3 var(--sans,system-ui)!important;letter-spacing:0!important;margin:0 0 16px!important;color:#315747}.quest-results dl{display:flex;gap:18px;margin:0;flex-wrap:wrap}.quest-results dl>div{flex:1;min-width:140px}.quest-results dt{font-size:14px;color:#5a7168;margin-bottom:6px}.quest-results dd{margin:0;font:700 30px/1.2 var(--sans,system-ui);color:#315747}.quest-results>p{font-size:15px!important;line-height:1.6;margin:17px 0 0;color:#4f6b60!important}.next-adventure{display:block;margin:14px auto 0}
+
+.passport-preview{display:block;width:100%;height:auto;border:1px solid #d9dfd8;border-radius:5px;margin:15px auto 0;background:#fffdf8}
 </style>
   <script type="module">/** Pure, dependency-free quest generation. Treat all returned text as text, never HTML. */
 const LOCATIONS = Object.freeze([
@@ -1637,7 +1641,7 @@ function continueScreenQuest(quest, progress) {
 const app = document.querySelector('#app');
 document.body.classList.add('winter-ui');
 const printRoot = document.querySelector('#print-root');
-const RELEASE = { version: '1.9.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
+const RELEASE = { version: '1.10.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
 const IS_PURCHASED = document.body.dataset.sales === 'full';
 const IS_SHARED = document.body.dataset.shared === 'true';
 const DRAFT_KEY = 'bureau:draft:v1';
@@ -1858,8 +1862,9 @@ function winterPassport(missions,solved,expanded=false,showJournal=true){
   const found=labels.map((_,index)=>missions.every((m,i)=>m.station?.index!==index||i<solved));
   const count=found.filter(Boolean).length;
   const journal=expanded&&showJournal?`<h3 class="journal-title">Записки Снегиря</h3><ol class="fragment-journal">${labels.map((label,i)=>{const station=missions.find(m=>m.station?.index===i)?.station;return found[i]?`<li class="journal-entry unlocked"><span class="journal-number">${i+1}</span><div><h3>${winterEscape(station?.clueTitle||label)}</h3><p>${winterEscape(station?.clueText||'Фрагмент найден. Снегирь бережно хранит его в пропуске.')}</p></div></li>`:`<li class="journal-entry locked"><span class="journal-number">${i+1}</span><div><h3>${label}</h3><p>Записка откроется, когда завершишь эту станцию.</p></div></li>`;}).join('')}</ol>`:'';
+  const exportId=showJournal?'passport-export-journal':'passport-export-card';
   const pieces=`<div class="passport-fragments">${labels.map((label,i)=>`<span class="address-fragment ${found[i]?'found':''}" aria-label="${label}: ${found[i]?'фрагмент найден':'ещё ищем'}">${winterIcon({kind:kinds[i]})}<span>${label}</span><b>${found[i]?'✓':i+1}</b></span>`).join('')}</div>`;
-  return expanded?`<div class="passport-sheet"><p class="passport-kicker">Почтовый пропуск · дело о пропавшем адресе</p>${pieces}${journal}<p>Найдено фрагментов: ${count} из 4. ${count===4?'Адресная бирка восстановлена!':'Заверши задания каждой станции, чтобы вернуть все четыре части бирки.'}</p>${!showJournal?'<button type="button" class="text-button" data-action="passport">Открыть записки Снегиря</button>':''}</div>`:`<div class="holiday-passport"><button type="button" class="passport-summary" data-action="passport" aria-label="Открыть почтовый пропуск: найдено ${count} из 4 фрагментов"><span>Собираем адрес подарка</span><b>Фрагменты ${count}/4</b></button>${pieces}</div>`;
+  return expanded?`<div class="passport-sheet"><p class="passport-kicker">Почтовый пропуск · дело о пропавшем адресе</p>${pieces}${journal}<p>Найдено фрагментов: ${count} из 4. ${count===4?'Адресная бирка восстановлена!':'Заверши задания каждой станции, чтобы вернуть все четыре части бирки.'}</p>${!showJournal?'<button type="button" class="text-button" data-action="passport">Открыть записки Снегиря</button>':''}<div class="passport-export"><button type="button" class="button paper small" data-action="save-passport" data-export-status="${exportId}" aria-describedby="${exportId}">Сохранить пропуск .png</button><p>На память о приключении.</p><p id="${exportId}" class="export-status" role="status" aria-live="polite"></p></div></div>`:`<div class="holiday-passport"><button type="button" class="passport-summary" data-action="passport" aria-label="Открыть почтовый пропуск: найдено ${count} из 4 фрагментов"><span>Собираем адрес подарка</span><b>Фрагменты ${count}/4</b></button>${pieces}</div>`;
 }
 function restoreTaskFocus(target){
   const key=target.dataset.focus;
@@ -1935,10 +1940,113 @@ function syncReaderControls(state,kind='quest'){
   }
 }
 
+function buildPassportSVG(missions,solved){
+  if(!Array.isArray(missions)||!missions.length)throw new TypeError('Для почтового пропуска нужны задания четырёх станций.');
+  const labels=['Почта','Ёлка','Мастерская','Сани'];
+  const kinds=['envelope','tree','gift','sleigh'];
+  const accents=['#b52d42','#2c735d','#4268a3','#b52d42'];
+  const tints=['#f7e9e5','#e9f0e6','#e7edf4','#f7e9e5'];
+  const positions=labels.map((_,index)=>missions.reduce((found,mission,i)=>{
+    if(mission?.station?.index===index)found.push(i);
+    return found;
+  },[]));
+  if(positions.some(found=>!found.length))throw new TypeError('В почтовом пропуске должны быть все четыре станции.');
+  const completeMissions=Number.isInteger(solved)?Math.max(0,Math.min(solved,missions.length)):0;
+  const found=positions.map(indices=>indices.every(index=>index<completeMissions));
+  const count=found.filter(Boolean).length;
+  const complete=count===4;
+  const status=complete?'Дело раскрыто':'Приключение продолжается';
+  const note=complete?'Все четыре фрагмента собраны. Новогодняя почта благодарит тебя!':'Каждая новая печать приближает нас к разгадке.';
+  const holes=[...Array.from({length:12},(_,i)=>`<circle cx="${10+i*20}" cy="0" r="5"/><circle cx="${10+i*20}" cy="252" r="5"/>`),...Array.from({length:12},(_,i)=>`<circle cx="0" cy="${16+i*20}" r="5"/><circle cx="240" cy="${16+i*20}" r="5"/>`)].join('');
+  const masks=labels.map((_,i)=>`<mask id="passport-stamp-${i}" maskUnits="userSpaceOnUse" x="0" y="0" width="240" height="252"><rect width="240" height="252" fill="white"/><g fill="black">${holes}</g></mask>`).join('');
+  const stamps=labels.map((label,i)=>{
+    const active=found[i],accent=active?accents[i]:'#858c81';
+    const mark=active?'<path d="m-7 0 5 5 10-11" fill="none" stroke="#fffdf8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>':`<text x="0" y="5" text-anchor="middle" font-size="15" font-weight="700" fill="#536253">${i+1}</text>`;
+    return `<g transform="translate(${78+i*268} 377)">
+      <g mask="url(#passport-stamp-${i})"><rect width="240" height="252" fill="${active?tints[i]:'#e9e9df'}"/><rect x="8" y="8" width="224" height="236" fill="none" stroke="${accent}" stroke-width="1.5"/><rect x="18" y="57" width="204" height="126" fill="${active?'#fffdf8':'#f0f0e8'}"/></g>
+      <text x="22" y="39" fill="${accent}" font-size="13" font-weight="700" letter-spacing="2">СТАНЦИЯ 0${i+1}</text>
+      <g transform="translate(211 31)"><circle r="13" fill="${active?accent:'#d1d5c8'}"/>${mark}</g>
+      <g transform="translate(64 61) scale(1.12)"${active?'':' filter="url(#passport-muted)" opacity=".38"'}>${winterDrawing({kind:kinds[i],color:i===2?'blue':'red'})}</g>
+      <text x="120" y="207" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="27" fill="#243e35">${winterEscape(label)}</text>
+      <text x="120" y="231" text-anchor="middle" font-size="14" fill="${active?accent:'#626d60'}">${active?'Печать получена':'Ещё ищем фрагмент'}</text>
+    </g>`;
+  }).join('');
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="850" viewBox="0 0 1200 850" role="img" aria-labelledby="passport-title passport-description">
+    <title id="passport-title">Почтовый пропуск — ${winterEscape(status)}</title>
+    <desc id="passport-description">Бюро находок. Дело о пропавшем адресе. Найдено фрагментов: ${count} из 4. ${labels.map((label,i)=>`${winterEscape(label)}: ${found[i]?'печать получена':'ещё ищем'}`).join('. ')}.</desc>
+    <defs>
+      <pattern id="passport-airmail" width="92" height="92" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="92" height="92" fill="#fffdf8"/><rect width="24" height="92" fill="#b52d42"/><rect x="46" width="24" height="92" fill="#4268a3"/></pattern>
+      <filter id="passport-muted" color-interpolation-filters="sRGB"><feColorMatrix type="saturate" values="0"/></filter>
+      ${masks}
+    </defs>
+    <rect width="1200" height="850" fill="#f6f2e8"/>
+    <rect x="18" y="18" width="1164" height="814" rx="4" fill="url(#passport-airmail)"/>
+    <rect x="34" y="34" width="1132" height="782" rx="2" fill="#fffdf8"/>
+    <rect x="49" y="49" width="1102" height="752" rx="1" fill="none" stroke="#d4d7c9"/>
+    <g fill="#243e35" font-family="Arial, Helvetica, sans-serif">
+      <g transform="translate(73 78) scale(.61)">${winterDrawing({kind:'envelope'})}</g>
+      <text x="145" y="104" font-family="Georgia, 'Times New Roman', serif" font-size="31">Бюро находок</text>
+      <text x="146" y="128" font-size="12" letter-spacing="2.5" fill="#687269">НОВОГОДНЯЯ ПОЧТА</text>
+      <g transform="translate(1034 122) rotate(9)" fill="#4268a3" stroke="#4268a3">
+        <path d="M-190-19h110m-120 19h120m-110 19h110" stroke-width="2" fill="none"/>
+        <circle r="57" fill="none" stroke-width="2"/><circle r="49" fill="none" stroke-width="1"/>
+        <text x="0" y="-13" text-anchor="middle" stroke="none" font-size="11" letter-spacing="1.4">СЕВЕРНАЯ</text>
+        <text x="0" y="13" text-anchor="middle" stroke="none" font-family="Georgia, 'Times New Roman', serif" font-size="24">ПОЧТА</text>
+        <path d="m-7 30 7-6 7 6m-7-6v13" stroke-width="1.5" fill="none"/>
+      </g>
+      <text x="78" y="237" font-family="Georgia, 'Times New Roman', serif" font-size="65" letter-spacing="-1.5">Почтовый пропуск</text>
+      <text x="81" y="279" font-size="23" fill="#b52d42">Дело о пропавшем адресе</text>
+      <path d="M80 311h1040" stroke="#d4d7c9"/>
+      <text x="80" y="345" font-size="21" fill="#536253">Четыре станции — четыре части потерянного адреса.</text>
+      ${stamps}
+      <path d="M80 667h1040" stroke="#d4d7c9"/>
+      <g transform="translate(128 731)"><circle r="43" fill="${complete?'#e9f0e6':'#f6f2e8'}" stroke="${complete?'#2c735d':'#d4d7c9'}" stroke-width="2"/><text x="0" y="10" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="34">${count}<tspan font-size="22"> / 4</tspan></text></g>
+      <text x="198" y="718" font-family="Georgia, 'Times New Roman', serif" font-size="${complete?40:36}" fill="${complete?'#2c735d':'#243e35'}">${winterEscape(status)}</text>
+      <text x="200" y="750" font-size="17" fill="#536253">${winterEscape(note)}</text>
+      <text x="600" y="788" text-anchor="middle" font-size="11" letter-spacing="2" fill="#687269">ОСОБАЯ ДОСТАВКА · МАЛЕНЬКОЕ ЧУДО УЖЕ РЯДОМ</text>
+    </g>
+  </svg>`;
+}
+
+function completionSummary(missions,progress){
+  const total=missions.length,solved=['treasure','done'].includes(progress.phase)?total:Math.min(total,Math.max(0,progress.index+(progress.phase==='find'?1:0)));
+  const winter=missions.every(m=>Number.isInteger(m.station?.index));
+  const fragments=winter?[0,1,2,3].filter(index=>missions.some(m=>m.station.index===index)&&missions.every((m,i)=>m.station.index!==index||i<solved)).length:0;
+  return `<section class="quest-results" aria-label="Итоги приключения"><h2>Вот что получилось</h2><dl><div><dt>Загадок разгадано</dt><dd>${solved} из ${total}</dd></div>${winter?`<div><dt>Фрагментов собрано</dt><dd>${fragments} из 4</dd></div>`:''}</dl><p>${winter&&fragments===4?'Адресная бирка цела. Спасибо от всей новогодней почты!':'Каждая разгаданная загадка приблизила нас к сюрпризу.'}</p></section>`;
+}
+async function downloadPassportPNG(missions,solved){
+  const svg=buildPassportSVG(missions,solved);
+  if(typeof Image!=='function')throw new Error('Этот браузер не умеет сохранять пропуск картинкой. Он остаётся доступен в игре.');
+  const picture=new Image();
+  try{
+    await new Promise((resolve,reject)=>{picture.onload=resolve;picture.onerror=()=>reject(new Error('Не удалось подготовить картинку. Попробуйте ещё раз.'));picture.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);});
+    const canvas=document.createElement('canvas');canvas.width=1200;canvas.height=850;
+    const context=canvas.getContext?.('2d');if(!context||typeof canvas.toBlob!=='function')throw new Error('Этот браузер не умеет сохранять PNG. Пропуск остаётся доступен в игре.');
+    context.drawImage(picture,0,0,1200,850);
+    const blob=await new Promise((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error('Не удалось собрать PNG. Попробуйте ещё раз.')),'image/png'));
+    const url=URL.createObjectURL(blob),anchor=document.createElement('a');anchor.href=url;anchor.download='buro-passport.png';
+    try{document.body.append(anchor);anchor.click();}catch(error){URL.revokeObjectURL(url);throw error;}finally{anchor.remove();}
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    let preview='';try{if(typeof canvas.toDataURL==='function')preview=canvas.toDataURL('image/png');}catch{}
+    return {filename:'buro-passport.png',width:1200,height:850,...(preview?{preview}:{})};
+  }finally{picture.onload=null;picture.onerror=null;}
+}
+function createPassportSaver(){
+  let busy=false;
+  return {async save(missions,solved,button,status){
+    if(busy)return {saved:false,ignored:true};
+    busy=true;const label=button.textContent;button.disabled=true;button.textContent='Готовим картинку…';if(status)status.textContent='';
+    try{const result=await downloadPassportPNG(missions,solved);if(status){status.textContent='Картинка готова. Проверьте загрузки браузера: buro-passport.png.';if(result.preview?.startsWith('data:image/png;'))status.insertAdjacentHTML?.('beforeend',`<img class="passport-preview" src="${winterEscape(result.preview)}" alt="Почтовый пропуск с найденными фрагментами">`);}return {saved:true};}
+    catch(error){if(status)status.textContent=error.message||'Не удалось сохранить картинку. Попробуйте ещё раз.';return {saved:false};}
+    finally{busy=false;button.disabled=false;button.textContent=label;}
+  }};
+}
+
 // HOLIDAY_RENDERER_END
 
 const questReader=createQuestReader({onChange:syncReaderControls});
 let readerContext='';
+const passportSaver=createPassportSaver();
 function answerRecap(m,open=false){return `<details class="answer-recap" ${open?'open':''}><summary>Загадка разгадана · посмотреть решение</summary><p><b>${escape(m.choices[m.answerIndex])}</b></p><p>${escape(m.explanation)}</p>${m.station?`<p class="stamp-story">${escape(m.station.reward)}</p>`:''}</details>`;}
 function gameFrame(content) {
   document.body.dataset.screen='game';
@@ -1974,9 +2082,9 @@ function renderGame(focus=false) {
     const p=place(m.locationId);
     gameFrame(`<article class="game-card"><span class="eyebrow red">Последняя загадка разгадана</span>${icon('gift','location-symbol')}<h1>${isDemo?'Здесь будет<br>подарок':'Сюрприз ждёт!'}</h1><h2>${escape(p.title)}</h2>${isDemo?'':`<p class="game-prompt">${escape(p.hint)}</p>`}${quest.config.giftNote?`<p class="hint-text">${escape(quest.config.giftNote)}</p>`:''}${holiday?answerRecap(m,true)+winterPassport(quest.missions,quest.missions.length,true,false)+'<p class="restored-address">Все печати собраны · адрес восстановлен</p>':''}<p>${isDemo?'Это пример финального тайника. В вашей игре здесь будет место, которое выберет взрослый. Настоящий подарок искать сейчас не нужно.':screen?'Все загадки решены! Поищи подарок в указанном месте и возвращайся.':'Больше кодов не нужно. Найди свой подарок и возвращайся!'}</p><button class="button red-button" data-action="finish">${isDemo?'Завершить пробную игру':'Подарок найден!'}</button></article>`);
   } else if(isDemo) {
-    gameFrame(`<article class="game-card ending"><div class="success-ribbon" aria-hidden="true">✦ ✦ ✦</div><span class="eyebrow">Пробный маршрут пройден</span><h1>Теперь —<br>ваше приключение</h1><p class="game-prompt">Вы попробовали загадки на экране. Теперь можно создать свою игру: без карточек или с поиском по домашним тайникам.</p><button class="button" data-action="create">Собрать свой квест</button><button class="hint-button" data-action="demo-restart">Попробовать ещё раз</button><button class="hint-button" data-action="home">На главную</button></article>`);
+    gameFrame(`<article class="game-card ending"><div class="success-ribbon" aria-hidden="true">✦ ✦ ✦</div><span class="eyebrow">Пробный маршрут пройден</span><h1>Теперь —<br>ваше приключение</h1>${completionSummary(quest.missions,progress)}<p class="game-prompt">Вы попробовали загадки на экране. Теперь можно создать свою игру: без карточек или с поиском по домашним тайникам.</p><button class="button" data-action="create">Собрать свой квест</button><button class="hint-button" data-action="demo-restart">Попробовать ещё раз</button><button class="hint-button" data-action="home">На главную</button></article>`);
   } else {
-    gameFrame(`<article class="game-card ending"><div class="success-ribbon" aria-hidden="true">✦ ✦ ✦</div><span class="eyebrow">${screen?'Все загадки разгаданы':'Все тайники найдены'}</span><h1>${escape(quest.config.name)},<br>подарок нашёлся!</h1><p class="game-prompt">${escape(quest.ending)}</p><div class="certificate-line"></div><p>Разгадано загадок: ${quest.missions.length}. ${screen?'Подарок найден — приключение удалось!':'Весь маршрут пройден. Вот это приключение!'}</p><button class="button" data-action="certificate">Распечатать диплом</button><button class="hint-button" data-action="home" style="display:block;margin:15px auto 0">На главную</button></article>`);
+    gameFrame(`<article class="game-card ending"><div class="success-ribbon" aria-hidden="true">✦ ✦ ✦</div><span class="eyebrow">${screen?'Все загадки разгаданы':'Все тайники найдены'}</span><h1>${escape(quest.config.name)},<br>подарок нашёлся!</h1><p class="game-prompt">${escape(quest.ending)}</p>${completionSummary(quest.missions,progress)}<div class="certificate-line"></div><button class="button" data-action="certificate">Распечатать диплом</button>${!IS_SHARED?'<button class="button paper next-adventure" data-action="new-quest">Подготовить новый квест</button>':''}<button class="hint-button" data-action="home" style="display:block;margin:15px auto 0">На главную</button></article>`);
   }
   syncReaderControls(questReader.state(),questReader.kind());
   if(focus){window.scrollTo(0,0);document.querySelector('.game-card h1, .game-card h2')?.focus({preventScroll:true});}
@@ -2035,21 +2143,27 @@ async function downloadGame(button){
 async function copyLink(){
   let url=new URL(location.href);
   if(url.protocol==='file:'){notify('Локальный файл нельзя передать ссылкой. Передайте сам HTML-файл.');return;}
+  const request=(copyLink.request||0)+1;copyLink.request=request;
+  const sourceHash=location.hash,sourceView=app.children[0];
+  const isLatest=()=>copyLink.request===request;
+  const canPresent=()=>isLatest()&&location.hash===sourceHash&&app.children[0]===sourceView;
+  let token;try{token=encodeConfig(draft);}catch(error){notify(error.message||'Не удалось подготовить ссылку. Проверьте настройки квеста.');return;}
   if(IS_PURCHASED&&!IS_SHARED){
     try{
       const response=await fetch('/api/share',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}'});
       if(!response.ok)throw new Error('Не удалось подготовить семейную ссылку. Откройте свою покупку и повторите попытку.');
       const data=await response.json();url=new URL(data.url);
       if(url.origin!==location.origin||!url.pathname.startsWith('/shared/'))throw new Error('Не удалось проверить ссылку на игру.');
-    }catch(error){notify(error instanceof TypeError?'Не удалось связаться с магазином. Проверьте интернет и повторите попытку.':error.message||'Не удалось подготовить ссылку. Повторите попытку.');return;}
+    }catch(error){if(canPresent())notify(error instanceof TypeError?'Не удалось связаться с магазином. Проверьте интернет и повторите попытку.':error.message||'Не удалось подготовить ссылку. Повторите попытку.');return;}
   }
-  url.hash='play='+encodeConfig(draft);
-  if(IS_PURCHASED&&!IS_SHARED){
+  if(!isLatest())return;
+  url.hash='play='+token;
+  if(IS_PURCHASED&&!IS_SHARED&&canPresent()){
     showDialog('Семейная ссылка на игру',isLocalAddress()?'Эта проверочная ссылка работает только на текущем компьютере. После размещения сайта её можно будет открыть на устройстве ребёнка.':'По этой ссылке ребёнок откроет подготовленный квест. Код вашей покупки ему не нужен.',`<label class="label" for="share-url">Ссылка для участников</label><input id="share-url" class="input" value="${escape(url.href)}" readonly><div class="actions"><button class="button" data-action="close-dialog">Готово</button></div>`);
     document.querySelector('#share-url')?.select();
   }
-  try{await navigator.clipboard.writeText(url.href);notify(isLocalAddress()?'Ссылка скопирована. Она работает только на этом компьютере.':'Ссылка скопирована. Получателю нужен доступ к этому сайту.');}
-  catch{showDialog('Ссылка на квест',isLocalAddress()?'Эта ссылка работает только на этом компьютере. Для другого устройства скачайте файл игры.':'Выделите и скопируйте ссылку. Она содержит имя, маршрут и финальную записку.',`<label class="label" for="share-url">Ссылка для участников</label><input id="share-url" class="input" value="${escape(url.href)}" readonly><div class="actions"><button class="button" data-action="close-dialog">Готово</button></div>`);document.querySelector('#share-url')?.select();}
+  try{await navigator.clipboard.writeText(url.href);if(canPresent())notify(isLocalAddress()?'Ссылка скопирована. Она работает только на этом компьютере.':'Ссылка скопирована. Получателю нужен доступ к этому сайту.');}
+  catch{if(canPresent()){showDialog('Ссылка на квест',isLocalAddress()?'Эта ссылка работает только на этом компьютере. Для другого устройства скачайте файл игры.':'Выделите и скопируйте ссылку. Она содержит имя, маршрут и финальную записку.',`<label class="label" for="share-url">Ссылка для участников</label><input id="share-url" class="input" value="${escape(url.href)}" readonly><div class="actions"><button class="button" data-action="close-dialog">Готово</button></div>`);document.querySelector('#share-url')?.select();}}
 }
 function showDialog(title,text,controls){
   closeDialog();lastFocus=document.activeElement;
@@ -2061,6 +2175,7 @@ function handleAction(target){
   const action=target.dataset.action;
   if(IS_SHARED&&['create','new-quest','confirm-new-quest','return-setup','prepare','play','print','download','copy-link','restart-prepared','preview-question','preview-answer','shuffle-puzzles','confirm-shuffle'].includes(action)){notify('Подготовка доступна взрослому в его покупке. Продолжайте играть по семейной ссылке.');return;}
   if(action==='passport'&&quest){questReader.stop();const solved=['treasure','done'].includes(progress.phase)?quest.missions.length:progress.index+(progress.phase==='find'?1:0);showDialog('Твой почтовый пропуск','Четыре станции — четыре части потерянной адресной бирки.',winterPassport(quest.missions,solved,true)+'<button class="button" data-action="close-dialog">Продолжить приключение</button>');const heading=document.querySelector('.dialog h2');heading?.setAttribute('tabindex','-1');heading?.focus({preventScroll:true});const dialog=document.querySelector('.dialog');if(dialog)dialog.scrollTop=0;return;}
+  if(action==='save-passport'&&quest){const completed=['treasure','done'].includes(progress.phase)?quest.missions.length:progress.index+(progress.phase==='find'?1:0);return passportSaver.save(quest.missions,completed,target,document.querySelector('#'+target.dataset.exportStatus));}
   if(action==='read-hint'&&progress?.phase==='puzzle'&&isHintOpen(progress,progress.index)){questReader.toggle('Подсказка. '+quest.missions[progress.index].hint,'hint');return;}
   if(action==='read-quest'&&progress?.phase==='puzzle'){questReader.toggle(missionReadingText(quest.missions[progress.index],puzzleInput(quest.missions[progress.index],progress)));return;}
   if(action==='reading-size'){largeReading=!largeReading;storage.set('bureau:large-reading:v1',largeReading);applyReadingSize();renderGame();document.querySelector('[data-action="reading-size"]')?.focus();return;}
@@ -2088,7 +2203,7 @@ function handleAction(target){
   if(action==='game-help'){showDialog('Как играть',quest.config.edition===3&&quest.config.theme==='winter'?'Пройди четыре станции новогодней почты. В одних заданиях выбирай картинку, в других вводи код или нажимай на предметы по порядку. Свой ответ можно изменить до проверки. За каждое решение ты получаешь печать. Если трудно, открой подсказку или «Разобрать вместе». В финале восстановится адрес подарка.':isScreenMode(quest.config)?'Решай загадки по очереди: нажимай на верный ответ, затем на «Следующая загадка». Между заданиями ничего искать и вводить не нужно. Если трудно, открой подсказку. В финале появится место подарка.':'Выбери верный ответ. Игра покажет тайник: найди там бумажную карточку и введи её четыре цифры. Последняя загадка приведёт к подарку — карточка там не нужна.', '<button class="button" data-action="close-dialog">Понятно, играем</button>');return;}
   if(action==='return-setup'&&!isDemo&&quest){draft={...quest.config,route:[...quest.config.route],step:3};step=3;ready=false;saveDraft();closeDialog();navigate('#create');return;}
   if(action==='new-quest'){showDialog('Собрать новый квест?',`Текущий черновик будет заменён. Чтобы вернуться к прежнему квесту, сначала сохраните его ссылку или HTML-файл.${storageAvailable?' Прогресс по сохранённой ссылке останется в этом браузере.':' Не закрывайте и не обновляйте вкладку: прогресс хранится только в её памяти.'}`,'<div class="actions"><button class="button" data-action="confirm-new-quest">Создать новый квест</button><button class="text-button" data-action="close-dialog">Отмена</button></div>');return;}
-  if(action==='confirm-new-quest'){draft=initialDraft();step=1;ready=false;saveDraft();closeDialog();renderEditor(true);window.scrollTo(0,0);return;}
+  if(action==='confirm-new-quest'){draft=initialDraft();step=1;ready=false;saveDraft();closeDialog();if(location.hash==='#create')renderEditor(true);else navigate('#create');window.scrollTo(0,0);return;}
   if(action==='demo-restart'&&isDemo){progress=freshProgress();saveProgress();renderGame(true);return;}
   if(action==='step'){const value=Number(target.dataset.step);if(value>=1&&value<step)setStep(value);return;}
   if(action==='move'){

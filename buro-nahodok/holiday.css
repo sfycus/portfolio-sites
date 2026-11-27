@@ -283,3 +283,7 @@
 .winter-ui.large-reading .journal-entry p{font-size:20px!important;line-height:1.7!important}.winter-ui.large-reading .read-aloud-controls .text-button{font-size:18px}
 
 .hint-audio{margin:0 0 18px;padding:0 12px}.hint-audio[hidden]{display:none}.hint-audio .text-button{min-height:44px;font-size:15px}.hint-audio .read-status{margin:6px 0;font-size:14px}.task-submit-row .undo-task{font-size:15px}.undo-task:disabled{color:#7a8d9c;opacity:.65;cursor:default;text-decoration:none}
+
+.passport-export{border-top:1px dashed #b8c9d3;padding-top:18px;margin-top:18px;text-align:center}.passport-export>p{font-size:14px;line-height:1.6;margin:8px 0 0;color:#5c7180}.passport-export .export-status:empty{display:none}.passport-export .export-status{font-size:15px;color:#315c4a}.quest-results{margin:24px 0;background:#eef4f3;border:1px solid #c9d8d2;border-radius:8px;padding:18px;text-align:left}.quest-results h2{font:700 20px/1.3 var(--sans,system-ui)!important;letter-spacing:0!important;margin:0 0 16px!important;color:#315747}.quest-results dl{display:flex;gap:18px;margin:0;flex-wrap:wrap}.quest-results dl>div{flex:1;min-width:140px}.quest-results dt{font-size:14px;color:#5a7168;margin-bottom:6px}.quest-results dd{margin:0;font:700 30px/1.2 var(--sans,system-ui);color:#315747}.quest-results>p{font-size:15px!important;line-height:1.6;margin:17px 0 0;color:#4f6b60!important}.next-adventure{display:block;margin:14px auto 0}
+
+.passport-preview{display:block;width:100%;height:auto;border:1px solid #d9dfd8;border-radius:5px;margin:15px auto 0;background:#fffdf8}
