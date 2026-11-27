@@ -281,3 +281,5 @@
 @media(max-width:370px){.journal-entry{padding:11px;gap:9px}.read-aloud-controls{gap:4px}.read-status{font-size:13px}}
 
 .winter-ui.large-reading .journal-entry p{font-size:20px!important;line-height:1.7!important}.winter-ui.large-reading .read-aloud-controls .text-button{font-size:18px}
+
+.hint-audio{margin:0 0 18px;padding:0 12px}.hint-audio[hidden]{display:none}.hint-audio .text-button{min-height:44px;font-size:15px}.hint-audio .read-status{margin:6px 0;font-size:14px}.task-submit-row .undo-task{font-size:15px}.undo-task:disabled{color:#7a8d9c;opacity:.65;cursor:default;text-decoration:none}

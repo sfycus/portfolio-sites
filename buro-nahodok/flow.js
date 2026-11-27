@@ -83,6 +83,14 @@ export function setPuzzleInput(quest,progress,value){
   const next={...progress,taskInput:{index:progress.index,value}};
   return {...next,taskInput:{index:progress.index,value:puzzleInput(mission,next)}};
 }
+/** Undo the most recent input without submitting or changing puzzle progress. */
+export function undoPuzzleInput(quest,progress){
+  if(progress?.phase!=='puzzle')return progress;
+  const mission=quest.missions[progress.index];
+  if(!mission?.interaction)return progress;
+  const input=puzzleInput(mission,progress);
+  return setPuzzleInput(quest,progress,input.slice(0,-1));
+}
 export function taskStatus(mission,value){
   const task=mission.interaction;if(!task)return {complete:false,correct:false};
   if(task.type==='code')return {complete:typeof value==='string'&&value.length===task.length,correct:value===task.answer};

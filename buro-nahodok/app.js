@@ -1,10 +1,10 @@
-import { LOCATIONS, AGE_GROUPS, THEMES, validateConfig, encodeConfig, decodeConfig, createQuest } from './engine.js?v=1.8.0-beta.1';
-import { cardCodes, freshProgress, readProgress, answerMission, confirmCard, continueScreenQuest, attemptMission, solveWithHelp, isHintOpen, toggleHint, puzzleInput, setPuzzleInput, attemptTask } from './flow.js?v=1.8.0-beta.1';
+import { LOCATIONS, AGE_GROUPS, THEMES, validateConfig, encodeConfig, decodeConfig, createQuest } from './engine.js?v=1.9.0-beta.1';
+import { cardCodes, freshProgress, readProgress, answerMission, confirmCard, continueScreenQuest, attemptMission, solveWithHelp, isHintOpen, toggleHint, puzzleInput, setPuzzleInput, undoPuzzleInput, attemptTask } from './flow.js?v=1.9.0-beta.1';
 
 const app = document.querySelector('#app');
 document.body.classList.add('winter-ui');
 const printRoot = document.querySelector('#print-root');
-const RELEASE = { version: '1.8.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
+const RELEASE = { version: '1.9.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
 const IS_PURCHASED = document.body.dataset.sales === 'full';
 const IS_SHARED = document.body.dataset.shared === 'true';
 const DRAFT_KEY = 'bureau:draft:v1';
@@ -232,7 +232,7 @@ function restoreTaskFocus(target){
   const key=target.dataset.focus;
   const selector=key?`[data-focus="${key}"]`:`[data-action="${target.dataset.action}"]${target.dataset.value?`[data-value="${target.dataset.value}"]`:''}`;
   const control=document.querySelector(selector)||document.querySelector(`[data-focus="item-${target.dataset.value||''}"]`)||document.querySelector('[data-action="task-clear"]');
-  control?.focus({preventScroll:true});
+  (control?.disabled?document.querySelector('.task-item'):control)?.focus({preventScroll:true});
 }
 function winterControls(mission,value){
   const task=mission.interaction;if(!task)return '';
@@ -241,7 +241,7 @@ function winterControls(mission,value){
     const lamps=[...task.initial];for(const id of value){const item=task.items.find(item=>item.id===id);if(item)for(const index of item.mask)lamps[index]=!lamps[index];}
     return `<div class="switch-puzzle"><div class="switch-lamps" aria-live="polite">${lamps.map((on,i)=>`<span class="switch-lamp ${on?'lit':''}" role="img" aria-label="${['Левая','Средняя','Правая'][i]} лампа ${on?'горит':'не горит'}">${winterIcon({kind:'ball',color:on?'gold':'blue'})}<small>${on?'Горит':'Не горит'}</small></span>`).join('')}</div><p class="lamp-status" role="status">${lamps.every(Boolean)?'Все три горят — можно проверить!':`Горят ${lamps.filter(Boolean).length} из 3`}</p><div class="switch-buttons">${task.items.map(item=>`<button class="button paper" type="button" data-action="task-toggle" data-focus="switch-${item.id}" data-value="${item.id}" aria-pressed="${value.includes(item.id)}"><b>${winterEscape(item.label)}</b><span>${item.mask.map(n=>['Левая','Средняя','Правая'][n]).join(' + ')}</span></button>`).join('')}</div><button class="button" type="button" data-action="task-check">Проверить гирлянду</button></div>`;
   }
-  return `<div class="sequence-puzzle"><p class="sequence-instruction">${task.type==='order'?'Нажимай по порядку. Чтобы убрать шаг, нажми на него ещё раз.':`Отметь ${task.count} посылки. Повторное нажатие снимает отметку.`}</p>${task.type==='order'?`<div class="sequence-slots" aria-label="Твой порядок" aria-live="polite">${Array.from({length:task.count},(_,i)=>{const item=task.items.find(item=>item.id===value[i]);return item?`<button type="button" class="filled-slot" data-action="task-toggle" data-focus="slot-${i}" data-value="${item.id}" aria-label="Убрать шаг ${i+1}: ${winterEscape(item.label)}"><span class="slot-number">${i+1}</span><span>${winterEscape(item.label)}</span></button>`:`<span class="empty-slot"><span>${i+1}</span></span>`;}).join('')}</div>`:''}<p class="task-progress" aria-live="polite">${task.type==='order'?'Собрано шагов':'Выбрано посылок'}: ${value.length} из ${task.count}</p><div class="task-items">${task.items.map(item=>`<button type="button" class="task-item ${value.includes(item.id)?'selected':''}" data-focus="item-${item.id}" data-action="task-toggle" data-value="${item.id}" aria-pressed="${value.includes(item.id)}">${winterTile(item)}${value.includes(item.id)?`<span class="item-selected">${task.type==='order'?'Шаг '+(value.indexOf(item.id)+1):'Выбрано'}</span>`:''}</button>`).join('')}</div><div class="task-submit-row"><button type="button" class="button" data-action="task-check">${task.type==='pick'?'Проверить посылки':'Проверить порядок'}</button><button type="button" class="text-button" data-action="task-clear" data-focus="reset">Сначала</button></div></div>`;
+  return `<div class="sequence-puzzle"><p class="sequence-instruction">${task.type==='order'?'Нажимай по порядку. Чтобы убрать шаг, нажми на него ещё раз.':`Отметь ${task.count} посылки. Повторное нажатие снимает отметку.`}</p>${task.type==='order'?`<div class="sequence-slots" aria-label="Твой порядок" aria-live="polite">${Array.from({length:task.count},(_,i)=>{const item=task.items.find(item=>item.id===value[i]);return item?`<button type="button" class="filled-slot" data-action="task-toggle" data-focus="slot-${i}" data-value="${item.id}" aria-label="Убрать шаг ${i+1}: ${winterEscape(item.label)}"><span class="slot-number">${i+1}</span><span>${winterEscape(item.label)}</span></button>`:`<span class="empty-slot"><span>${i+1}</span></span>`;}).join('')}</div>`:''}<p class="task-progress" aria-live="polite">${task.type==='order'?'Собрано шагов':'Выбрано посылок'}: ${value.length} из ${task.count}</p><div class="task-items">${task.items.map(item=>`<button type="button" class="task-item ${value.includes(item.id)?'selected':''}" data-focus="item-${item.id}" data-action="task-toggle" data-value="${item.id}" aria-pressed="${value.includes(item.id)}">${winterTile(item)}${value.includes(item.id)?`<span class="item-selected">${task.type==='order'?'Шаг '+(value.indexOf(item.id)+1):'Выбрано'}</span>`:''}</button>`).join('')}</div><div class="task-submit-row"><button type="button" class="button" data-action="task-check">${task.type==='pick'?'Проверить посылки':'Проверить порядок'}</button><button type="button" class="text-button undo-task" data-action="task-undo" data-focus="undo" ${value.length?'':'disabled'}>${task.type==='order'?'Убрать последний шаг':'Снять последнюю отметку'}</button><button type="button" class="text-button" data-action="task-clear" data-focus="reset">Сначала</button></div></div>`;
 }
 function missionReadingText(mission,value){
   const v=mission.visual,task=mission.interaction,parts=[mission.title,mission.prompt];
@@ -271,29 +271,35 @@ function readAloudControls(){
 }
 /** Uses only a Russian voice advertised as a local device service. No autoplay. */
 function createQuestReader({speech=globalThis.speechSynthesis,Utterance=globalThis.SpeechSynthesisUtterance,onChange=()=>{}}={}){
-  let current=null,serial=0,speaking=false,message='';
+  let current=null,serial=0,speaking=false,message='',activeKind=null;
   const state=()=>({speaking,message});
-  const update=(active,text)=>{speaking=active;message=text;onChange(state());};
-  const stop=()=>{serial++;current=null;try{if(speech&&typeof speech.cancel==='function')speech.cancel();}catch{}update(false,'');};
-  function toggle(text){
-    if(speaking){stop();return;}
+  const update=(active,text)=>{speaking=active;message=text;onChange(state(),activeKind);};
+  const stop=()=>{serial++;current=null;activeKind=null;try{if(speech&&typeof speech.cancel==='function')speech.cancel();}catch{}update(false,'');};
+  function toggle(text,kind='quest'){
+    if(speaking&&activeKind===kind){stop();return;}
+    if(speaking)stop();activeKind=kind;
     if(!speech||typeof speech.speak!=='function'||typeof Utterance!=='function'){update(false,'Этот браузер не поддерживает чтение вслух. Можно прочитать задание вместе со взрослым.');return;}
     let voice;try{voice=speech.getVoices().find(item=>item.localService===true&&/^ru(?:[-_]|$)/i.test(item.lang));}catch{}
     if(!voice){update(false,'Русский голос устройства недоступен. Можно прочитать задание вместе со взрослым.');return;}
-    stop();const token=++serial;
+    stop();activeKind=kind;const token=++serial;
     try{
       current=new Utterance(String(text).slice(0,6000));current.voice=voice;current.lang=voice.lang;current.rate=.88;current.pitch=1;
-      current.onend=()=>{if(serial===token){current=null;update(false,'Задание прочитано. Можно слушать ещё раз.');}};
+      current.onend=()=>{if(serial===token){current=null;update(false,kind==='hint'?'Подсказка прочитана. Можно слушать ещё раз.':'Задание прочитано. Можно слушать ещё раз.');}};
       current.onerror=event=>{if(serial===token){current=null;update(false,['canceled','interrupted'].includes(event.error)?'':'Не удалось включить голос. Попробуй ещё раз или прочитай вместе со взрослым.');}};
       update(true,'Читает голос устройства. Можно остановить чтение.');speech.speak(current);
     }catch{if(serial===token){current=null;update(false,'Не удалось включить голос. Попробуй ещё раз или прочитай вместе со взрослым.');}}
   }
-  return {state,stop,toggle};
+  return {state,stop,toggle,kind:()=>activeKind};
 }
-function syncReaderControls(state){
-  const button=document.querySelector('[data-action="read-quest"]'),status=document.querySelector('#read-status');
-  if(button){button.textContent=state.speaking?'Остановить чтение':'Прочитать вслух';button.setAttribute('aria-pressed',String(state.speaking));}
-  if(status)status.textContent=state.message;
+function hintReadingControls(open){
+  return `<div class="hint-audio" id="hint-audio" ${open?'':'hidden'}><button type="button" class="text-button" data-action="read-hint" aria-pressed="false" aria-describedby="hint-read-status">Прочитать подсказку</button><p class="read-status" id="hint-read-status" role="status" aria-live="polite"></p></div>`;
+}
+function syncReaderControls(state,kind='quest'){
+  for(const [source,action,id,label,stopLabel] of [['quest','read-quest','read-status','Прочитать вслух','Остановить чтение'],['hint','read-hint','hint-read-status','Прочитать подсказку','Остановить подсказку']]){
+    const button=document.querySelector(`[data-action="${action}"]`),status=document.querySelector('#'+id),active=state.speaking&&kind===source;
+    if(button){button.textContent=active?stopLabel:label;button.setAttribute('aria-pressed',String(active));}
+    if(status)status.textContent=kind===source?state.message:'';
+  }
 }
 
 // HOLIDAY_RENDERER_END
@@ -323,7 +329,7 @@ function renderGame(focus=false) {
     const attempts=m.interaction?(progress.taskAttempts?.[progress.index]||0):tried.length;
     const feedback=attempts>=2?'Давай воспользуемся подсказкой. Можно также разобрать задачу вместе со взрослым.':attempts?'Предыдущий ответ не подошёл. Можно изменить его и проверить ещё раз.':'';
     const legacyFeedback=tried.length===1?'Этот вариант уже проверили. Попробуй другой или открой подсказку.':feedback;
-    gameFrame(`<article class="game-card ${m.station?'holiday-game-card':''}">${m.station?m.station.step===1?`<div class="courier-note"><div class="courier-portrait">${winterIcon({kind:'bird'})}</div><div><span class="courier-label">Снегирь на связи</span><p>${escape(m.station.story)}</p></div></div>`:`<p class="courier-mini">${escape(m.station.story)}</p>`:''}<span class="eyebrow red">${m.station?escape(m.station.title)+' · ':''}Загадка ${progress.index+1}</span><h1>${escape(m.title)}</h1>${readAloudControls()}<p class="game-prompt">${escape(m.prompt)}</p>${winterVisual(m)}<p class="feedback attempt-feedback" id="answer-feedback" tabindex="-1" role="status" aria-live="polite">${escape(m.interaction?feedback:legacyFeedback)}</p>${m.interaction?winterControls(m,puzzleInput(m,progress)):winterChoices(m,tried)}<div class="puzzle-help-area"><div class="puzzle-help"><button class="hint-button" data-action="hint" aria-expanded="${isHintOpen(progress,progress.index)}" aria-controls="mission-hint">${isHintOpen(progress,progress.index)?'Скрыть подсказку':'Нужна подсказка?'}</button><button class="hint-button" data-action="assist">Разобрать вместе</button></div><p class="hint-text" id="mission-hint" ${isHintOpen(progress,progress.index)?'':'hidden'}>${escape(m.hint)}</p></div></article>`);
+    gameFrame(`<article class="game-card ${m.station?'holiday-game-card':''}">${m.station?m.station.step===1?`<div class="courier-note"><div class="courier-portrait">${winterIcon({kind:'bird'})}</div><div><span class="courier-label">Снегирь на связи</span><p>${escape(m.station.story)}</p></div></div>`:`<p class="courier-mini">${escape(m.station.story)}</p>`:''}<span class="eyebrow red">${m.station?escape(m.station.title)+' · ':''}Загадка ${progress.index+1}</span><h1>${escape(m.title)}</h1>${readAloudControls()}<p class="game-prompt">${escape(m.prompt)}</p>${winterVisual(m)}<p class="feedback attempt-feedback" id="answer-feedback" tabindex="-1" role="status" aria-live="polite">${escape(m.interaction?feedback:legacyFeedback)}</p>${m.interaction?winterControls(m,puzzleInput(m,progress)):winterChoices(m,tried)}<div class="puzzle-help-area"><div class="puzzle-help"><button class="hint-button" data-action="hint" aria-expanded="${isHintOpen(progress,progress.index)}" aria-controls="mission-hint">${isHintOpen(progress,progress.index)?'Скрыть подсказку':'Нужна подсказка?'}</button><button class="hint-button" data-action="assist">Разобрать вместе</button></div><p class="hint-text" id="mission-hint" ${isHintOpen(progress,progress.index)?'':'hidden'}>${escape(m.hint)}</p>${hintReadingControls(isHintOpen(progress,progress.index))}</div></article>`);
   } else if(progress.phase==='find') {
     if(screen) {
       gameFrame(`<article class="game-card answer-success"><div class="answer-tick" aria-hidden="true">✓</div><span class="eyebrow red">Загадка ${progress.index+1} разгадана</span><h1>${m.station?'Печать получена!':'Верно!'}</h1>${m.station?`<div class="earned-stamp">${winterIcon({kind:['envelope','tree','gift','sleigh'][m.station.index]})}<b>${escape(m.station.stamp)}</b></div><p class="stamp-story">${escape(m.station.reward)}</p>`:''}<p class="correct-answer">Ответ: <b>${escape(m.choices[m.answerIndex])}</b></p><p class="answer-explanation">${escape(m.explanation)}</p><p class="success-next-note">Впереди ещё ${quest.missions.length-progress.index-1} ${pluralWord(quest.missions.length-progress.index-1,'загадка','загадки','загадок')}. Продолжаем?</p><button class="button" data-action="next-screen">Следующая загадка</button></article>`);
@@ -339,7 +345,7 @@ function renderGame(focus=false) {
   } else {
     gameFrame(`<article class="game-card ending"><div class="success-ribbon" aria-hidden="true">✦ ✦ ✦</div><span class="eyebrow">${screen?'Все загадки разгаданы':'Все тайники найдены'}</span><h1>${escape(quest.config.name)},<br>подарок нашёлся!</h1><p class="game-prompt">${escape(quest.ending)}</p><div class="certificate-line"></div><p>Разгадано загадок: ${quest.missions.length}. ${screen?'Подарок найден — приключение удалось!':'Весь маршрут пройден. Вот это приключение!'}</p><button class="button" data-action="certificate">Распечатать диплом</button><button class="hint-button" data-action="home" style="display:block;margin:15px auto 0">На главную</button></article>`);
   }
-  syncReaderControls(questReader.state());
+  syncReaderControls(questReader.state(),questReader.kind());
   if(focus){window.scrollTo(0,0);document.querySelector('.game-card h1, .game-card h2')?.focus({preventScroll:true});}
 }
 function showError(message){shell(`<main class="empty-state"><span class="eyebrow red">Не получилось открыть квест</span><h1>Кажется, потерялась часть карты</h1><p>${escape(message)}</p><button class="button" data-action="home">На главную</button></main>`);}
@@ -422,6 +428,7 @@ function handleAction(target){
   const action=target.dataset.action;
   if(IS_SHARED&&['create','new-quest','confirm-new-quest','return-setup','prepare','play','print','download','copy-link','restart-prepared','preview-question','preview-answer','shuffle-puzzles','confirm-shuffle'].includes(action)){notify('Подготовка доступна взрослому в его покупке. Продолжайте играть по семейной ссылке.');return;}
   if(action==='passport'&&quest){questReader.stop();const solved=['treasure','done'].includes(progress.phase)?quest.missions.length:progress.index+(progress.phase==='find'?1:0);showDialog('Твой почтовый пропуск','Четыре станции — четыре части потерянной адресной бирки.',winterPassport(quest.missions,solved,true)+'<button class="button" data-action="close-dialog">Продолжить приключение</button>');const heading=document.querySelector('.dialog h2');heading?.setAttribute('tabindex','-1');heading?.focus({preventScroll:true});const dialog=document.querySelector('.dialog');if(dialog)dialog.scrollTop=0;return;}
+  if(action==='read-hint'&&progress?.phase==='puzzle'&&isHintOpen(progress,progress.index)){questReader.toggle('Подсказка. '+quest.missions[progress.index].hint,'hint');return;}
   if(action==='read-quest'&&progress?.phase==='puzzle'){questReader.toggle(missionReadingText(quest.missions[progress.index],puzzleInput(quest.missions[progress.index],progress)));return;}
   if(action==='reading-size'){largeReading=!largeReading;storage.set('bureau:large-reading:v1',largeReading);applyReadingSize();renderGame();document.querySelector('[data-action="reading-size"]')?.focus();return;}
   if(action==='assist'&&progress?.phase==='puzzle'){questReader.stop();
@@ -471,7 +478,7 @@ function handleAction(target){
   if(action==='restart-request'){if(!ready){notify(isScreenMode(draft)?'Сначала подтвердите, что подарок спрятан.':'Сначала подтвердите, что карточки и подарок готовы.');return;}showDialog('Начать квест заново?',`${isScreenMode(draft)?'Снова спрячьте подарок в выбранном месте.':'Карточки и подарок должны снова лежать на своих местах.'} Прогресс этого квеста будет сброшен.`,'<div class="actions"><button class="button" data-action="restart-prepared">Начать заново</button><button class="text-button" data-action="close-dialog">Отмена</button></div>');return;}
   if(action==='restart-prepared'&&ready){const prepared=createQuest(draft);storage.set(`bureau:progress:v1:${prepared.id}`,freshProgress());closeDialog();navigate('#play='+encodeConfig(draft));return;}
   if(action==='start'){progress={...progress,phase:'puzzle',startedAt:progress.startedAt||Date.now()};saveProgress();renderGame(true);return;}
-  if(['task-key','task-back','task-toggle','task-clear','task-check'].includes(action)&&progress?.phase==='puzzle'){
+  if(['task-key','task-back','task-toggle','task-clear','task-check','task-undo'].includes(action)&&progress?.phase==='puzzle'){
     const mission=quest.missions[progress.index],task=mission.interaction;if(!task)return;
     let value=puzzleInput(mission,progress);
     if(action==='task-check'){
@@ -480,6 +487,7 @@ function handleAction(target){
       else if(!result.correct)document.querySelector('#answer-feedback')?.focus();
       return;
     }
+    if(action==='task-undo'){progress=undoPuzzleInput(quest,progress);saveProgress();renderGame();restoreTaskFocus(target);return;}
     if(action==='task-clear')value=task.type==='code'?'':[];
     if(action==='task-key'&&task.type==='code')value=(value+target.dataset.value).slice(0,task.length);
     if(action==='task-back'&&task.type==='code')value=value.slice(0,-1);
@@ -500,7 +508,7 @@ function handleAction(target){
     return;
   }
   if(action==='hint'){
-    progress=toggleHint(progress,progress.index);saveProgress();const hint=document.querySelector('#mission-hint'),open=isHintOpen(progress,progress.index);hint.hidden=!open;target.setAttribute('aria-expanded',String(open));target.textContent=open?'Скрыть подсказку':'Нужна подсказка?';if(open)hint.scrollIntoView?.({block:'nearest',behavior:'smooth'});return;
+    progress=toggleHint(progress,progress.index);saveProgress();const hint=document.querySelector('#mission-hint'),open=isHintOpen(progress,progress.index);hint.hidden=!open;const audio=document.querySelector('#hint-audio');if(audio)audio.hidden=!open;if(!open&&questReader.kind()==='hint')questReader.stop();target.setAttribute('aria-expanded',String(open));target.textContent=open?'Скрыть подсказку':'Нужна подсказка?';if(open)hint.scrollIntoView?.({block:'nearest',behavior:'smooth'});return;
   }
   if(action==='demo-card'&&isDemo){const result=confirmCard(quest,progress,cardCodes(quest)[progress.index]);progress=result.progress;saveProgress();renderGame(true);return;}
   if(action==='finish'&&progress.phase==='treasure'){progress.phase='done';saveProgress();renderGame(true);return;}
@@ -539,7 +547,7 @@ app.addEventListener('submit',event=>{
 document.addEventListener('keydown',event=>{
   const dialog=document.querySelector('.dialog-backdrop');if(!dialog)return;
   if(event.key==='Escape'){event.preventDefault();closeDialog();}
-  if(event.key==='Tab'){const items=[...dialog.querySelectorAll('button,a,input')].filter(el=>!el.disabled);if(!items.length)return;const first=items[0],last=items.at(-1);if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}
+  if(event.key==='Tab'){const items=[...dialog.querySelectorAll('button,a,input,select,textarea,summary,[tabindex]')].filter(el=>!el.disabled&&el.getAttribute('tabindex')!=='-1'&&(!el.getClientRects||el.getClientRects().length>0));if(!items.length){event.preventDefault();return;}const first=items[0],last=items.at(-1);if(!items.includes(document.activeElement)){event.preventDefault();(event.shiftKey?last:first).focus();}else if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}
 });
 window.addEventListener('hashchange',route);
 window.addEventListener('pagehide',()=>questReader.stop());
