@@ -20,6 +20,10 @@ export function readProgress(value, count) {
   if (value.phase === 'find' && value.index === count - 1) return freshProgress();
   if (['treasure', 'done'].includes(value.phase) && value.index !== count - 1) return freshProgress();
   const result = { index: value.index, phase: value.phase, startedAt: Number.isFinite(value.startedAt) && value.startedAt > 0 ? value.startedAt : 0, hints: Array.isArray(value.hints) ? [...new Set(value.hints.filter(i => Number.isInteger(i) && i >= 0 && i < count))] : [] };
+  if (Array.isArray(value.hiddenHints)) {
+    const hiddenHints = result.hints.filter(index => value.hiddenHints.includes(index));
+    if (hiddenHints.length) result.hiddenHints = hiddenHints;
+  }
   if(value.mistakes&&typeof value.mistakes==='object'&&!Array.isArray(value.mistakes)){
     const mistakes={};
     for(const [key,answers] of Object.entries(value.mistakes))if(/^(0|[1-9][0-9]*)$/.test(key)&&Number(key)<count&&Array.isArray(answers)){
@@ -43,6 +47,27 @@ export function readProgress(value, count) {
     if(Object.keys(attempts).length)result.taskAttempts=attempts;
   }
   return result;
+}
+
+export function isHintOpen(progress, index) {
+  return progress.hints.includes(index) && !progress.hiddenHints?.includes(index);
+}
+
+function openHint(progress, index) {
+  if (!progress.hints.includes(index)) return { ...progress, hints: [...progress.hints, index] };
+  if (!progress.hiddenHints?.includes(index)) return progress;
+  const { hiddenHints, ...visible } = progress;
+  const remaining = hiddenHints.filter(hidden => hidden !== index);
+  if (remaining.length) visible.hiddenHints = remaining;
+  return visible;
+}
+
+export function toggleHint(progress, index) {
+  if (progress?.phase !== 'puzzle' || index !== progress.index) return progress;
+  if (isHintOpen(progress, index)) {
+    return { ...progress, hiddenHints: [...(progress.hiddenHints || []), index] };
+  }
+  return openHint(progress, index);
 }
 
 /** A partially assembled puzzle is saved, but is never counted as solved. */
@@ -76,7 +101,8 @@ export function attemptTask(quest,progress){
   if(!status.complete)return {correct:false,progress,incomplete:true};
   if(status.correct)return answerMission(quest,progress,mission.answerIndex);
   const attempts=Math.min(99,(progress.taskAttempts?.[progress.index]||0)+1);
-  return {correct:false,progress:{...progress,taskAttempts:{...progress.taskAttempts,[progress.index]:attempts},hints:attempts>=2?[...new Set([...progress.hints,progress.index])]:[...progress.hints]}};
+  const next = { ...progress, taskAttempts: { ...progress.taskAttempts, [progress.index]: attempts } };
+  return { correct: false, progress: attempts === 2 ? openHint(next, progress.index) : next };
 }
 
 /** Track a genuine attempt without advancing, so retries and help survive refresh. */
@@ -88,8 +114,9 @@ export function attemptMission(quest, progress, answerIndex) {
   if(result.correct)return result;
   const previous=progress.mistakes?.[progress.index]||[];
   const tried=[...new Set([...previous,answerIndex])];
-  const hints=tried.length>=2?[...new Set([...progress.hints,progress.index])]:[...progress.hints];
-  return {correct:false,progress:{...progress,hints,mistakes:{...progress.mistakes,[progress.index]:tried}}};
+  const next = { ...progress, mistakes: { ...progress.mistakes, [progress.index]: tried } };
+  const reachedThreshold = previous.length === 1 && tried.length === 2;
+  return { correct: false, progress: reachedThreshold ? openHint(next, progress.index) : next };
 }
 
 /** Help is an explicit choice; opening the explanation does not complete a puzzle. */

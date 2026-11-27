@@ -63,3 +63,206 @@
 .winter-stations{background:#fffefb;border:1px solid #d4dfe8;border-radius:8px;padding:8px 7px;box-shadow:0 3px 0 #dbe4ec}.fragment-edge{font-size:12px;color:#72879a;font-weight:400}
 
 .task-submit-row .text-button{min-height:44px;padding:10px 8px}
+
+/* The four pieces share a single sheet of postal stationery. */
+.holiday-passport,
+.passport-sheet {
+  color: #344656;
+  background: #fffaf0;
+  border: 1px solid #c9baa0;
+  border-radius: 6px;
+  box-shadow: 0 3px 0 #d5dce3;
+}
+.holiday-passport {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 5px 10px;
+  margin: 0 0 16px;
+}
+.passport-summary {
+  min-height: 44px;
+  border: 0;
+  background: transparent;
+  padding: 5px 4px;
+  font: 650 15px/1.35 var(--sans, system-ui);
+  color: #345785;
+  text-align: left;
+  cursor: pointer;
+}
+.passport-summary > span { display: block; font-size: 14px; font-weight: 450; }
+.passport-summary > b { display: block; text-decoration: underline; text-underline-offset: 3px; }
+.passport-summary:hover,
+.answer-recap summary:hover { color: #922e43; }
+.passport-fragments {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: stretch;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.holiday-passport .passport-fragments { flex: 1; min-width: 0; }
+.address-fragment {
+  min-width: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 3px;
+  padding: 5px;
+  color: #666154;
+  text-align: center;
+  line-height: 1.25;
+}
+.address-fragment + .address-fragment { border-left: 1px dashed #baab92; }
+.address-fragment .winter-icon {
+  width: 32px;
+  height: 32px;
+  margin: 0;
+  filter: grayscale(1);
+  opacity: .46;
+}
+.address-fragment.found { color: #265647; }
+.address-fragment.found .winter-icon { filter: none; opacity: 1; }
+.address-fragment > span { font-size: 13px; overflow-wrap: anywhere; }
+.address-fragment > b {
+  position: absolute;
+  top: 2px;
+  right: 3px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.address-fragment.found > b { color: #265647; font-weight: 800; }
+.passport-sheet { padding: 12px; margin: 14px 0 20px; }
+.passport-sheet > p { margin: 4px 0; font-size: 16px; line-height: 1.55; }
+.passport-sheet > .passport-kicker {
+  color: #654e35;
+  font: 650 14px/1.4 var(--sans, system-ui);
+  margin: 0 0 10px;
+}
+.passport-sheet .passport-fragments {
+  margin-bottom: 10px;
+  padding-block: 6px;
+  border-block: 1px solid #dbcfba;
+}
+.passport-sheet .address-fragment { gap: 6px; padding: 8px 5px; }
+.passport-sheet .address-fragment .winter-icon { width: 50px; height: 50px; }
+.passport-sheet .address-fragment > span { font-size: 15px; }
+
+.courier-note:has(.courier-portrait) {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 80px;
+  padding: 10px 15px;
+}
+.courier-portrait {
+  width: 70px;
+  height: 70px;
+}
+.courier-portrait svg { display: block; width: 100%; height: 100%; }
+.courier-note p, .courier-mini { font-size: 16px; line-height: 1.5; }
+.winter-ui .game-card .courier-mini {
+  min-height: 0;
+  margin: 0 0 13px;
+  padding: 0 0 0 11px;
+  border-left: 2px solid #92a5b4;
+  border-radius: 0;
+  background: transparent;
+  color: #475d6c;
+  font-size: 16px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.sequence-instruction { font-size: 16px; margin-bottom: 10px; }
+.sequence-slots { gap: 4px; margin-bottom: 6px; }
+.task-progress { margin: 0 0 12px; color: #4e6475; font-size: 16px; line-height: 1.45; }
+.sequence-slots > span,
+.sequence-slots > button {
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 44px;
+  padding: 5px 3px;
+  border-width: 1px;
+  gap: 2px;
+  overflow-wrap: anywhere;
+}
+.sequence-slots .empty-slot > span { font-size: 18px; color: #647a8c; }
+.sequence-slots .slot-number { position: static; font-size: 13px; }
+.sequence-slots .filled-slot { font-size: 14px; }
+.task-item .item-selected { font-size: 13px; }
+.switch-puzzle .lamp-status {
+  margin: 0 0 16px;
+  color: #314f62;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 650;
+}
+.switch-puzzle .switch-lamps { margin-bottom: 7px; }
+.puzzle-help-area .puzzle-help { margin-top: 12px; }
+.puzzle-help-area .hint-text { margin: 4px 0 0; font-size: 16px; line-height: 1.55; }
+.answer-recap {
+  margin: 15px 0;
+  padding: 0 12px;
+  border-block: 1px dashed #bcad91;
+  text-align: left;
+}
+.answer-recap summary {
+  min-height: 44px;
+  padding: 11px 0;
+  cursor: pointer;
+  color: #345785;
+  font: 650 16px/1.4 var(--sans, system-ui);
+}
+.answer-recap p { font-size: 16px; line-height: 1.6; }
+.winter-ui.large-reading .puzzle-help-area .hint-text,
+.winter-ui.large-reading .courier-note p,
+.winter-ui.large-reading .game-card .courier-mini,
+.winter-ui.large-reading .answer-recap p { font-size: 21px; }
+
+@media (max-width: 760px) {
+  .winter-ui .game-shell:has(.holiday-passport) .game-header {
+    gap: 8px;
+    min-height: 0;
+    padding-block: 12px 4px;
+  }
+  .winter-ui .game-shell:has(.holiday-passport) .game-tool { min-height: 44px; }
+  .winter-ui .game-main:has(.holiday-passport) { padding-top: 8px; }
+  .winter-ui .game-main:has(.holiday-passport) .game-topline { margin-bottom: 8px; }
+}
+@media (max-width: 520px) {
+  .holiday-passport { display: block; padding: 0 6px 5px; margin-bottom: 12px; }
+  .holiday-passport .passport-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    font-size: 15px;
+  }
+  .holiday-passport .address-fragment { padding: 2px; }
+  .holiday-passport .address-fragment .winter-icon { width: 25px; height: 25px; }
+  .holiday-passport .address-fragment > span { font-size: 12px; }
+  .passport-sheet { padding: 7px 3px; }
+  .passport-sheet .address-fragment { padding-inline: 3px; }
+  .passport-sheet .address-fragment .winter-icon { width: 40px; height: 40px; }
+  .passport-sheet .address-fragment > span { font-size: 13px; }
+  .sequence-puzzle .task-items { gap: 5px; margin-bottom: 15px; }
+  .sequence-puzzle .task-item { min-width: 64px; padding-inline: 4px; }
+  .sequence-puzzle .task-item .winter-icon { width: min(56px, 100%); height: 56px; }
+}
+@media (max-width: 370px) {
+  .sequence-puzzle .task-items:has(> :nth-child(4):last-child) {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .sequence-puzzle .task-items:has(> :nth-child(4):last-child) .task-item { max-width: none; }
+  .passport-sheet .address-fragment .winter-icon { width: 32px; height: 32px; }
+}
+
+@media(max-width:370px){.courier-note{grid-template-columns:50px minmax(0,1fr);gap:10px;padding:12px}.courier-portrait,.courier-portrait .winter-icon{width:50px;height:50px}}
+.sales-pending{font-size:16px;color:#586f82;padding:12px 0}
