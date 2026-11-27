@@ -603,6 +603,72 @@ button,input,select,textarea{font:inherit}button,a,input,textarea{touch-action:m
   <div id="toast" role="status" aria-live="polite"></div>
   <section id="print-root" aria-label="Материалы для печати"></section>
   <noscript><p style="padding:2rem">Для квеста включите JavaScript в браузере. Устанавливать приложение не нужно.</p></noscript>
+  <style>/* The working desk of the New Year post office. Illustrations are local SVG. */
+.winter-ui .game-main:has(.holiday-game-card){max-width:760px}
+.winter-stations{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:4px 0 22px;gap:8px;color:#5d7186;font-size:14px;text-align:center}
+.winter-stations>span{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 3px;border-bottom:2px solid #cbd8e5}
+.winter-stations b{display:grid;place-items:center;width:23px;height:23px;flex-shrink:0;border:1px solid #a9bdd1;border-radius:50%;font-size:13px}
+.winter-stations .station-current{color:#a5283e;border-color:#b52d42;font-weight:700}
+.winter-stations .station-current b{background:#b52d42;border-color:#b52d42;color:white}
+.winter-stations .station-done{color:#25654e;border-color:#43816a}.station-done b{background:#2c735d!important;color:white;border-color:#2c735d!important}
+.courier-note{background:#eff4f9;text-align:left;border-radius:7px;padding:14px 17px;margin:0 0 24px;border-left:3px solid #6884a5}
+.courier-label{font-size:13px;font-weight:800;letter-spacing:.035em;color:#315675;text-transform:uppercase}
+.courier-note p{font-size:15px;line-height:1.55;color:#4a6074;margin:6px 0 0}
+.demo-intro-note{display:block;margin-top:16px;font-size:16px;color:#66758a}
+.winter-puzzle-board{background:#f2f6f9;border:1px solid #d5e0e9;border-radius:10px;padding:21px 18px;margin:23px 0;overflow:hidden;text-align:center;color:#263e54}
+.winter-icon{width:85px;height:85px;display:block;flex-shrink:0;margin:auto;overflow:visible}
+.toy-legend{display:flex;align-items:stretch;justify-content:center;gap:10px;flex-wrap:wrap}
+.toy-tile{position:relative;display:flex;flex:1;min-width:70px;flex-direction:column;align-items:center;padding:7px 4px 12px;gap:3px;background:#fffdf7;border:1px solid #d6d3c8;border-radius:5px;box-shadow:0 3px 0 #dde4e9}
+.toy-tile>span{font-size:14px;font-weight:600;line-height:1.35}.toy-tag{font-size:24px;line-height:1;background:#f2deb1;border:1px solid #d7ba80;border-radius:3px;padding:5px 12px;margin-top:5px}
+.toy-target{display:flex;align-items:center;justify-content:center;gap:7px}.toy-target>.winter-icon{margin:0}
+.stamped-envelope{background:#fffcf2;border:2px dashed #8aa0b4;border-radius:5px;padding:16px 8px;margin:22px auto 0;max-width:380px;box-shadow:3px 4px 0 #dfe8ed}
+.stamped-envelope:first-child{margin-top:0}.winter-board-label{font-size:13px;display:block;font-weight:700;margin-bottom:10px;color:#526b81}
+.toy-garland{display:flex;align-items:center;justify-content:center;position:relative;gap:0;padding:8px 0 16px}
+.toy-garland:before{content:'';position:absolute;top:10px;left:4%;right:4%;height:14px;border-top:3px solid #3b6857;border-radius:50%}
+.toy-garland>span{width:12%;position:relative}.toy-garland .winter-icon{width:100%;height:auto;max-height:80px}
+.missing-toy{font-size:30px;color:#a5283e;font-weight:700;border:2px dashed #b4c2cf;border-radius:50%;padding:8px 0}
+.shadow-tag{display:inline-block;border:1px dashed #a0b3c2;background:#fffdf6;padding:16px 37px;transform:rotate(-3deg)}
+.winter-ui .choices.illustrated-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.winter-ui .illustrated-choices .choice{flex-direction:column;align-items:center;text-align:center;gap:5px;min-height:140px;padding:16px 10px;font-size:17px;line-height:1.35}
+.illustrated-choices .winter-icon{width:88px;height:88px}.illustrated-choices .choice:disabled .winter-icon{opacity:.45}
+.winter-mini-scene{display:flex;align-items:center;justify-content:center;gap:15px}.winter-mini-scene .winter-icon{margin:0;width:95px;height:95px}.winter-mini-scene>span{font-size:16px;max-width:160px}
+.layer-card{position:relative;width:250px;height:190px;background:#fff8e7;border:1px solid #d9c69f;box-shadow:3px 5px 0 #d5dfe7;margin:0 auto;transform:rotate(-2deg)}
+.layer-card .winter-icon{position:absolute;margin:0}.layer-flake{width:125px;height:125px;left:20px;top:10px}.layer-tree{width:145px;height:145px;left:70px;top:20px}.layer-gift{width:95px;height:95px;left:117px;top:96px}.layer-ribbon{width:65px;height:65px;left:173px;top:120px}
+.winter-grid{--columns:3;display:grid;grid-template-columns:repeat(var(--columns),1fr);width:210px;max-width:100%;margin:10px auto;border:1px solid #738b9e;background:white}
+.winter-grid>span{border:1px solid #a6bbc9;display:grid;place-items:center;aspect-ratio:1;font:700 22px/1.2 var(--sans,system-ui);min-width:0;padding:3px}
+.winter-grid>span:has(+span):first-child{border-top-left-radius:0}.winter-grid>span:only-child{font-size:16px}
+.stencil-layout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.stencil-layout>div>b{font-size:14px;white-space:nowrap}.stencil-layout .winter-grid{width:140px}.stencil-layout .winter-grid>span{font-size:21px}
+.mask-grid>span{background:#dce5ed}.winter-board-note{font-size:14px;line-height:1.5;margin:12px 0 0}
+.sorter-machine{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sorter-step{border:1px solid #a9bac8;padding:13px 5px;border-radius:4px;background:white;font-size:15px}
+.sorter-display{grid-column:1/-1;justify-self:center;display:flex;align-items:center;gap:16px;background:#263e54;color:#fff3c7;border-radius:5px;padding:12px 22px}.sorter-display b{font:700 39px/1.2 monospace;letter-spacing:.15em}.sorter-display small{font-size:14px}
+.fold-layout{display:flex;align-items:center;justify-content:center;gap:12px}.fold-layout>div{min-width:0}.fold-layout b{font-size:14px}.fold-layout .winter-icon{width:115px;height:115px}.fold-directions{max-width:140px;font-size:14px;line-height:1.6}
+.folded-paper{display:grid;grid-template-columns:1fr 1fr;width:78px;height:78px;background:white;margin:15px auto;border:1px solid #738b9e}.folded-paper>span{border:1px solid #a6bbc9;display:grid;place-items:center;color:#b52d42;font-size:20px}
+.cube-net{display:grid;grid-template-columns:repeat(4,64px);grid-template-rows:repeat(3,64px);justify-content:center}.cube-net>div{border:1px dashed #6d879b;background:#fffcf3}.cube-net .winter-icon{width:60px;height:60px}
+.delivery-rules{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;font-size:14px;line-height:1.5}.delivery-rules>span{background:#fffdf7;border:1px solid #c8d7e1;border-radius:5px;padding:12px 5px}.delivery-rules b{display:block;color:#a5283e;margin-bottom:8px}
+.departure-board{display:inline-flex;flex-direction:column;gap:10px;background:#263e54;color:#f9f3dc;border-radius:6px;padding:20px 35px}.departure-board span{font-size:15px}.departure-board b{font:700 44px/1.1 monospace;letter-spacing:.08em}
+.puzzle-input-form{max-width:330px;margin:18px auto 0;display:flex;flex-direction:column;gap:14px;align-items:stretch}.puzzle-input-form label{font-size:17px;font-weight:700}
+.puzzle-code-input{text-align:center;font:700 35px/1.3 monospace;letter-spacing:.2em;min-height:64px;padding:10px 14px}
+.puzzle-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.puzzle-keypad button{border:1px solid #b9c9d7;box-shadow:0 3px 0 #d9e2ea;border-radius:6px;background:#fff;color:#294b6a;min-height:47px;font:600 23px/1 var(--sans,system-ui);cursor:pointer}
+.puzzle-keypad button:hover{background:#e9f1f8}.puzzle-keypad .key-erase{grid-column:span 2;font-size:16px}.puzzle-keypad button:active{transform:translateY(2px);box-shadow:none}
+.sequence-instruction{font-size:15px;line-height:1.6;color:#586e81;margin:0 0 16px}.sequence-slots{display:flex;gap:8px;margin-bottom:23px;justify-content:center;align-items:stretch}
+.sequence-slots>span,.sequence-slots>button{width:25%;min-height:130px;border:2px dashed #b2c5d4;border-radius:6px;position:relative;padding:13px 3px;background:#f3f7f9;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#355871;font:600 13px/1.35 var(--sans,system-ui)}
+.sequence-slots>.filled-slot{background:#fffaf0;border-style:solid;border-color:#75978b;cursor:pointer}.sequence-slots .winter-icon{width:66px;height:66px}.sequence-slots .empty-slot>span{font-size:29px;font-weight:400;color:#8299ac}.slot-number{position:absolute;top:3px;left:7px;font-size:12px}
+.task-items{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:0 0 24px}.task-item{flex:1;min-width:85px;max-width:145px;position:relative;display:flex;align-items:center;flex-direction:column;gap:5px;padding:12px 7px 16px;background:#fffdf6;border:1px solid #acbfce;border-radius:6px;box-shadow:0 4px 0 #dde5ec;color:#2b465d;font:600 15px/1.35 var(--sans,system-ui);cursor:pointer}
+.task-item .winter-icon{width:78px;height:78px}.task-item.selected{border:2px solid #2c735d;background:#edf5ef;padding:11px 6px 15px;box-shadow:0 4px 0 #d1e3d7}.item-selected{font-size:12px;color:#2c735d;margin-top:3px}.task-submit-row{display:flex;gap:20px;justify-content:center;align-items:center;flex-wrap:wrap}
+.switch-lamps{display:flex;justify-content:center;gap:15px;margin:10px 0 20px}.switch-lamp{background:#e9eef3;display:flex;flex-direction:column;border-radius:50% 50% 6px 6px;padding:5px 8px 13px}.switch-lamp.lit{background:#fff0bd;box-shadow:0 0 18px #e5bd4340}.switch-lamp small{font-size:14px}.switch-lamp .winter-icon{width:74px;height:74px}
+.switch-buttons{display:flex;gap:10px;margin:0 0 23px}.switch-buttons>.button{display:flex;flex:1;align-items:center;flex-direction:column;gap:7px;padding:13px 5px;min-width:0}.switch-buttons b{font-size:24px}.switch-buttons span{font-size:12px;line-height:1.4;white-space:normal}
+.earned-stamp{display:flex;align-items:center;justify-content:center;flex-direction:column;width:128px;height:128px;border:3px double #b52d42;border-radius:50%;margin:16px auto 20px;transform:rotate(-7deg);color:#a5283e;background:#fff7df}.earned-stamp .winter-icon{width:77px;height:77px}.earned-stamp>b{font-size:14px;letter-spacing:.03em;text-transform:uppercase}.stamp-story{font-size:17px!important;color:#2c735d!important}.restored-address{font-size:14px!important;letter-spacing:.02em;color:#2c735d!important;border-bottom:1px dashed #96b8a7;padding-bottom:13px}
+.shop .winter-puzzle-board{margin-top:20px}.shop .choices{margin:20px 0;display:grid;gap:10px}.shop .choice{border:1px solid #b8c7d6;border-radius:7px;padding:16px;background:#fff;color:#294a68;display:flex;align-items:center;gap:12px;font:600 18px/1.4 var(--sans,system-ui);cursor:pointer}.shop .choice:disabled{opacity:.5}.shop .choice-letter{font-size:14px;color:#7a91a6}.shop .puzzle-help{display:flex;justify-content:center;gap:15px}.shop .attempt-feedback{font-size:16px;color:#385c7e}.shop .attempt-feedback:empty{display:none}
+@media(max-width:520px){
+ .winter-stations{gap:5px;font-size:12px;margin-bottom:16px}.winter-stations>span{flex-direction:column;gap:4px;padding:7px 1px}.winter-stations b{width:21px;height:21px}.winter-puzzle-board{padding:16px 9px}.courier-note{padding:11px 12px;margin-bottom:20px}.courier-note p{font-size:14px}.toy-legend{gap:6px}.toy-tile{min-width:54px;padding:4px 2px 8px}.toy-tile .winter-icon{width:64px;height:64px}.toy-tile>span{font-size:12px}.toy-tag{font-size:21px;padding:4px 10px}.toy-target .winter-icon{width:70px;height:70px}.toy-target>div>.winter-icon{width:74px;height:74px}.stencil-layout{gap:6px}.stencil-layout>div>b{font-size:12px}.stencil-layout .winter-grid>span{font-size:18px}.fold-layout{gap:4px}.fold-layout .winter-icon{width:88px;height:88px}.fold-directions{max-width:95px;font-size:12px}.fold-layout b{font-size:12px}.folded-paper{width:60px;height:60px}.cube-net{grid-template-columns:repeat(4,54px);grid-template-rows:repeat(3,54px)}.cube-net .winter-icon{width:50px;height:50px}.sequence-slots{gap:5px}.sequence-slots>span,.sequence-slots>button{min-height:108px;font-size:11px}.sequence-slots .winter-icon{width:53px;height:53px}.task-item{font-size:14px;min-width:75px}.task-item .winter-icon{width:65px;height:65px}.switch-lamps{gap:7px}.switch-lamp{padding:4px 5px 10px}.switch-lamp .winter-icon{width:62px;height:62px}.switch-buttons{gap:7px}.switch-buttons span{font-size:11px}.winter-ui .illustrated-choices .choice{font-size:15px;min-height:123px}.illustrated-choices .winter-icon{width:75px;height:75px}.winter-board-note{font-size:12px}.delivery-rules{gap:6px;font-size:12px}.sorter-step{font-size:13px}.sorter-display b{font-size:32px}.task-submit-row{gap:14px}
+}
+@media(prefers-reduced-motion:no-preference){.earned-stamp{animation:stamp-arrives .25s ease-out}@keyframes stamp-arrives{from{opacity:0;transform:scale(1.15) rotate(-7deg)}to{opacity:1;transform:scale(1) rotate(-7deg)}}}
+
+.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.winter-stations{background:#fffefb;border:1px solid #d4dfe8;border-radius:8px;padding:8px 7px;box-shadow:0 3px 0 #dbe4ec}.fragment-edge{font-size:12px;color:#72879a;font-weight:400}
+
+.task-submit-row .text-button{min-height:44px;padding:10px 8px}
+</style>
   <script type="module">/** Pure, dependency-free quest generation. Treat all returned text as text, never HTML. */
 const LOCATIONS = Object.freeze([
   { id: 'books', title: 'Рядом с книгами', hint: 'Истории стоят плечом к плечу. Поищи у книг.', safety: 'Низкая доступная полка. Книги и тяжёлые предметы не двигать.' },
@@ -618,9 +684,9 @@ const LOCATIONS = Object.freeze([
 ].map(Object.freeze));
 
 const AGE_GROUPS = Object.freeze([
-  { id: '5-7', title: '5–7 лет', description: 'Простой счёт, цвета и внимательность. Взрослый может читать задания вслух.' },
-  { id: '8-10', title: '8–10 лет', description: 'Счёт, короткие шифры и логические цепочки.' },
-  { id: '11-13', title: '11–13 лет', description: 'Доли, закономерности и задачи в несколько действий.' },
+  { id: '5-7', title: '5–7 лет', description: 'Картинки, игрушечные шифры и простые цепочки. Взрослый может читать вслух.' },
+  { id: '8-10', title: '8–10 лет', description: 'Письма с шифрами, сборка посылок и маршруты саней.' },
+  { id: '11-13', title: '11–13 лет', description: 'Ледяные решётки, переключатели и логические задачи в несколько шагов.' },
 ].map(Object.freeze));
 
 const THEMES = Object.freeze([
@@ -668,7 +734,7 @@ function validateConfig(input) {
   const mode = ownValue(input, 'mode');
   if (mode !== undefined && mode !== 'cards' && mode !== 'screen') throw new Error('Выберите формат игры: в браузере или с карточками.');
   const edition = ownValue(input, 'edition');
-  if (edition !== undefined && edition !== 2) throw new Error('Этот набор загадок не поддерживается. Создайте новый квест.');
+  if (edition !== undefined && edition !== 2 && edition !== 3) throw new Error('Этот набор загадок не поддерживается. Создайте новый квест.');
   const suppliedRoute = ownValue(input, 'route');
   if (!Array.isArray(suppliedRoute) || suppliedRoute.length < 4 || suppliedRoute.length > 8) {
     throw new Error('Выберите от 4 до 8 разных тайников.');
@@ -686,7 +752,7 @@ function validateConfig(input) {
   const suppliedNote = ownValue(input, 'giftNote');
   const giftNote = suppliedNote === undefined ? '' : textField(suppliedNote, 'Записка к подарку', 0, 120);
   // Keep the legacy canonical shape (and its IDs) for games with physical cards.
-  return Object.freeze({ v: 1, name, age, theme, route: Object.freeze(route), seed, giftNote, ...(mode === 'screen' ? { mode } : {}), ...(edition === 2 ? { edition } : {}) });
+  return Object.freeze({ v: 1, name, age, theme, route: Object.freeze(route), seed, giftNote, ...(mode === 'screen' ? { mode } : {}), ...(edition !== undefined ? { edition } : {}) });
 }
 
 function bytesToBase64(bytes) {
@@ -965,6 +1031,150 @@ function editionTwoMakers(age, count, random) {
   return shuffle(selected,random).map(record=>record.make);
 }
 
+// Edition three is a separate story. Never change earlier banks: printed codes and
+// family links must continue to lead to exactly the same puzzles.
+const WINTER_STATIONS = [
+  {title:'Северная почта',stamp:'Письмо',story:'Снегирь-почтальон нашёл мешок писем. Метки на конвертах перепутались.',reward:'Письмо снова на своём месте. На пропуске появилась почтовая печать.'},
+  {title:'Ёлочная площадь',stamp:'Ёлка',story:'На площади уже пахнет хвоей. Но без твоей помощи ёлка ещё не готова к празднику.',reward:'Ёлочная площадь готова встречать Новый год. Ещё одна печать получена!'},
+  {title:'Мастерская подарков',stamp:'Подарок',story:'В мастерской шуршат ленты и бумага. Помоги закончить последнюю посылку.',reward:'Посылка готова к отправке. Мастер поставил на пропуск праздничную печать.'},
+  {title:'Станция саней',stamp:'Сани',story:'Олени уже на станции. Осталось разобраться с доставкой — и можно отправляться!',reward:'Маршрут проверен. Сани могут отправляться за твоим подарком.'},
+];
+function winterTask(stage,id,title,prompt,answer,choices,hint,explanation,visual,interaction,choiceArt){
+  return {...puzzle(id,title,prompt,answer,choices,hint,explanation),station:{index:stage,...WINTER_STATIONS[stage]},visual,...(interaction?{interaction}:{}),...(choiceArt?{choiceArt}:{})};
+}
+const toy = (kind,label,extra={}) => ({kind,label,...extra});
+const codeTask = (answer) => ({type:'code',answer:String(answer),length:String(answer).length,alphabet:'0123456789'});
+const orderTask = (items,answer) => ({type:'order',items,answer,count:answer.length});
+function ornamentCode(r,young){
+  const digits=shuffle(['2','3','5','7','8','9'],r).slice(0,4);
+  const kinds=[toy('star','Звезда'),toy('bell','Колокольчик'),toy('mitten','Варежка'),toy('ball','Шар')];
+  const order=shuffle([0,1,2],r),answer=order.map(i=>digits[i]).join('');
+  const legends=kinds.map((item,i)=>({...item,value:digits[i]}));
+  return winterTask(0,young?'snow-young-tags':'snow-middle-tags',young?'Бирки с ёлки':'Замок почтового мешка',`Каждая игрушка заменяет одну цифру. ${young?'Игрушки на письме потеряли цвет, но сохранили форму.':'Снегирь запер мешок кодом из игрушек.'} Рассмотри бирки и набери код для нижнего ряда слева направо.`,answer,[answer,answer.split('').reverse().join(''),digits[3]+answer.slice(1),answer.slice(0,2)+digits[3]],'Сначала найди первую игрушку на бирках. Запиши её цифру, затем переходи к следующей.',`Нужные бирки по порядку: ${order.map(i=>`${kinds[i].label.toLowerCase()} — ${digits[i]}`).join(', ')}. Код: ${answer}.`,{type:'legend',items:legends,target:order.map(i=>({...kinds[i],silhouette:young}))},codeTask(answer));
+}
+function parcelOrder(r,young){
+  const items=[toy('gift','Закрыть коробку',{id:'box'}),toy('ribbon','Завязать ленту',{id:'ribbon'}),toy('card','Прикрепить открытку',{id:'card'})];
+  return winterTask(2,young?'snow-young-pack':'snow-middle-pack','Последняя посылка','Открытку крепят к уже завязанной ленте. Ленту завязывают только на закрытой коробке. Нажимай на действия в том порядке, в котором нужно упаковать подарок.','Коробка → лента → открытка',['Коробка → лента → открытка','Лента → коробка → открытка','Открытка → лента → коробка'],'Подумай, что должно быть готово, прежде чем можно завязать ленту.','Сначала закрываем коробку, затем завязываем ленту, а уже к ней прикрепляем открытку.',{type:'parcel'},orderTask(shuffle(items,r),['box','ribbon','card']));
+}
+function houseLetters(r,young){
+  if(young){
+    const houses=shuffle([
+      {id:'a',label:'Дом А',symbols:['tree','star']},{id:'b',label:'Дом Б',symbols:['tree','bell']},
+      {id:'v',label:'Дом В',symbols:['bell','tree']},{id:'g',label:'Дом Г',symbols:['star','bell']},
+    ],r);
+    return winterTask(0,'snow-young-house','Кому это письмо?','Вместо адреса на конверте две картинки: сначала ёлка, потом колокольчик. Выбери дом с точно такими же картинками в таком же порядке.','Дом Б',houses.map(h=>h.label),'Порядок важен: ёлка должна быть слева, а колокольчик справа.','У дома Б сначала ёлка, затем колокольчик — точно как на конверте.',{type:'envelope',symbols:['tree','bell']},null,Object.fromEntries(houses.map(h=>[h.label,{kind:'house',label:h.label,symbols:h.symbols}])));
+  }
+  const houses=[{kind:'house',label:'Дом 1',number:'1',roof:'star',door:'round'},{kind:'house',label:'Дом 2',number:'2',roof:'moon',door:'square'},{kind:'house',label:'Дом 3',number:'3',roof:'star',door:'square'}];
+  return winterTask(0,'snow-middle-houses','Три письма без адресов','Снегирь записал приметы домов. Письмо 1: квадратная дверь, на крыше не звезда. Письмо 2: звезда на крыше, дверь не круглая. Письмо 3: круглая дверь. Введи номера домов по порядку писем.','231',['231','321','213','132'],'Сначала найди единственный дом с луной. Потом из двух домов со звездой выбери нужную дверь.','Первое письмо — дому 2 с луной. Второе — дому 3 с квадратной дверью и звездой. Третье — дому 1 с круглой дверью. Код 231.',{type:'row',items:houses},codeTask('231'));
+}
+function ribbonCode(r,young){
+  const items=[toy('tree','Ёлка',{value:'4'}),toy('star','Звезда',{value:'7'}),toy('bell','Колокольчик',{value:'2'})];
+  const target=shuffle(items,r),answer=target.map(t=>t.value).join('');
+  return winterTask(0,young?'snow-young-stamps':'snow-middle-stamps','Оттиски на конверте','На письме остались три оттиска. У каждого штампа свой номер. Набери номера штампов в том порядке, в котором стоят оттиски на письме.',answer,[answer,answer.slice(1)+answer[0],answer[2]+answer.slice(0,2),answer[1]+answer[0]+answer[2]],'Сопоставь каждый оттиск со штампом такой же формы. Цвет здесь не нужен.',`Слева направо: ${target.map(t=>`${t.label.toLowerCase()} — ${t.value}`).join(', ')}. Получается ${answer}.`,{type:'legend',items,target:target.map(t=>({...t,silhouette:true}))},codeTask(answer));
+}
+function garland(r,young){
+  const a=toy('ball','Шар в полоску',{pattern:'stripe',color:'red'}),b=toy('star','Золотая звезда',{color:'gold'}),c=toy('bell','Синий колокольчик',{color:'blue'});
+  const unit=young?[a,b]:[a,b,c],row=[...unit,...unit,...unit.slice(0,-1)],answer=unit.at(-1);
+  return winterTask(1,young?'snow-young-garland':'snow-middle-garland','Потерянная игрушка','Снегирь украшал ёлку одним и тем же узором. В конце гирлянды не хватает игрушки. Какую нужно повесить на свободное место?',answer.label,[a.label,b.label,c.label,'Зелёная варежка'],'Начни слева и найди короткий кусочек, который повторяется целиком.',`Узор повторяется: ${unit.map(t=>t.label.toLowerCase()).join(', ')}. На пустом месте должна быть ${answer.label.toLowerCase()}.`,{type:'garland',items:row},null,Object.fromEntries([...unit,c,toy('mitten','Зелёная варежка',{color:'green'})].map(t=>[t.label,t])));
+}
+function shadowTask(r,young){
+  const variants=shuffle([toy('mitten','Варежка с одной звездой',{pattern:'star'}),toy('mitten','Варежка в полоску',{pattern:'stripe'}),toy('bell','Колокольчик'),toy('ball','Шар со звездой',{pattern:'star'})],r);
+  if(young)return winterTask(1,'snow-young-shadow','Игрушка и её тень','На ёлке осталось пустое место. Здесь висела игрушка, чья тень нарисована на бирке. Найди такую же форму.','Колокольчик',variants.map(t=>t.label),'Смотри на внешний край: сверху маленькая петелька, снизу широкий раструб.','Тень расширяется книзу, а под краем виден язычок. Это колокольчик.',{type:'shadow',item:toy('bell','Тень колокольчика',{silhouette:true})},null,Object.fromEntries(variants.map(t=>[t.label,t])));
+  const correct=toy('flake','Снежинка Б',{spokes:5}),items=[toy('flake','Снежинка А',{spokes:6}),correct,toy('flake','Снежинка В',{spokes:6}),toy('flake','Снежинка Г',{spokes:6})];
+  return winterTask(1,'snow-middle-flake','Чужая снежинка','Мастерская делает снежинки с шестью лучами. Снегирь случайно принёс одну из другой коробки. Найди снежинку, у которой не шесть лучей.',correct.label,items.map(t=>t.label),'Удобно считать длинные лучи от центра по кругу. Маленькие веточки на них — не отдельные лучи.','У снежинки Б пять длинных лучей. У остальных — по шесть.',{type:'none'},null,Object.fromEntries(items.map(t=>[t.label,t])));
+}
+function snowmanOrder(r){
+  const items=[toy('snowball','Большой ком',{id:'big',size:1}),toy('snowball','Средний ком',{id:'middle',size:.73}),toy('snowball','Маленький ком',{id:'small',size:.48})];
+  return winterTask(2,'snow-young-snowman','Снеговик у мастерской','Выстрой снежные комья снизу вверх: первым выбери самый большой, а последним — самый маленький. Тогда снеговик будет устойчивым.','Большой → средний → маленький',['Большой → средний → маленький','Маленький → средний → большой','Средний → большой → маленький'],'Внизу нужна самая широкая опора. Каждый следующий ком меньше предыдущего.','Большой ком — внизу, средний — на нём, маленький — голова. Снеговик готов!',{type:'snowman'},orderTask(shuffle(items,r),['big','middle','small']));
+}
+function stickerOrder(r,young){
+  const items=[toy('flake','Снежинка',{id:'flake'}),toy('tree','Ёлка',{id:'tree'}),toy('gift','Подарок',{id:'gift'})];
+  return winterTask(2,young?'snow-young-card':'snow-middle-card','Открытка из наклеек','Снегирь хочет повторить открытку. Ёлка закрывает часть снежинки, а подарок закрывает нижние ветки ёлки. Выбери наклейки в порядке от первой до последней.','Снежинка → ёлка → подарок',['Снежинка → ёлка → подарок','Ёлка → снежинка → подарок','Подарок → ёлка → снежинка'],'Нижнюю наклейку приклеили первой. Сверху на неё уже наклеивали остальные.','Сначала приклеили снежинку. Поверх неё — ёлку. Последним приклеили подарок, поэтому он закрывает ветки.',{type:'layers'},orderTask(shuffle(items,r),['flake','tree','gift']));
+}
+function sleighRoad(r,young){
+  if(young){
+    const options=[{label:'Дорога А',symbols:['star','star','star']},{label:'Дорога Б',symbols:['star','bell','star']},{label:'Дорога В',symbols:['tree','star','tree']}];
+    return winterTask(3,'snow-young-road','Звёздная дорога','Почтовые сани едут по дороге, на которой все три знака — звёзды. Выбери дорогу для Снегиря.','Дорога А',options.map(x=>x.label),'Проверь все знаки на каждой дороге. Одной звезды недостаточно.','На дороге А три звезды. На других есть колокольчик или ёлки.',{type:'sleigh'},null,Object.fromEntries(options.map(x=>[x.label,{kind:'symbols',symbols:x.symbols,label:x.label}])));
+  }
+  return winterTask(3,'snow-middle-route','Повороты над городом','Сани начинают в клетке «СТАРТ» и смотрят вверх. Пролети одну клетку прямо, затем одну вправо относительно саней, затем одну влево относительно нового направления. Введи цифры трёх клеток, в которых остановился.','472',['472','478','875','498'],'Первый шаг — к 4. После поворота направо сани смотрят вправо. Налево от этого направления — вверх.','Из старта летим вверх к 4, вправо к 7, затем вверх к 2. Повороты считаются относительно саней. Код 472.',{type:'grid',columns:3,cells:['9','2','6','4','7','3','СТАРТ ↑','8','5']},codeTask('472'));
+}
+function deliveryOrder(r,young){
+  const items=[toy('house','Дом А',{id:'a',number:'А'}),toy('house','Дом Б',{id:'b',number:'Б'}),toy('house','Дом В',{id:'v',number:'В'})];
+  return winterTask(3,young?'snow-young-delivery':'snow-middle-delivery','Кто получит подарок первым?',young?'Подарок дому Б нужно доставить раньше, чем дому А. Дом В — последний в маршруте. Нажми на дома в порядке доставки.':'Сани должны закончить у дома В. К дому А можно попасть только после доставки в дом Б. Расставь дома по порядку.', 'Б → А → В',['Б → А → В','А → Б → В','В → Б → А'],'Сначала найди последний дом. Из двух оставшихся один должен идти раньше другого.','Дом В — последний. Дом Б должен быть раньше А. Поэтому маршрут: Б, А, В.',{type:'sleigh'},orderTask(shuffle(items,r),['b','a','v']));
+}
+function olderSorter(r){
+  const initial=shuffle(['2','4','6','8','9'],r).slice(0,3),output=[initial[1],initial[2],initial[0]],answer=initial.join('');
+  return winterTask(0,'snow-older-sorter','Сбой снежного сортировщика','Машина сначала меняет местами первую и последнюю цифры, а потом — первые две. На выходе получился номер на табло. Какой номер был на посылке до машины?',answer,[answer,output.join(''),initial[0]+initial[2]+initial[1],initial[1]+initial[0]+initial[2]],'Отмени действия в обратном порядке: сначала поменяй первые две цифры на табло, затем — крайние.',`Начальный номер ${answer}. После обмена крайних: ${[initial[2],initial[1],initial[0]].join('')}. После обмена первых двух: ${output.join('')}.`,{type:'sorter',output:output.join('')},codeTask(answer));
+}
+function olderStencil(){
+  return winterTask(0,'snow-older-stencil','Адрес под ледяными решётками','На табличку накладывают две решётки. Обе стрелки должны смотреть вверх: вторую решётку сначала поверни на пол-оборота. Читай цифры только в тех клетках, где отверстия совпадут, сверху вниз, а в строке — слева направо.','835',['835','825','853','385'],'После поворота отверстия второй решётки окажутся в клетках 1, 3, 4, 7 и 9. Теперь сравни их с первой.','У обеих решёток открыты клетки 1, 4 и 9. На табличке там стоят 8, 3 и 5. Код 835.',{type:'stencils',cells:['8','1','6','3','7','2','9','4','5'],masks:[[0,1,3,5,8],[0,2,5,6,8]]},codeTask('835'));
+}
+function olderBags(){
+  const items=[toy('bag','«Только шары»',{id:'balls'}),toy('bag','«Только звёзды»',{id:'stars'}),toy('bag','«Шары и звёзды»',{id:'mixed'})];
+  return winterTask(0,'snow-older-bags','Все ярлыки перепутаны','В одном мешке только шары, в другом только звёзды, в третьем — и шары, и звёзды. Все три ярлыка неверны. Из какого мешка нужно достать одну игрушку, не глядя, чтобы затем определить содержимое всех мешков?','«Шары и звёзды»',items.map(t=>t.label),'Мешок с надписью «Шары и звёзды» точно не смешанный. Одна игрушка полностью раскроет его содержимое.','Если из мешка «Шары и звёзды» вынуть шар, весь мешок с шарами. Оставшиеся мешки определяются по неверным ярлыкам. Со звездой рассуждение такое же.',{type:'none'},null,Object.fromEntries(items.map(t=>[t.label,t])));
+}
+function olderLights(r){
+  const masks=[[0,1],[1,2],[0,1,2]],answer=['a','c'];
+  return winterTask(1,'snow-older-lights','Капризная гирлянда','Кнопка А переключает левую и среднюю лампы. Б — среднюю и правую. В — все три. При нажатии горящая лампа гаснет, погасшая загорается. Вначале горят две левые. Включи все три лампы и нажми «Проверить».','А и В',['А и В','А и Б','Только В','Б и В'],'Кнопка В даёт нужный свет справа, но гасит две левые лампы. Какая кнопка вернёт их обратно?','Нажимаем А: обе левые лампы гаснут. Нажимаем В: загораются все три. Порядок этих двух нажатий можно поменять.',{type:'none'},{type:'switches',items:[{id:'a',label:'А',mask:masks[0]},{id:'b',label:'Б',mask:masks[1]},{id:'c',label:'В',mask:masks[2]}],initial:[true,true,false],answer,count:3});
+}
+function olderFold(){
+  const variants={
+    'Узор А':{kind:'holes',cells:[1,2,13,14],label:'Узор А'},'Узор Б':{kind:'holes',cells:[0,3,12,15],label:'Узор Б'},
+    'Узор В':{kind:'holes',cells:[5,6,9,10],label:'Узор В'},'Узор Г':{kind:'holes',cells:[4,7,8,11],label:'Узор Г'},
+  };
+  return winterTask(1,'snow-older-fold','Бумажная снежинка','Квадрат 4 × 4 сложили пополам слева направо, затем снизу вверх. В получившемся квадрате 2 × 2 сделали одно отверстие в центре верхней левой клетки. Каким станет лист, когда его развернут?','Узор А',Object.keys(variants),'При развороте каждый сгиб отражает отверстие как зеркало. Отверстий будет четыре.','Отверстия окажутся во 2-й и 3-й клетках верхней строки и во 2-й и 3-й клетках нижней строки.',{type:'fold'},null,variants);
+}
+function olderLoad(r){
+  const items=[toy('gift','Посылка 2 кг',{id:'two',value:'2 кг',color:'red'}),toy('gift','Посылка 3 кг',{id:'three',value:'3 кг',color:'blue'}),toy('gift','Посылка 5 кг',{id:'five',value:'5 кг',color:'green'}),toy('gift','Посылка 8 кг',{id:'eight',value:'8 кг',color:'gold'})];
+  return winterTask(2,'snow-older-load','Ровно две посылки','В маленькие сани помещаются ровно две посылки. Вместе они должны весить ровно 10 кг. Отметь две подходящие посылки и проверь загрузку.','2 кг и 8 кг',['2 кг и 8 кг','3 кг и 5 кг','2 кг и 5 кг','3 кг и 8 кг'],'Проверь пары. Нельзя взять одну посылку или набрать 10 кг тремя посылками.','Единственная подходящая пара — 2 кг и 8 кг. Вместе ровно 10 кг.',{type:'sleigh'},{type:'pick',items:shuffle(items,r),answer:['two','eight'],count:2});
+}
+function olderCube(){
+  const sets=[{label:'Звезда, ёлка, колокольчик',symbols:['star','tree','bell']},{label:'Звезда, подарок, ёлка',symbols:['star','gift','tree']},{label:'Варежка, колокольчик, снеговик',symbols:['mitten','bell','snowman']},{label:'Ёлка, снеговик, подарок',symbols:['tree','snowman','gift']}];
+  return winterTask(2,'snow-older-cube','Коробка с шестью наклейками','Из этой развёртки складывают куб. Какие три рисунка могут встретиться у одного угла коробки?',sets[0].label,sets.map(x=>x.label),'У одного угла не могут встретиться противоположные грани. Мысленно подними четыре боковые стенки.','Противоположны: варежка и колокольчик, ёлка и снеговик, звезда и подарок. В первом наборе противоположных пар нет.',{type:'cube'},null,Object.fromEntries(sets.map(x=>[x.label,{kind:'symbols',...x}])));
+}
+function olderCard(r){
+  const items=[toy('flake','Снежинка',{id:'flake'}),toy('tree','Ёлка',{id:'tree'}),toy('gift','Подарок',{id:'gift'}),toy('ribbon','Лента',{id:'ribbon'})];
+  return winterTask(2,'snow-older-card','Четыре слоя открытки','Подарок закрывает нижние ветви ёлки. Лента закрывает угол подарка. Ёлка закрывает часть снежинки. Расставь слои от самого нижнего до самого верхнего.','Снежинка → ёлка → подарок → лента',['Снежинка → ёлка → подарок → лента','Ёлка → снежинка → лента → подарок','Лента → подарок → ёлка → снежинка'],'Каждое «закрывает» означает, что эта деталь лежит выше другой. Собери все три условия в одну цепочку.','Снежинка внизу, над ней ёлка, затем подарок, а поверх подарка — лента.',{type:'layers',ribbon:true},orderTask(shuffle(items,r),['flake','tree','gift','ribbon']));
+}
+function olderGates(r){
+  const items=['a','b','v'].map((id,i)=>toy('house',`Дом ${'АБВ'[i]}`,{id,number:'АБВ'[i]}));
+  return winterTask(3,'snow-older-gates','Сани не проходят!','На санях подарки для домов А, Б и В. Дорога к А не пропускает сани с подарком Б, а дорога к В — с подарком А. К Б дорога свободна. После каждой доставки сани возвращаются на станцию. Оставлять недоставленные подарки на станции нельзя. В каком порядке ехать?', 'Б → А → В',['Б → А → В','А → Б → В','Б → В → А','В → А → Б'],'Чтобы проехать к А, сначала избавься от подарка Б. Чтобы проехать к В — от подарка А.','Сначала доставляем Б. После этого можно проехать к А. Когда А доставлен, дорога к В тоже открыта.',{type:'gates'},orderTask(shuffle(items,r),['b','a','v']));
+}
+function olderMidnight(r){
+  const minute=integer(r,40,55),duration=integer(r,5,7)*5,end=23*60+minute+duration,answer=clock(end%1440).replace(':','');
+  return winterTask(3,'snow-older-midnight','Доставка после полуночи',`Сани вылетают 31 декабря в 23:${minute}. Полёт занимает ${duration} минут без остановок. Введи время прибытия четырьмя цифрами по 24-часовым часам: например, 00:07 записывается как 0007.`,answer,[answer,clock((end+60)%1440).replace(':',''),clock((end+10)%1440).replace(':',''),clock((end-10)%1440).replace(':','')],`До полуночи остаётся ${60-minute} минут. Остаток полёта пройдёт уже 1 января.`,`23:${minute} + ${duration} минут = ${clock(end%1440)}. Четыре цифры времени: ${answer}.`,{type:'clock',start:`23:${minute}`,duration},codeTask(answer));
+}
+function tornAddress(r){
+  const items=[{id:'start',kind:'card',label:'СНЕ',edge:'Начало'},{id:'middle',kind:'card',label:'ЖНЫЙ ПРО',edge:'Середина'},{id:'end',kind:'card',label:'ЕЗД, 7',edge:'Конец'}];
+  return winterTask(2,'snow-middle-address','Разорванный адрес','Ветер разорвал адрес на три части. Начало и конец помечены. Собери части так, чтобы получилось название улицы и номер дома. Нажимай на обрывки по порядку.','СНЕ → ЖНЫЙ ПРО → ЕЗД, 7',['СНЕ → ЖНЫЙ ПРО → ЕЗД, 7','ЖНЫЙ ПРО → СНЕ → ЕЗД, 7','ЕЗД, 7 → СНЕ → ЖНЫЙ ПРО'],'Первый обрывок начинает слово «снежный». Название улицы заканчивается словом «проезд».','Получается адрес: СНЕЖНЫЙ ПРОЕЗД, 7. Начало — «СНЕ», затем «ЖНЫЙ ПРО», в конце «ЕЗД, 7».',{type:'torn'},orderTask(shuffle(items,r),['start','middle','end']));
+}
+const WINTER_BANKS={
+  '5-7':[
+    [(r)=>ornamentCode(r,true),(r)=>houseLetters(r,true),(r)=>ribbonCode(r,true)],
+    [(r)=>garland(r,true),(r)=>shadowTask(r,true)],
+    [(r)=>parcelOrder(r,true),snowmanOrder,(r)=>stickerOrder(r,true)],
+    [(r)=>sleighRoad(r,true),(r)=>deliveryOrder(r,true)],
+  ],
+  '8-10':[
+    [(r)=>ornamentCode(r,false),(r)=>houseLetters(r,false),(r)=>ribbonCode(r,false)],
+    [(r)=>garland(r,false),(r)=>shadowTask(r,false)],
+    [(r)=>parcelOrder(r,false),(r)=>stickerOrder(r,false),tornAddress],
+    [(r)=>sleighRoad(r,false),(r)=>deliveryOrder(r,false)],
+  ],
+  '11-13':[
+    [olderSorter,olderStencil,olderBags],
+    [olderLights,olderFold],
+    [olderLoad,olderCube,olderCard],
+    [olderGates,olderMidnight],
+  ],
+};
+function winterMakers(age,count,random){
+  const perStation=Array(4).fill(1);
+  const extras=shuffle([0,1,2,3],random);
+  for(let i=0;i<count-4;i++)perStation[extras[i]]++;
+  return WINTER_BANKS[age].flatMap((makers,index)=>shuffle(makers,random).slice(0,perStation[index]));
+}
+
 function stableHash(value) {
   const bytes = new TextEncoder().encode(value);
   let first = 0x811c9dc5, second = 0x9e3779b9;
@@ -979,18 +1189,21 @@ function stableHash(value) {
 function createQuest(input) {
   const config = validateConfig(input);
   const random = randomSource(config.seed);
-  const makers = config.edition === 2 ? editionTwoMakers(config.age, config.route.length, random) : shuffle(BANKS[config.age], random).slice(0, config.route.length);
+  const holiday=config.edition===3&&config.theme==='winter';
+  const makers = holiday ? winterMakers(config.age,config.route.length,random) : config.edition >= 2 ? editionTwoMakers(config.age, config.route.length, random) : shuffle(BANKS[config.age], random).slice(0, config.route.length);
   const missions = makers.map((make, index) => {
     const { answer, ...content } = make(random, config.theme);
     const choices = shuffle(content.choices, random);
     return Object.freeze({ ...content, choices: Object.freeze(choices), answerIndex: choices.indexOf(answer), locationId: config.route[index] });
   });
-  const intro = config.mode === 'screen'
+  const intro = holiday
+    ? `${config.name}, это Снегирь, дежурный новогодней почты! Метель стёрла адрес с твоего подарка. Пройди четыре станции, помоги подготовить праздник и собери ${counted(missions.length,'печать','печати','печатей')} в почтовый пропуск. Тогда мы восстановим адрес и доставим сюрприз!`
+    : config.mode === 'screen'
     ? `${config.name}, ${config.theme === 'winter' ? 'новогодняя почта' : 'секретная экспедиция'} приготовила для тебя ${counted(missions.length, 'загадку', 'загадки', 'загадок')}. Решай их по очереди в браузере. После последней загадки ты узнаешь, где спрятан подарок!`
     : config.theme === 'winter'
       ? `${config.name}, новогодняя почта приготовила для тебя ${counted(missions.length, 'загадку', 'загадки', 'загадок')}. Разгадывай их по очереди: каждая откроет следующий домашний тайник. В последнем ждёт подарок!`
       : `${config.name}, секретная экспедиция начинается! Впереди ${counted(missions.length, 'загадка', 'загадки', 'загадок')} и домашние тайники. Решай задания по очереди — последнее приведёт к подарку.`;
-  const ending = config.theme === 'winter'
+  const ending = holiday ? `${config.name}, адрес восстановлен, сани добрались, а подарок нашёл своего хозяина! Спасибо за помощь новогодней почте. Твой друг Снегирь. С Новым годом!` : config.theme === 'winter'
     ? `${config.name}, новогоднее приключение завершено! Все загадки разгаданы, а подарок найден. С Новым годом!`
     : `${config.name}, экспедиция завершена! Все загадки разгаданы, а подарок найден.`;
   return Object.freeze({ config, id: `quest-${stableHash(JSON.stringify(config))}`, missions: Object.freeze(missions), intro, ending });
@@ -1031,7 +1244,51 @@ function readProgress(value, count) {
     const assisted=[...new Set(value.assisted.filter(index=>Number.isInteger(index)&&index>=0&&index<count))];
     if(assisted.length)result.assisted=assisted;
   }
+  if(value.taskInput&&value.taskInput.index===value.index){
+    const input=value.taskInput.value;
+    if(typeof input==='string'&&/^[0-9А-ЯЁA-Z]{0,8}$/u.test(input))result.taskInput={index:value.index,value:input};
+    else if(Array.isArray(input)&&input.length<=6&&input.every(id=>typeof id==='string'&&/^[a-z]{1,16}$/.test(id))&&new Set(input).size===input.length)result.taskInput={index:value.index,value:[...input]};
+  }
+  if(value.taskAttempts&&typeof value.taskAttempts==='object'&&!Array.isArray(value.taskAttempts)){
+    const attempts={};
+    for(const [key,n] of Object.entries(value.taskAttempts))if(/^(0|[1-9][0-9]*)$/.test(key)&&Number(key)<count&&Number.isInteger(n)&&n>0&&n<=99)attempts[key]=n;
+    if(Object.keys(attempts).length)result.taskAttempts=attempts;
+  }
   return result;
+}
+
+/** A partially assembled puzzle is saved, but is never counted as solved. */
+function puzzleInput(mission,progress){
+  const task=mission?.interaction;if(!task)return null;
+  const supplied=progress.taskInput?.index===progress.index?progress.taskInput.value:undefined;
+  if(task.type==='code')return typeof supplied==='string'?[...supplied.toUpperCase()].filter(ch=>task.alphabet.includes(ch)).slice(0,task.length).join(''):'';
+  return Array.isArray(supplied)?[...new Set(supplied.filter(id=>task.items.some(item=>item.id===id)))].slice(0,task.type==='switches'?task.items.length:task.count):[];
+}
+function setPuzzleInput(quest,progress,value){
+  if(progress?.phase!=='puzzle')return progress;
+  const mission=quest.missions[progress.index];if(!mission?.interaction)return progress;
+  const next={...progress,taskInput:{index:progress.index,value}};
+  return {...next,taskInput:{index:progress.index,value:puzzleInput(mission,next)}};
+}
+function taskStatus(mission,value){
+  const task=mission.interaction;if(!task)return {complete:false,correct:false};
+  if(task.type==='code')return {complete:typeof value==='string'&&value.length===task.length,correct:value===task.answer};
+  if(!Array.isArray(value))return {complete:false,correct:false};
+  if(task.type==='switches'){
+    const lamps=[...task.initial];for(const id of value){const item=task.items.find(item=>item.id===id);if(item)for(const index of item.mask)lamps[index]=!lamps[index];}
+    return {complete:true,correct:lamps.every(Boolean),lamps};
+  }
+  const complete=value.length===task.count;
+  return {complete,correct:complete&&(task.type==='pick'?task.answer.every(id=>value.includes(id)):task.answer.every((id,i)=>value[i]===id))};
+}
+function attemptTask(quest,progress){
+  if(progress?.phase!=='puzzle')return {correct:false,progress,incomplete:true};
+  const mission=quest.missions[progress.index];if(!mission?.interaction)return {correct:false,progress,incomplete:true};
+  const status=taskStatus(mission,puzzleInput(mission,progress));
+  if(!status.complete)return {correct:false,progress,incomplete:true};
+  if(status.correct)return answerMission(quest,progress,mission.answerIndex);
+  const attempts=Math.min(99,(progress.taskAttempts?.[progress.index]||0)+1);
+  return {correct:false,progress:{...progress,taskAttempts:{...progress.taskAttempts,[progress.index]:attempts},hints:attempts>=2?[...new Set([...progress.hints,progress.index])]:[...progress.hints]}};
 }
 
 /** Track a genuine attempt without advancing, so retries and help survive refresh. */
@@ -1079,7 +1336,7 @@ function continueScreenQuest(quest, progress) {
 const app = document.querySelector('#app');
 document.body.classList.add('winter-ui');
 const printRoot = document.querySelector('#print-root');
-const RELEASE = { version: '1.5.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
+const RELEASE = { version: '1.6.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
 const IS_PURCHASED = document.body.dataset.sales === 'full';
 const IS_SHARED = document.body.dataset.shared === 'true';
 const DRAFT_KEY = 'bureau:draft:v1';
@@ -1110,7 +1367,7 @@ const isLocalAddress = () => ['localhost','127.0.0.1','[::1]'].includes(location
 const pluralWord = (n, one, few, many) => n % 100 >= 11 && n % 100 <= 14 ? many : n % 10 === 1 ? one : n % 10 >= 2 && n % 10 <= 4 ? few : many;
 const randomSeed = () => { const n = new Uint32Array(1); if (globalThis.crypto?.getRandomValues) crypto.getRandomValues(n); else n[0] = Date.now(); return n[0] % 2147483646 + 1; };
 const isScreenMode = config => config.mode === 'screen';
-const initialDraft = () => ({ v:1, edition:2, name:'', age:'8-10', theme:'winter', mode:'screen', route:['books','sofa','toys','desk','bed','wardrobe'], seed:randomSeed(), giftNote:'', step:1 });
+const initialDraft = () => ({ v:1, edition:3, name:'', age:'8-10', theme:'winter', mode:'screen', route:['books','sofa','toys','desk','bed','wardrobe'], seed:randomSeed(), giftNote:'', step:1 });
 function loadDraft() {
   const saved = storage.get(DRAFT_KEY), fallback = initialDraft();
   if (!saved || typeof saved !== 'object') return fallback;
@@ -1209,7 +1466,7 @@ function prepareView() {
   const resume=!['intro','done'].includes(prior.phase);
   const readyText=screen?'Подарок спрятан в выбранном месте. Можно начинать.':'Карточки разложены, подарок спрятан. Все места безопасны, взрослый будет рядом.';
   const plan=screen?`<div class="prep-summary browser-prep">${icon('screen','prep-mode-icon')}<div><h2>Всё готово для игры в браузере</h2><p>${q.missions.length} ${pluralWord(q.missions.length,'загадка','загадки','загадок')} на экране · без карточек и кодов</p></div></div><h3 class="label">Спрячьте подарок в этом месте</h3><div class="gift-spot">${icon(gift.id,'location-symbol')}<div><b>${escape(gift.title)}</b><p>${escape(gift.safety)}</p><button class="edit-link" data-action="step" data-step="2">Выбрать другое место</button></div></div><ol class="launch-instructions"><li>Спрячьте подарок, пока ребёнок не видит.</li><li>Нажмите «Запустить игру» и передайте ребёнку устройство.</li><li>Помогайте читать при необходимости. Место подарка откроется в финале.</li></ol>`:`<div class="prep-summary"><span class="big">${q.missions.length-1}+1</span><div><h2>Карточки и подарок</h2><p>${q.missions.length-1} ${pluralWord(q.missions.length-1,'карточка','карточки','карточек')} в тайниках, подарок — в последнем месте.</p></div></div><div class="print-choice"><h3 class="label">Как подготовить карточки?</h3><p>Распечатайте готовый лист или напишите коды на бумаге.</p><div class="actions"><button class="button paper" data-action="print">Распечатать карточки</button><button class="text-button" data-action="handwrite">Переписать коды вручную</button></div></div><h3 class="label" tabindex="-1" id="cards-plan">Куда положить карточки</h3>${q.missions.slice(0,-1).map((m,i)=>`<div class="prep-row"><span class="route-order">${i+1}</span><div class="prep-place"><b>${escape(place(m.locationId).title)}</b><span>Карточка № ${i+1} · ${escape(place(m.locationId).safety)}</span></div><span class="code-ticket" aria-label="Код карточки ${i+1}: ${codes[i]}">${codes[i]}</span></div>`).join('')}<div class="prep-row final">${icon('gift','brand-symbol')}<div class="prep-place"><b>Подарок: ${escape(gift.title)}</b><span>Карточка здесь не нужна. ${escape(gift.safety)}</span></div></div><p class="privacy-note">Без принтера: напишите по одному коду на каждом из ${codes.length} листков и разложите по плану выше.</p><button class="edit-link" data-action="step" data-step="2">Изменить маршрут</button>`;
-  return `<section>${plan}<div class="prep-tools"><button class="text-button" data-action="preview-question">Попробовать первую загадку</button><button class="text-button" data-action="shuffle-puzzles">Подобрать другие загадки</button><p>Проба не запускает квест и не меняет прогресс ребёнка.</p></div><div class="start-panel"><h3>${resume?'Продолжим с сохранённого места?':'Можно начинать?'}</h3>${resume?'<p>Прогресс этой игры сохранён. При продолжении решённые загадки повторять не придётся.</p>':''}<label class="ready-check"><input type="checkbox" id="ready-check" ${ready?'checked':''}><span>${readyText}</span></label><button class="button red-button start-game-button" data-action="play" ${ready?'':'disabled'}>${resume?'Продолжить игру':prior.phase==='done'?'Сыграть ещё раз':'Запустить игру'} · ${escape(draft.name)}</button><p class="ready-helper" id="ready-helper" ${ready?'hidden':''}>Сначала отметьте галочкой, что ${screen?'подарок спрятан':'карточки и подарок готовы'}.</p>${resume?'<button class="text-button restart-link" data-action="restart-request">Начать этот квест заново</button>':''}</div><details class="answer-key"><summary>Ответы к загадкам · только взрослому</summary><ol>${q.missions.map(m=>`<li><b>${escape(m.title)}:</b> ${escape(m.choices[m.answerIndex])}. ${escape(m.explanation)}</li>`).join('')}</ol></details><details class="transfer-section"><summary>Открыть на другом устройстве или сохранить</summary><div class="download-section"><p>Скачанный HTML-файл содержит готовую игру и фотографии. На компьютере его можно открыть в браузере без интернета.</p><div class="actions"><button class="button paper small" data-action="download">Скачать игру .html</button><button class="text-button" data-action="copy-link">Скопировать ссылку</button></div><p>${isLocalAddress()?'Ссылка с этого локального адреса работает только на этом компьютере при запущенном сервере. Для передачи используйте скачанный файл. На телефоне заранее проверьте, открывает ли его браузер.':'Ссылка работает у тех, кому доступен этот сайт. Для игры без доступа к сайту передайте HTML-файл; на телефоне заранее проверьте его открытие.'}</p><p class="privacy-note">Ссылка и файл содержат имя, место подарка и записку. Передавайте их только участникам игры.</p></div></details><div class="prepare-back"><button class="text-button" data-action="step" data-step="1">Изменить формат игры</button></div></section>`;
+  return `<section>${draft.theme==='winter'&&draft.edition!==3?'<div class="notice">Доступно новое приключение «Дело о пропавшем адресе». Нажмите «Подобрать другие загадки», чтобы перейти на него. Подготовленные раньше карточки сохранят свой прежний маршрут.</div>':''}${plan}<div class="prep-tools"><button class="text-button" data-action="preview-question">Попробовать первую загадку</button><button class="text-button" data-action="shuffle-puzzles">Подобрать другие загадки</button><p>Проба не запускает квест и не меняет прогресс ребёнка.</p></div><div class="start-panel"><h3>${resume?'Продолжим с сохранённого места?':'Можно начинать?'}</h3>${resume?'<p>Прогресс этой игры сохранён. При продолжении решённые загадки повторять не придётся.</p>':''}<label class="ready-check"><input type="checkbox" id="ready-check" ${ready?'checked':''}><span>${readyText}</span></label><button class="button red-button start-game-button" data-action="play" ${ready?'':'disabled'}>${resume?'Продолжить игру':prior.phase==='done'?'Сыграть ещё раз':'Запустить игру'} · ${escape(draft.name)}</button><p class="ready-helper" id="ready-helper" ${ready?'hidden':''}>Сначала отметьте галочкой, что ${screen?'подарок спрятан':'карточки и подарок готовы'}.</p>${resume?'<button class="text-button restart-link" data-action="restart-request">Начать этот квест заново</button>':''}</div><details class="answer-key"><summary>Ответы к загадкам · только взрослому</summary><ol>${q.missions.map(m=>`<li><b>${escape(m.title)}:</b> ${escape(m.choices[m.answerIndex])}. ${escape(m.explanation)}</li>`).join('')}</ol></details><details class="transfer-section"><summary>Открыть на другом устройстве или сохранить</summary><div class="download-section"><p>Скачанный HTML-файл содержит готовую игру и фотографии. На компьютере его можно открыть в браузере без интернета.</p><div class="actions"><button class="button paper small" data-action="download">Скачать игру .html</button><button class="text-button" data-action="copy-link">Скопировать ссылку</button></div><p>${isLocalAddress()?'Ссылка с этого локального адреса работает только на этом компьютере при запущенном сервере. Для передачи используйте скачанный файл. На телефоне заранее проверьте, открывает ли его браузер.':'Ссылка работает у тех, кому доступен этот сайт. Для игры без доступа к сайту передайте HTML-файл; на телефоне заранее проверьте его открытие.'}</p><p class="privacy-note">Ссылка и файл содержат имя, место подарка и записку. Передавайте их только участникам игры.</p></div></details><div class="prepare-back"><button class="text-button" data-action="step" data-step="1">Изменить формат игры</button></div></section>`;
 }
 function renderEditor(focusHeading=false) {
   const screen=isScreenMode(draft);
@@ -1220,36 +1477,113 @@ function renderEditor(focusHeading=false) {
 }
 function progressKey(){return `bureau:${isDemo?'demo':'progress'}:v1:${quest.id}`;}
 function saveProgress(){storage.set(progressKey(),progress);}
+// HOLIDAY_RENDERER_START — also copied into the public four-puzzle sample at build time.
+const winterEscape=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+function winterDrawing(item){
+  const colors={red:'#b52d42',blue:'#4268a3',gold:'#dcad44',green:'#2c735d',white:'#f9faf5'};
+  const color=item.silhouette?'#263e54':colors[item.color]||'#b52d42',ink='#263e54',gold=item.silhouette?'#263e54':colors.gold;
+  const pattern=item.pattern==='stripe'?'<path d="M31 45h38M30 58h40M34 71h32" stroke="#fff8e5" stroke-width="6"/>':item.pattern==='star'?'<path d="m50 40 4 9 10 1-8 7 2 10-8-5-8 5 2-10-8-7 10-1z" fill="#fff2c5"/>':'';
+  if(item.kind==='symbols')return item.symbols.map((kind,i)=>`<g transform="translate(${i*32},22) scale(.34)">${winterDrawing({kind})}</g>`).join('');
+  if(item.kind==='star')return `<path d="m50 12 11 25 27 3-20 19 6 28-24-14-24 14 6-28-20-19 27-3z" fill="${item.silhouette?color:gold}" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/>`;
+  if(item.kind==='moon')return `<path d="M63 16A35 35 0 1 0 80 72 34 34 0 0 1 63 16" fill="${gold}" stroke="${ink}" stroke-width="3"/>`;
+  if(item.kind==='bell')return `<path d="M43 24v-5a7 7 0 0 1 14 0v5M26 70c11-11 6-36 24-36s13 25 24 36l4 6H22z" fill="${color}" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/><path d="M43 81a7 7 0 0 0 14 0" fill="${gold}" stroke="${ink}" stroke-width="3"/>${item.silhouette?'':'<path d="m40 45-4 18" stroke="#fff7e3" stroke-width="4" stroke-linecap="round"/>'}`;
+  if(item.kind==='ball')return `<path d="M45 20v-6h10v6" fill="${gold}" stroke="${ink}" stroke-width="3"/><circle cx="50" cy="57" r="32" fill="${color}" stroke="${ink}" stroke-width="3"/>${pattern}`;
+  if(item.kind==='mitten')return `<path d="M36 81V58l-7-10c-8-12 2-20 10-10l4 5V26c0-19 29-18 29 1v35c0 9-4 15-8 19z" fill="${color}" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/>${pattern}<path d="M35 80h30v10H35z" fill="${gold}" stroke="${ink}" stroke-width="3"/>`;
+  if(item.kind==='tree')return `<path d="M45 75h10v17H45z" fill="#b28253"/><path d="m50 12 22 27H62l19 26H67l20 21H13l20-21H19l19-26H28z" fill="${item.silhouette?color:colors.green}" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/><path d="m33 51 33 9M28 72l40 7" stroke="#f3dd9d" stroke-width="4"/>`;
+  if(item.kind==='gift'||item.kind==='parcel')return `<rect x="19" y="35" width="62" height="49" rx="3" fill="${color}" stroke="${ink}" stroke-width="3"/><path d="M16 31h68v14H16z" fill="${color}" stroke="${ink}" stroke-width="3"/><path d="M46 32h9v52h-9z" fill="${gold}"/><path d="M50 31C22 32 28 7 44 20l6 10c8-25 34-16 20-4-5 4-12 5-20 5" fill="none" stroke="${gold}" stroke-width="6"/>`;
+  if(item.kind==='ribbon')return `<path d="M48 47C11 59 13 13 39 29l11 15c23-38 54-10 26 2-7 3-17 2-26 1l-8 36-12-9-7 4 14-29m16-2 22 30-14-1-8 9-7-35" fill="${color}" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/><circle cx="50" cy="46" r="8" fill="${gold}" stroke="${ink}" stroke-width="3"/>`;
+  if(item.kind==='card')return `<path d="m19 26 61-7 7 59-61 7z" fill="#fff9e8" stroke="${ink}" stroke-width="3"/><path d="m33 40 34-4m-33 17 25-3m-24 16 34-4" stroke="${color}" stroke-width="4"/>`;
+  if(item.kind==='envelope')return `<rect x="13" y="27" width="74" height="52" rx="3" fill="#fff9e8" stroke="${ink}" stroke-width="3"/><path d="m14 29 36 28 36-28M15 77l24-24m46 24L61 53" fill="none" stroke="${ink}" stroke-width="3"/>`;
+  if(item.kind==='snowball')return `<circle cx="50" cy="${85-33*(item.size||1)}" r="${33*(item.size||1)}" fill="#fff" stroke="#65839b" stroke-width="3"/><path d="M32 84h37" stroke="#c3d6e3" stroke-width="3"/>`;
+  if(item.kind==='snowman')return `<circle cx="50" cy="67" r="23" fill="white" stroke="${ink}" stroke-width="3"/><circle cx="50" cy="33" r="15" fill="white" stroke="${ink}" stroke-width="3"/><path d="M36 43h29v8H36z" fill="${color}"/><path d="M49 31h15l-15 6" fill="#d78039"/><circle cx="45" cy="28" r="2"/><circle cx="50" cy="62" r="2"/><circle cx="50" cy="72" r="2"/>`;
+  if(item.kind==='flake'){
+    const count=item.spokes||6;
+    return Array.from({length:count},(_,i)=>`<g transform="rotate(${i*360/count} 50 50)"><path d="M50 50V12m0 15-10-10m10 10 10-10m-10 24-12-9m12 9 12-9" stroke="${item.silhouette?ink:'#49799e'}" stroke-width="3.5" fill="none" stroke-linecap="round"/></g>`).join('');
+  }
+  if(item.kind==='house')return `<path d="M23 43h54v43H23z" fill="#f1e4c6" stroke="${ink}" stroke-width="3"/><path d="m14 44 36-30 36 30z" fill="${color}" stroke="${ink}" stroke-width="3"/><path d="M23 43h54" stroke="white" stroke-width="5"/>${item.door==='round'?'<path d="M42 85V66a9 9 0 0 1 18 0v19" fill="#4268a3"/>':'<path d="M43 62h17v24H43z" fill="#4268a3"/>'}${item.roof?`<g transform="translate(35 12) scale(.3)">${winterDrawing({kind:item.roof})}</g>`:''}${item.symbols?item.symbols.map((kind,i)=>`<g transform="translate(${25+i*26} 43) scale(.24)">${winterDrawing({kind})}</g>`).join(''):''}${item.number?`<text x="50" y="56" text-anchor="middle" fill="${ink}" font-size="17" font-weight="800">${winterEscape(item.number)}</text>`:''}`;
+  if(item.kind==='bag')return `<path d="m33 22 8 14c-33 17-34 52 9 52s42-35 9-52l8-14z" fill="#d9c19a" stroke="${ink}" stroke-width="3"/><path d="M35 37h30" stroke="${color}" stroke-width="6"/><path d="M37 53h28v20H37z" fill="#fff9e8" stroke="${ink}" stroke-width="2"/>`;
+  if(item.kind==='holes')return Array.from({length:16},(_,i)=>`<rect x="${12+i%4*19}" y="${12+Math.floor(i/4)*19}" width="19" height="19" fill="#fff" stroke="#45637d" stroke-width="1.5"/>${item.cells.includes(i)?`<circle cx="${21.5+i%4*19}" cy="${21.5+Math.floor(i/4)*19}" r="4" fill="#b52d42"/>`:''}`).join('');
+  if(item.kind==='sleigh')return `<path d="m18 40 9 30h44l13-27-26 5-4-21H36v18z" fill="${color}" stroke="${ink}" stroke-width="3"/><path d="m24 70-5 14h54q16 0 14-13M33 70l-4 14m35-14-5 14" fill="none" stroke="${gold}" stroke-width="5" stroke-linecap="round"/><g transform="translate(25 -4) scale(.54)">${winterDrawing({kind:'gift',color:'green'})}</g>`;
+  return '';
+}
+function winterIcon(item,extra=''){
+  return `<svg class="winter-icon ${extra}" viewBox="0 0 100 100" aria-hidden="true" focusable="false">${winterDrawing(item)}</svg>`;
+}
+function winterTile(item){
+  const description=item.kind==='house'&&item.roof?`; на крыше ${item.roof==='star'?'звезда':'луна'}, ${item.door==='round'?'круглая':'квадратная'} дверь`:'';
+  return `${winterIcon(item)}<span>${winterEscape(item.label)}${description?`<span class="visually-hidden">${winterEscape(description)}</span>`:''}</span>${item.value?`<b class="toy-tag">${winterEscape(item.value)}</b>`:''}${item.edge?`<small class="fragment-edge">${winterEscape(item.edge)}</small>`:''}`;
+}
+function winterGrid(cells,columns=3,extra=''){
+  return `<div class="winter-grid ${extra}" style="--columns:${columns}" role="group">${cells.map(cell=>`<span>${winterEscape(cell)}</span>`).join('')}</div>`;
+}
+function winterVisual(mission){
+  const v=mission.visual;if(!v||v.type==='none')return '';
+  let content='',caption='';
+  if(v.type==='legend'){
+    content=`<div class="toy-legend">${v.items.map(item=>`<div class="toy-tile">${winterTile(item)}</div>`).join('')}</div><div class="stamped-envelope"><span class="winter-board-label">Оттиски на письме · слева направо</span><div class="toy-target">${v.target.map(item=>`<div>${winterIcon(item)}<span class="visually-hidden">${winterEscape(item.label)}</span></div>`).join('')}</div></div>`;
+  }else if(v.type==='row')content=`<div class="toy-legend houses">${v.items.map(item=>`<div class="toy-tile">${winterTile(item)}</div>`).join('')}</div>`;
+  else if(v.type==='envelope')content=`<div class="stamped-envelope"><span class="winter-board-label">Картинки вместо адреса</span><div class="toy-target">${v.symbols.map(kind=>winterIcon({kind})).join('')}</div></div>`;
+  else if(v.type==='garland')content=`<div class="toy-garland">${v.items.map(item=>`<span>${winterIcon(item)}<span class="visually-hidden">${winterEscape(item.label)}; </span></span>`).join('')}<span class="missing-toy" aria-label="Пустое место">?</span></div>`;
+  else if(v.type==='shadow')content=`<div class="shadow-tag">${winterIcon(v.item)}</div>`;
+  else if(v.type==='layers')content=`<div class="layer-card" role="img" aria-label="Снежинку частично закрывает ёлка, нижние ветви ёлки закрывает подарок${v.ribbon?', угол подарка закрывает лента':''}">${winterIcon({kind:'flake'},'layer-flake')}${winterIcon({kind:'tree'},'layer-tree')}${winterIcon({kind:'gift'},'layer-gift')}${v.ribbon?winterIcon({kind:'ribbon'},'layer-ribbon'):''}</div>`;
+  else if(v.type==='grid')content=winterGrid(v.cells,v.columns);
+  else if(v.type==='sorter')content=`<div class="sorter-machine"><span class="sorter-step">1. Меняем крайние</span><span class="sorter-step">2. Меняем первые две</span><div class="sorter-display"><small>На выходе</small><b>${winterEscape(v.output)}</b></div></div>`;
+  else if(v.type==='stencils')content=`<div class="stencil-layout"><div><b>Табличка</b>${winterGrid(v.cells)}</div>${v.masks.map((mask,i)=>`<div><b>Решётка ${i+1} ${i===0?'↑':'↓'}</b>${winterGrid(Array.from({length:9},(_,j)=>mask.includes(j)?'○':'■'),3,'mask-grid')}<span class="visually-hidden">Отверстия в клетках ${mask.map(n=>n+1).join(', ')}, счёт по строкам.</span></div>`).join('')}</div><p class="winter-board-note">○ — отверстие · ■ — лёд · стрелки нужно совместить</p>`;
+  else if(v.type==='fold')content=`<div class="fold-layout"><div><b>Лист 4 × 4</b>${winterIcon({kind:'holes',cells:[]})}</div><div class="fold-directions">Левую половину направо<br>Затем нижнюю наверх</div><div><b>После сгибов</b><div class="folded-paper"><span>●</span><span></span><span></span><span></span></div></div></div>`;
+  else if(v.type==='cube')content=`<div class="cube-net" role="img" aria-label="Развёртка: ряд варежка, ёлка, колокольчик, снеговик. Звезда над ёлкой, подарок под ёлкой.">${[{kind:'star',x:2,y:1},{kind:'mitten',x:1,y:2},{kind:'tree',x:2,y:2},{kind:'bell',x:3,y:2},{kind:'snowman',x:4,y:2},{kind:'gift',x:2,y:3}].map(item=>`<div style="grid-column:${item.x};grid-row:${item.y}">${winterIcon(item)}</div>`).join('')}</div>`;
+  else if(v.type==='gates')content=`<div class="delivery-rules"><span><b>Дом А</b>С подарком Б<br>не проехать</span><span><b>Дом Б</b>Дорога<br>свободна</span><span><b>Дом В</b>С подарком А<br>не проехать</span></div>`;
+  else if(v.type==='clock')content=`<div class="departure-board"><span>Вылет 31 декабря</span><b>${winterEscape(v.start)}</b><span>В пути ${winterEscape(v.duration)} минут</span></div>`;
+  else if(v.type==='snowman')content=`<div class="winter-mini-scene">${winterIcon({kind:'snowman'})}<span>Собираем снизу вверх</span></div>`;
+  else if(v.type==='torn')content=`<div class="winter-mini-scene">${winterIcon({kind:'envelope'})}<span>Адрес снова станет целым</span></div>`;
+  else content=`<div class="winter-mini-scene">${winterIcon({kind:v.type==='sleigh'?'sleigh':'gift'})}</div>`;
+  return `<div class="winter-puzzle-board">${content}${caption}</div>`;
+}
+function winterChoices(mission,tried=[]){
+  return `<div class="choices ${mission.choiceArt?'illustrated-choices':mission.choices.every(c=>c.length<=16)?'compact-choices':''}" role="group" aria-label="Варианты ответа">${mission.choices.map((choice,i)=>`<button type="button" class="choice ${tried.includes(i)?'tried-choice':''}" data-action="answer" data-answer="${i}" ${tried.includes(i)?'disabled':''} aria-label="${winterEscape(choice)}${tried.includes(i)?' — этот вариант уже проверили':''}">${mission.choiceArt?.[choice]?winterIcon(mission.choiceArt[choice]):`<span class="choice-letter" aria-hidden="true">${'АБВГДЕ'[i]}</span>`}<span>${winterEscape(choice)}</span></button>`).join('')}</div>`;
+}
+function winterControls(mission,value){
+  const task=mission.interaction;if(!task)return '';
+  if(task.type==='code')return `<form id="puzzle-form" class="puzzle-input-form" novalidate><label for="puzzle-code">Код из ${task.length} цифр</label><input class="input puzzle-code-input" id="puzzle-code" name="puzzle-code" type="text" inputmode="numeric" autocomplete="off" maxlength="${task.length}" value="${winterEscape(value)}" aria-describedby="answer-feedback" placeholder="${'·'.repeat(task.length)}"><div class="puzzle-keypad" role="group" aria-label="Цифры для кода">${[...'1234567890'].map(ch=>`<button type="button" data-action="task-key" data-value="${ch}">${ch}</button>`).join('')}<button type="button" class="key-erase" data-action="task-back">Стереть</button></div><button type="submit" class="button">Проверить код</button></form>`;
+  if(task.type==='switches'){
+    const lamps=[...task.initial];for(const id of value){const item=task.items.find(item=>item.id===id);if(item)for(const index of item.mask)lamps[index]=!lamps[index];}
+    return `<div class="switch-puzzle"><div class="switch-lamps" aria-live="polite">${lamps.map((on,i)=>`<span class="switch-lamp ${on?'lit':''}" role="img" aria-label="${['Левая','Средняя','Правая'][i]} лампа ${on?'горит':'не горит'}">${winterIcon({kind:'ball',color:on?'gold':'blue'})}<small>${on?'Горит':'Не горит'}</small></span>`).join('')}</div><div class="switch-buttons">${task.items.map(item=>`<button class="button paper" type="button" data-action="task-toggle" data-value="${item.id}" aria-pressed="${value.includes(item.id)}"><b>${winterEscape(item.label)}</b><span>${item.mask.map(n=>['Левая','Средняя','Правая'][n]).join(' + ')}</span></button>`).join('')}</div><button class="button" type="button" data-action="task-check">Проверить гирлянду</button></div>`;
+  }
+  return `<div class="sequence-puzzle"><p class="sequence-instruction">${task.type==='order'?'Нажимай по порядку. Чтобы убрать шаг, нажми на него ещё раз.':`Отметь ${task.count} посылки. Повторное нажатие снимает отметку.`}</p>${task.type==='order'?`<div class="sequence-slots" aria-label="Твой порядок" aria-live="polite">${Array.from({length:task.count},(_,i)=>{const item=task.items.find(item=>item.id===value[i]);return item?`<button type="button" class="filled-slot" data-action="task-toggle" data-value="${item.id}" aria-label="Убрать шаг ${i+1}: ${winterEscape(item.label)}"><span class="slot-number">${i+1}</span>${winterIcon(item)}<span>${winterEscape(item.label)}</span></button>`:`<span class="empty-slot"><span>${i+1}</span></span>`;}).join('')}</div>`:''}<div class="task-items">${task.items.map(item=>`<button type="button" class="task-item ${value.includes(item.id)?'selected':''}" data-action="task-toggle" data-value="${item.id}" aria-pressed="${value.includes(item.id)}">${winterTile(item)}${value.includes(item.id)?'<span class="item-selected">Выбрано</span>':''}</button>`).join('')}</div><div class="task-submit-row"><button type="button" class="button" data-action="task-check">${task.type==='pick'?'Проверить посылки':'Проверить порядок'}</button><button type="button" class="text-button" data-action="task-clear">Сначала</button></div></div>`;
+}
+// HOLIDAY_RENDERER_END
+
 function gameFrame(content) {
   document.body.dataset.screen='game';
   const count=quest.missions.length;
   const solved=['treasure','done'].includes(progress.phase)?count:progress.index+(progress.phase==='find'?1:0);
   const screen=isScreenMode(quest.config);
   const caption=isDemo?'Пробная игра: подарок готовить не нужно.':progress.phase==='done'?'Игра завершена. Можно создать новый квест с другим сюрпризом.':progress.phase==='treasure'?'Проверь указанный тайник вместе со взрослым.':screen?'Играем на экране. Место подарка откроется в финале.':'Ищем карточки спокойно. Взрослый остаётся рядом.';
-  app.innerHTML=`${!storageAvailable?'<div class="storage-notice">Сохранение доступно только в этой вкладке. Не закрывайте и не обновляйте вкладку.</div>':''}<div class="game-shell"><header class="game-header"><div><span class="game-wordmark">Бюро находок</span>${isDemo?'<span class="game-demo">Пробная игра</span>':''}</div><div class="game-tools"><button class="game-tool" data-action="reading-size" aria-pressed="${largeReading}">${largeReading?'Обычный текст':'Крупный текст'}</button><button class="game-tool" data-action="game-help">Как играть</button>${progress.phase!=='done'?'<button class="game-tool" data-action="pause">Пауза</button>':''}</div></header><main class="game-main"><div class="game-topline"><span class="quiet">Разгадано: ${solved} из ${count}</span><div class="dots" aria-label="Разгадано загадок: ${solved} из ${count}">${Array.from({length:count},(_,i)=>`<span class="dot ${i<solved?'complete':i===progress.index?'active':''}"></span>`).join('')}</div></div>${content}<p class="game-caption">${caption}</p></main></div>`;
+  app.innerHTML=`${!storageAvailable?'<div class="storage-notice">Сохранение доступно только в этой вкладке. Не закрывайте и не обновляйте вкладку.</div>':''}<div class="game-shell"><header class="game-header"><div><span class="game-wordmark">Бюро находок</span>${isDemo?'<span class="game-demo">Пробная игра</span>':''}</div><div class="game-tools"><button class="game-tool" data-action="reading-size" aria-pressed="${largeReading}">${largeReading?'Обычный текст':'Крупный текст'}</button><button class="game-tool" data-action="game-help">Как играть</button>${progress.phase!=='done'?'<button class="game-tool" data-action="pause">Пауза</button>':''}</div></header><main class="game-main"><div class="game-topline"><span class="quiet">Разгадано: ${solved} из ${count}</span><div class="dots" aria-label="Разгадано загадок: ${solved} из ${count}">${Array.from({length:count},(_,i)=>`<span class="dot ${i<solved?'complete':i===progress.index?'active':''}"></span>`).join('')}</div></div>${quest.config.edition===3&&quest.config.theme==='winter'?`<nav class="winter-stations" aria-label="Станции приключения">${['Почта','Ёлка','Мастерская','Сани'].map((label,index)=>{const stops=quest.missions.map((mission,i)=>({mission,i})).filter(x=>x.mission.station.index===index);const done=stops.every(x=>x.i<solved);return `<span class="${done?'station-done':quest.missions[progress.index].station.index===index?'station-current':''}"><b>${done?'✓':index+1}</b>${label}</span>`;}).join('')}</nav>`:''}${content}<p class="game-caption">${caption}</p></main></div>`;
   document.querySelector('.game-card h1, .game-card h2')?.setAttribute('tabindex','-1');
 }
 function renderGame(focus=false) {
   const m=quest.missions[progress.index];
   const winter=quest.config.theme==='winter';
+  const holiday=quest.config.edition===3&&winter;
   const screen=isScreenMode(quest.config);
   if(progress.phase==='intro') {
-    gameFrame(`<article class="game-card"><div class="intro-seal">${winter?'Новогодняя<br>почта<br>Особая доставка':'Секретная<br>экспедиция'}</div><span class="eyebrow red">${escape(THEMES.find(t=>t.id===quest.config.theme).title)}</span><h1>${winter?'Пришло письмо<br>с сюрпризом!':'Есть секретное дело!'}</h1><p class="game-prompt">${isDemo?`${escape(quest.config.name)}, попробуй четыре загадки. В конце увидишь, как игра показывает место подарка.`:escape(quest.intro)}</p><p>${screen?'Нажимай на верный ответ. Если будет сложно — открой подсказку. Печатать карточки и вводить коды не нужно.':'Выбирай ответы, находи указанные тайники и вводи четыре цифры с карточек. В последнем месте будет подарок.'}</p><button class="button" data-action="start">Начать приключение</button></article>`);
+    gameFrame(`<article class="game-card"><div class="intro-seal">${winter?'Новогодняя<br>почта<br>Особая доставка':'Секретная<br>экспедиция'}</div><span class="eyebrow red">${escape(THEMES.find(t=>t.id===quest.config.theme).title)}</span><h1>${holiday?'Дело о пропавшем<br>адресе':winter?'Пришло письмо<br>с сюрпризом!':'Есть секретное дело!'}</h1><p class="game-prompt">${escape(quest.intro)}${isDemo?'<span class="demo-intro-note">Это пробная игра из четырёх заданий. Настоящий подарок готовить не нужно.</span>':''}</p><p>${holiday?(screen?'Вводи секретные коды, собирай посылки и выбирай путь для саней. Карточки печатать не нужно.':'Решай новогодние задания на экране, а затем ищи домашние карточки с кодами.') :screen?'Нажимай на верный ответ. Если будет сложно — открой подсказку. Печатать карточки и вводить коды не нужно.':'Выбирай ответы, находи указанные тайники и вводи четыре цифры с карточек. В последнем месте будет подарок.'}</p><button class="button" data-action="start">Начать приключение</button></article>`);
   } else if(progress.phase==='puzzle') {
     const tried=(progress.mistakes?.[progress.index]||[]).filter(index=>index!==m.answerIndex&&index<m.choices.length);
-    const compact=m.choices.every(choice=>[...String(choice)].length<=16);
-    const feedback=tried.length>=2?'Давай воспользуемся подсказкой. Можно также разобрать задачу вместе со взрослым.':tried.length?'Этот вариант уже проверили. Попробуй другой или открой подсказку.':'';
-    gameFrame(`<article class="game-card"><span class="eyebrow red">Загадка ${progress.index+1}</span><h1>${escape(m.title)}</h1><p class="game-prompt">${escape(m.prompt)}</p><p class="feedback attempt-feedback" id="answer-feedback" tabindex="-1" role="status" aria-live="polite">${escape(feedback)}</p>${progress.hints.includes(progress.index)?`<p class="hint-text" id="mission-hint">${escape(m.hint)}</p>`:`<p class="hint-text" id="mission-hint" hidden>${escape(m.hint)}</p>`}<div class="choices ${compact?'compact-choices':''}" role="group" aria-label="Варианты ответа">${m.choices.map((choice,i)=>`<button class="choice ${tried.includes(i)?'tried-choice':''}" data-action="answer" data-answer="${i}" ${tried.includes(i)?'disabled':''} aria-label="${escape(choice)}${tried.includes(i)?' — этот вариант уже проверили':''}"><span class="choice-letter" aria-hidden="true">${'АБВГДЕ'[i]}</span><span>${escape(choice)}</span></button>`).join('')}</div><div class="puzzle-help"><button class="hint-button" data-action="hint" aria-expanded="${progress.hints.includes(progress.index)}" aria-controls="mission-hint">${progress.hints.includes(progress.index)?'Скрыть подсказку':'Нужна подсказка?'}</button><button class="hint-button" data-action="assist">Разобрать вместе</button></div></article>`);
+    const attempts=m.interaction?(progress.taskAttempts?.[progress.index]||0):tried.length;
+    const feedback=attempts>=2?'Давай воспользуемся подсказкой. Можно также разобрать задачу вместе со взрослым.':attempts?'Пока не сходится. Можно изменить свой ответ и проверить ещё раз.':'';
+    const legacyFeedback=tried.length===1?'Этот вариант уже проверили. Попробуй другой или открой подсказку.':feedback;
+    gameFrame(`<article class="game-card ${m.station?'holiday-game-card':''}">${m.station?`<div class="courier-note"><span class="courier-label">Снегирь на связи</span><p>${escape(m.station.story)}</p></div>`:''}<span class="eyebrow red">${m.station?escape(m.station.title)+' · ':''}Загадка ${progress.index+1}</span><h1>${escape(m.title)}</h1><p class="game-prompt">${escape(m.prompt)}</p>${winterVisual(m)}<p class="feedback attempt-feedback" id="answer-feedback" tabindex="-1" role="status" aria-live="polite">${escape(m.interaction?feedback:legacyFeedback)}</p>${progress.hints.includes(progress.index)?`<p class="hint-text" id="mission-hint">${escape(m.hint)}</p>`:`<p class="hint-text" id="mission-hint" hidden>${escape(m.hint)}</p>`}${m.interaction?winterControls(m,puzzleInput(m,progress)):winterChoices(m,tried)}<div class="puzzle-help"><button class="hint-button" data-action="hint" aria-expanded="${progress.hints.includes(progress.index)}" aria-controls="mission-hint">${progress.hints.includes(progress.index)?'Скрыть подсказку':'Нужна подсказка?'}</button><button class="hint-button" data-action="assist">Разобрать вместе</button></div></article>`);
   } else if(progress.phase==='find') {
     if(screen) {
-      gameFrame(`<article class="game-card answer-success"><div class="answer-tick" aria-hidden="true">✓</div><span class="eyebrow red">Загадка ${progress.index+1} разгадана</span><h1>Верно!</h1><p class="correct-answer">Ответ: <b>${escape(m.choices[m.answerIndex])}</b></p><p class="answer-explanation">${escape(m.explanation)}</p><p class="success-next-note">Впереди ещё ${quest.missions.length-progress.index-1} ${pluralWord(quest.missions.length-progress.index-1,'загадка','загадки','загадок')}. Продолжаем?</p><button class="button" data-action="next-screen">Следующая загадка</button></article>`);
+      gameFrame(`<article class="game-card answer-success"><div class="answer-tick" aria-hidden="true">✓</div><span class="eyebrow red">Загадка ${progress.index+1} разгадана</span><h1>${m.station?'Печать получена!':'Верно!'}</h1>${m.station?`<div class="earned-stamp">${winterIcon({kind:['envelope','tree','gift','sleigh'][m.station.index]})}<b>${escape(m.station.stamp)}</b></div><p class="stamp-story">${escape(m.station.reward)}</p>`:''}<p class="correct-answer">Ответ: <b>${escape(m.choices[m.answerIndex])}</b></p><p class="answer-explanation">${escape(m.explanation)}</p><p class="success-next-note">Впереди ещё ${quest.missions.length-progress.index-1} ${pluralWord(quest.missions.length-progress.index-1,'загадка','загадки','загадок')}. Продолжаем?</p><button class="button" data-action="next-screen">Следующая загадка</button></article>`);
     } else {
     const p=place(m.locationId);
     gameFrame(`<article class="game-card"><span class="eyebrow red">Верно! Вот следующая зацепка</span>${icon(p.id,'location-symbol')}<h1>${escape(p.title)}</h1><p class="game-prompt">${escape(p.hint)}</p>${isDemo?'<div class="notice">В настоящем квесте здесь будет карточка с кодом. Сейчас её можно пропустить.</div><button class="button" data-action="demo-card">Продолжить без карточки</button>':`<p>Найди там карточку № ${progress.index+1}. На ней четыре цифры.</p><form id="code-form" novalidate><label for="card-code" class="label" style="text-align:center;margin-top:24px">Код с карточки</label><input class="input game-code" id="card-code" name="code" type="text" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" aria-describedby="code-feedback" placeholder="····"><p class="feedback" style="text-align:center" id="code-feedback" role="status" aria-live="polite"></p><button class="button" type="submit">Проверить код</button></form>`}</article>`);
     }
   } else if(progress.phase==='treasure') {
     const p=place(m.locationId);
-    gameFrame(`<article class="game-card"><span class="eyebrow red">Последняя загадка разгадана</span>${icon('gift','location-symbol')}<h1>${isDemo?'Здесь будет<br>подарок':'Сюрприз ждёт!'}</h1><h2>${escape(p.title)}</h2>${isDemo?'':`<p class="game-prompt">${escape(p.hint)}</p>`}${quest.config.giftNote?`<p class="hint-text">${escape(quest.config.giftNote)}</p>`:''}<p>${isDemo?'Это пример финального тайника. В вашей игре здесь будет место, которое выберет взрослый. Настоящий подарок искать сейчас не нужно.':screen?'Все загадки решены! Поищи подарок в указанном месте и возвращайся.':'Больше кодов не нужно. Найди свой подарок и возвращайся!'}</p><button class="button red-button" data-action="finish">${isDemo?'Завершить пробную игру':'Подарок найден!'}</button></article>`);
+    gameFrame(`<article class="game-card"><span class="eyebrow red">Последняя загадка разгадана</span>${holiday?'<p class="restored-address">Все печати собраны · адрес восстановлен</p>':''}${icon('gift','location-symbol')}<h1>${isDemo?'Здесь будет<br>подарок':'Сюрприз ждёт!'}</h1><h2>${escape(p.title)}</h2>${isDemo?'':`<p class="game-prompt">${escape(p.hint)}</p>`}${quest.config.giftNote?`<p class="hint-text">${escape(quest.config.giftNote)}</p>`:''}<p>${isDemo?'Это пример финального тайника. В вашей игре здесь будет место, которое выберет взрослый. Настоящий подарок искать сейчас не нужно.':screen?'Все загадки решены! Поищи подарок в указанном месте и возвращайся.':'Больше кодов не нужно. Найди свой подарок и возвращайся!'}</p><button class="button red-button" data-action="finish">${isDemo?'Завершить пробную игру':'Подарок найден!'}</button></article>`);
   } else if(isDemo) {
     gameFrame(`<article class="game-card ending"><div class="success-ribbon" aria-hidden="true">✦ ✦ ✦</div><span class="eyebrow">Пробный маршрут пройден</span><h1>Теперь —<br>ваше приключение</h1><p class="game-prompt">Вы попробовали загадки на экране. Теперь можно создать свою игру: без карточек или с поиском по домашним тайникам.</p><button class="button" data-action="create">Собрать свой квест</button><button class="hint-button" data-action="demo-restart">Попробовать ещё раз</button><button class="hint-button" data-action="home">На главную</button></article>`);
   } else {
@@ -1265,7 +1599,7 @@ function route() {
     shell('<main class="empty-state"><span class="eyebrow red">Семейный квест</span><h1>Откройте ссылку от взрослого</h1><p>Для начала игры нужна полная ссылка с настройками. Подготовка и скачивание доступны владельцу покупки.</p><a class="button" href="/">Бюро находок</a></main>');return;
   }
   if(hash==='create'){quest=null;isDemo=false;ready=false;renderEditor();return;}
-  if(hash==='demo'){isDemo=true;quest=createQuest({v:1,name:'Саша',age:'8-10',theme:'winter',mode:'screen',route:['books','sofa','toys','wardrobe'],seed:20261124,giftNote:'Сюрприз — это ещё и время, которое мы провели вместе.'});progress=readProgress(storage.get(progressKey()),quest.missions.length);renderGame();return;}
+  if(hash==='demo'){isDemo=true;quest=createQuest({v:1,edition:3,name:'Саша',age:'8-10',theme:'winter',mode:'screen',route:['books','sofa','toys','wardrobe'],seed:20261124,giftNote:'Сюрприз — это ещё и время, которое мы провели вместе.'});progress=readProgress(storage.get(progressKey()),quest.missions.length);renderGame();return;}
   if(hash.startsWith('play=')){
     try {isDemo=false;quest=createQuest(decodeConfig(hash.slice(5)));storage.set(LAST_GAME_KEY,quest.config);progress=readProgress(storage.get(progressKey()),quest.missions.length);renderGame();}
     catch(error){showError(error.message);}
@@ -1343,21 +1677,21 @@ function handleAction(target){
   if(action==='assist-confirm'&&progress?.phase==='puzzle'){const result=solveWithHelp(quest,progress);if(result.correct){progress=result.progress;saveProgress();closeDialog();renderGame(true);}return;}
   if(action==='preview-question'){
     const mission=createQuest(draft).missions[0];
-    showDialog('Попробуйте первую загадку','Это проверка для взрослого. Тайник, готовность и сохранённая игра останутся на месте.',`<h3 class="preview-title">${escape(mission.title)}</h3><p class="preview-prompt">${escape(mission.prompt)}</p><div class="choices preview-choices">${mission.choices.map((answer,i)=>`<button class="choice" data-action="preview-answer" data-answer="${i}">${escape(answer)}</button>`).join('')}</div><p id="preview-feedback" class="hint-text" role="status"></p><button class="button" data-action="close-dialog">Вернуться к подготовке</button>`);return;
+    showDialog('Попробуйте первую загадку','Это проверка для взрослого. Тайник, готовность и сохранённая игра останутся на месте.',`<h3 class="preview-title">${escape(mission.title)}</h3><p class="preview-prompt">${escape(mission.prompt)}</p>${winterVisual(mission)}${mission.interaction?'<p>В предпросмотре выберите готовый ответ из списка ниже.</p>':''}<div class="choices preview-choices">${mission.choices.map((answer,i)=>`<button class="choice" data-action="preview-answer" data-answer="${i}">${escape(answer)}</button>`).join('')}</div><p id="preview-feedback" class="hint-text" role="status"></p><button class="button" data-action="close-dialog">Вернуться к подготовке</button>`);return;
   }
   if(action==='preview-answer'){
     const mission=createQuest(draft).missions[0],index=Number(target.dataset.answer);
     document.querySelector('#preview-feedback').textContent=index===mission.answerIndex?'Верно! '+mission.explanation:'Пока не сходится. '+mission.hint;return;
   }
   if(action==='shuffle-puzzles'){showDialog('Подобрать другие загадки?','Имя, возраст, формат и тайники сохранятся. Этот квест получит новый набор. Сохранения уже начатых игр останутся доступны по прежним ссылкам.','<div class="actions"><button class="button" data-action="confirm-shuffle">Подобрать новый набор</button><button class="text-button" data-action="close-dialog">Оставить как есть</button></div>');return;}
-  if(action==='confirm-shuffle'){const previous=draft.seed;draft.seed=randomSeed();if(draft.seed===previous)draft.seed=previous===2147483647?1:previous+1;draft.edition=2;ready=false;saveDraft();closeDialog();renderEditor(true);notify('Новый набор загадок готов. Имя, формат и место подарка сохранены.');return;}
+  if(action==='confirm-shuffle'){const previous=draft.seed;draft.seed=randomSeed();if(draft.seed===previous)draft.seed=previous===2147483647?1:previous+1;draft.edition=3;ready=false;saveDraft();closeDialog();renderEditor(true);notify('Новый набор загадок готов. Имя, формат и место подарка сохранены.');return;}
   if(action==='home'){if(IS_SHARED){location.assign('/');return;}navigate('');return;}
   if(action==='create'){step=draft.name?draft.step||1:1;navigate('#create');return;}
   if(action==='demo'){navigate('#demo');return;}
   if(action==='resume-home'){const saved=resumableDraft();if(saved)navigate('#play='+encodeConfig(saved.quest.config));return;}
   if(action==='next-screen'){const result=continueScreenQuest(quest,progress);if(result.correct){progress=result.progress;saveProgress();renderGame(true);}return;}
   if(action==='handwrite'){document.querySelector('#cards-plan')?.scrollIntoView?.({block:'start'});document.querySelector('#cards-plan')?.focus();notify('Перепишите по одному коду на каждом листке и разложите карточки по этому плану.');return;}
-  if(action==='game-help'){showDialog('Как играть',isScreenMode(quest.config)?'Решай загадки по очереди: нажимай на верный ответ, затем на «Следующая загадка». Между заданиями ничего искать и вводить не нужно. Если трудно, открой подсказку. В финале появится место подарка.':'Выбери верный ответ. Игра покажет тайник: найди там бумажную карточку и введи её четыре цифры. Последняя загадка приведёт к подарку — карточка там не нужна.', '<button class="button" data-action="close-dialog">Понятно, играем</button>');return;}
+  if(action==='game-help'){showDialog('Как играть',quest.config.edition===3&&quest.config.theme==='winter'?'Пройди четыре станции новогодней почты. В одних заданиях выбирай картинку, в других вводи код или нажимай на предметы по порядку. Свой ответ можно изменить до проверки. За каждое решение ты получаешь печать. Если трудно, открой подсказку или «Разобрать вместе». В финале восстановится адрес подарка.':isScreenMode(quest.config)?'Решай загадки по очереди: нажимай на верный ответ, затем на «Следующая загадка». Между заданиями ничего искать и вводить не нужно. Если трудно, открой подсказку. В финале появится место подарка.':'Выбери верный ответ. Игра покажет тайник: найди там бумажную карточку и введи её четыре цифры. Последняя загадка приведёт к подарку — карточка там не нужна.', '<button class="button" data-action="close-dialog">Понятно, играем</button>');return;}
   if(action==='return-setup'&&!isDemo&&quest){draft={...quest.config,route:[...quest.config.route],step:3};step=3;ready=false;saveDraft();closeDialog();navigate('#create');return;}
   if(action==='new-quest'){showDialog('Собрать новый квест?',`Текущий черновик будет заменён. Чтобы вернуться к прежнему квесту, сначала сохраните его ссылку или HTML-файл.${storageAvailable?' Прогресс по сохранённой ссылке останется в этом браузере.':' Не закрывайте и не обновляйте вкладку: прогресс хранится только в её памяти.'}`,'<div class="actions"><button class="button" data-action="confirm-new-quest">Создать новый квест</button><button class="text-button" data-action="close-dialog">Отмена</button></div>');return;}
   if(action==='confirm-new-quest'){draft=initialDraft();step=1;ready=false;saveDraft();closeDialog();renderEditor(true);window.scrollTo(0,0);return;}
@@ -1383,7 +1717,29 @@ function handleAction(target){
   if(action==='restart-request'){if(!ready){notify(isScreenMode(draft)?'Сначала подтвердите, что подарок спрятан.':'Сначала подтвердите, что карточки и подарок готовы.');return;}showDialog('Начать квест заново?',`${isScreenMode(draft)?'Снова спрячьте подарок в выбранном месте.':'Карточки и подарок должны снова лежать на своих местах.'} Прогресс этого квеста будет сброшен.`,'<div class="actions"><button class="button" data-action="restart-prepared">Начать заново</button><button class="text-button" data-action="close-dialog">Отмена</button></div>');return;}
   if(action==='restart-prepared'&&ready){const prepared=createQuest(draft);storage.set(`bureau:progress:v1:${prepared.id}`,freshProgress());closeDialog();navigate('#play='+encodeConfig(draft));return;}
   if(action==='start'){progress={...progress,phase:'puzzle',startedAt:progress.startedAt||Date.now()};saveProgress();renderGame(true);return;}
+  if(['task-key','task-back','task-toggle','task-clear','task-check'].includes(action)&&progress?.phase==='puzzle'){
+    const mission=quest.missions[progress.index],task=mission.interaction;if(!task)return;
+    let value=puzzleInput(mission,progress);
+    if(action==='task-check'){
+      const result=attemptTask(quest,progress);progress=result.progress;saveProgress();renderGame(result.correct);
+      if(result.incomplete){const feedback=document.querySelector('#answer-feedback');feedback.textContent=task.type==='code'?`Нужно ввести ${task.length} цифры. Пока код не полный.`:`Сначала выбери все элементы: ${task.count}.`;feedback.focus();}
+      else if(!result.correct)document.querySelector('#answer-feedback')?.focus();
+      return;
+    }
+    if(action==='task-clear')value=task.type==='code'?'':[];
+    if(action==='task-key'&&task.type==='code')value=(value+target.dataset.value).slice(0,task.length);
+    if(action==='task-back'&&task.type==='code')value=value.slice(0,-1);
+    if(action==='task-toggle'&&task.type!=='code'){
+      const id=target.dataset.value;if(!task.items.some(item=>item.id===id))return;
+      if(value.includes(id))value=value.filter(item=>item!==id);
+      else if(value.length<(task.type==='switches'?task.items.length:task.count))value=[...value,id];
+      else {document.querySelector('#answer-feedback').textContent='Все места заняты. Нажми на выбранный элемент, чтобы убрать его.';document.querySelector('#answer-feedback').focus();return;}
+    }
+    progress=setPuzzleInput(quest,progress,value);saveProgress();renderGame();
+    document.querySelector(`[data-action="${action}"][data-value="${target.dataset.value||''}"]`)?.focus({preventScroll:true});return;
+  }
   if(action==='answer'){
+    if(quest.missions[progress.index]?.interaction)return;
     const result=attemptMission(quest,progress,Number(target.dataset.answer));
     progress=result.progress;saveProgress();renderGame(result.correct);
     if(!result.correct)document.querySelector('#answer-feedback')?.focus();
@@ -1401,7 +1757,7 @@ function handleAction(target){
   if(action==='close-dialog'){closeDialog();return;}
 }
 document.addEventListener('click',event=>{const target=event.target.closest('[data-action]');if(!target||target.disabled)return;event.preventDefault();handleAction(target);});
-app.addEventListener('input',event=>{const target=event.target;if(['child-name','gift-note'].includes(target.name)){updateDraftField(target);syncSidebar();target.removeAttribute('aria-invalid');document.querySelector(target.name==='gift-note'?'#note-error':'#name-error').textContent='';}});
+app.addEventListener('input',event=>{const target=event.target;if(target.name==='puzzle-code'&&progress?.phase==='puzzle'){progress=setPuzzleInput(quest,progress,target.value);target.value=puzzleInput(quest.missions[progress.index],progress);saveProgress();return;}if(['child-name','gift-note'].includes(target.name)){updateDraftField(target);syncSidebar();target.removeAttribute('aria-invalid');document.querySelector(target.name==='gift-note'?'#note-error':'#name-error').textContent='';}});
 app.addEventListener('change',event=>{
   const target=event.target;
   if(['age','theme'].includes(target.name)){updateDraftField(target);syncSidebar();}
@@ -1418,6 +1774,7 @@ app.addEventListener('submit',event=>{
   if(event.target.id==='settings-form'){
     try{validateConfig({...draft,route:['books','sofa','desk','bed']});setStep(2);}catch(error){const isNote=error.message.startsWith('Записка');if(isNote){const extra=document.querySelector('#extra-settings');if(extra)extra.open=true;}const input=document.querySelector(isNote?'#gift-note':'#child-name');input.setAttribute('aria-invalid','true');document.querySelector(isNote?'#note-error':'#name-error').textContent=error.message;input.focus();}
   }
+  if(event.target.id==='puzzle-form'){handleAction({dataset:{action:'task-check'}});return;}
   if(event.target.id==='code-form'){
     const input=document.querySelector('#card-code');const result=confirmCard(quest,progress,input.value);
     if(result.correct){progress=result.progress;saveProgress();renderGame(true);}else{input.setAttribute('aria-invalid','true');document.querySelector('#code-feedback').textContent='Код не совпал. Проверь четыре цифры на найденной карточке.';input.select();}

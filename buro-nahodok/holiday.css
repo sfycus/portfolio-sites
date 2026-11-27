@@ -1,0 +1,65 @@
+/* The working desk of the New Year post office. Illustrations are local SVG. */
+.winter-ui .game-main:has(.holiday-game-card){max-width:760px}
+.winter-stations{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:4px 0 22px;gap:8px;color:#5d7186;font-size:14px;text-align:center}
+.winter-stations>span{display:flex;align-items:center;justify-content:center;gap:7px;padding:10px 3px;border-bottom:2px solid #cbd8e5}
+.winter-stations b{display:grid;place-items:center;width:23px;height:23px;flex-shrink:0;border:1px solid #a9bdd1;border-radius:50%;font-size:13px}
+.winter-stations .station-current{color:#a5283e;border-color:#b52d42;font-weight:700}
+.winter-stations .station-current b{background:#b52d42;border-color:#b52d42;color:white}
+.winter-stations .station-done{color:#25654e;border-color:#43816a}.station-done b{background:#2c735d!important;color:white;border-color:#2c735d!important}
+.courier-note{background:#eff4f9;text-align:left;border-radius:7px;padding:14px 17px;margin:0 0 24px;border-left:3px solid #6884a5}
+.courier-label{font-size:13px;font-weight:800;letter-spacing:.035em;color:#315675;text-transform:uppercase}
+.courier-note p{font-size:15px;line-height:1.55;color:#4a6074;margin:6px 0 0}
+.demo-intro-note{display:block;margin-top:16px;font-size:16px;color:#66758a}
+.winter-puzzle-board{background:#f2f6f9;border:1px solid #d5e0e9;border-radius:10px;padding:21px 18px;margin:23px 0;overflow:hidden;text-align:center;color:#263e54}
+.winter-icon{width:85px;height:85px;display:block;flex-shrink:0;margin:auto;overflow:visible}
+.toy-legend{display:flex;align-items:stretch;justify-content:center;gap:10px;flex-wrap:wrap}
+.toy-tile{position:relative;display:flex;flex:1;min-width:70px;flex-direction:column;align-items:center;padding:7px 4px 12px;gap:3px;background:#fffdf7;border:1px solid #d6d3c8;border-radius:5px;box-shadow:0 3px 0 #dde4e9}
+.toy-tile>span{font-size:14px;font-weight:600;line-height:1.35}.toy-tag{font-size:24px;line-height:1;background:#f2deb1;border:1px solid #d7ba80;border-radius:3px;padding:5px 12px;margin-top:5px}
+.toy-target{display:flex;align-items:center;justify-content:center;gap:7px}.toy-target>.winter-icon{margin:0}
+.stamped-envelope{background:#fffcf2;border:2px dashed #8aa0b4;border-radius:5px;padding:16px 8px;margin:22px auto 0;max-width:380px;box-shadow:3px 4px 0 #dfe8ed}
+.stamped-envelope:first-child{margin-top:0}.winter-board-label{font-size:13px;display:block;font-weight:700;margin-bottom:10px;color:#526b81}
+.toy-garland{display:flex;align-items:center;justify-content:center;position:relative;gap:0;padding:8px 0 16px}
+.toy-garland:before{content:'';position:absolute;top:10px;left:4%;right:4%;height:14px;border-top:3px solid #3b6857;border-radius:50%}
+.toy-garland>span{width:12%;position:relative}.toy-garland .winter-icon{width:100%;height:auto;max-height:80px}
+.missing-toy{font-size:30px;color:#a5283e;font-weight:700;border:2px dashed #b4c2cf;border-radius:50%;padding:8px 0}
+.shadow-tag{display:inline-block;border:1px dashed #a0b3c2;background:#fffdf6;padding:16px 37px;transform:rotate(-3deg)}
+.winter-ui .choices.illustrated-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.winter-ui .illustrated-choices .choice{flex-direction:column;align-items:center;text-align:center;gap:5px;min-height:140px;padding:16px 10px;font-size:17px;line-height:1.35}
+.illustrated-choices .winter-icon{width:88px;height:88px}.illustrated-choices .choice:disabled .winter-icon{opacity:.45}
+.winter-mini-scene{display:flex;align-items:center;justify-content:center;gap:15px}.winter-mini-scene .winter-icon{margin:0;width:95px;height:95px}.winter-mini-scene>span{font-size:16px;max-width:160px}
+.layer-card{position:relative;width:250px;height:190px;background:#fff8e7;border:1px solid #d9c69f;box-shadow:3px 5px 0 #d5dfe7;margin:0 auto;transform:rotate(-2deg)}
+.layer-card .winter-icon{position:absolute;margin:0}.layer-flake{width:125px;height:125px;left:20px;top:10px}.layer-tree{width:145px;height:145px;left:70px;top:20px}.layer-gift{width:95px;height:95px;left:117px;top:96px}.layer-ribbon{width:65px;height:65px;left:173px;top:120px}
+.winter-grid{--columns:3;display:grid;grid-template-columns:repeat(var(--columns),1fr);width:210px;max-width:100%;margin:10px auto;border:1px solid #738b9e;background:white}
+.winter-grid>span{border:1px solid #a6bbc9;display:grid;place-items:center;aspect-ratio:1;font:700 22px/1.2 var(--sans,system-ui);min-width:0;padding:3px}
+.winter-grid>span:has(+span):first-child{border-top-left-radius:0}.winter-grid>span:only-child{font-size:16px}
+.stencil-layout{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.stencil-layout>div>b{font-size:14px;white-space:nowrap}.stencil-layout .winter-grid{width:140px}.stencil-layout .winter-grid>span{font-size:21px}
+.mask-grid>span{background:#dce5ed}.winter-board-note{font-size:14px;line-height:1.5;margin:12px 0 0}
+.sorter-machine{display:grid;grid-template-columns:1fr 1fr;gap:12px}.sorter-step{border:1px solid #a9bac8;padding:13px 5px;border-radius:4px;background:white;font-size:15px}
+.sorter-display{grid-column:1/-1;justify-self:center;display:flex;align-items:center;gap:16px;background:#263e54;color:#fff3c7;border-radius:5px;padding:12px 22px}.sorter-display b{font:700 39px/1.2 monospace;letter-spacing:.15em}.sorter-display small{font-size:14px}
+.fold-layout{display:flex;align-items:center;justify-content:center;gap:12px}.fold-layout>div{min-width:0}.fold-layout b{font-size:14px}.fold-layout .winter-icon{width:115px;height:115px}.fold-directions{max-width:140px;font-size:14px;line-height:1.6}
+.folded-paper{display:grid;grid-template-columns:1fr 1fr;width:78px;height:78px;background:white;margin:15px auto;border:1px solid #738b9e}.folded-paper>span{border:1px solid #a6bbc9;display:grid;place-items:center;color:#b52d42;font-size:20px}
+.cube-net{display:grid;grid-template-columns:repeat(4,64px);grid-template-rows:repeat(3,64px);justify-content:center}.cube-net>div{border:1px dashed #6d879b;background:#fffcf3}.cube-net .winter-icon{width:60px;height:60px}
+.delivery-rules{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;font-size:14px;line-height:1.5}.delivery-rules>span{background:#fffdf7;border:1px solid #c8d7e1;border-radius:5px;padding:12px 5px}.delivery-rules b{display:block;color:#a5283e;margin-bottom:8px}
+.departure-board{display:inline-flex;flex-direction:column;gap:10px;background:#263e54;color:#f9f3dc;border-radius:6px;padding:20px 35px}.departure-board span{font-size:15px}.departure-board b{font:700 44px/1.1 monospace;letter-spacing:.08em}
+.puzzle-input-form{max-width:330px;margin:18px auto 0;display:flex;flex-direction:column;gap:14px;align-items:stretch}.puzzle-input-form label{font-size:17px;font-weight:700}
+.puzzle-code-input{text-align:center;font:700 35px/1.3 monospace;letter-spacing:.2em;min-height:64px;padding:10px 14px}
+.puzzle-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.puzzle-keypad button{border:1px solid #b9c9d7;box-shadow:0 3px 0 #d9e2ea;border-radius:6px;background:#fff;color:#294b6a;min-height:47px;font:600 23px/1 var(--sans,system-ui);cursor:pointer}
+.puzzle-keypad button:hover{background:#e9f1f8}.puzzle-keypad .key-erase{grid-column:span 2;font-size:16px}.puzzle-keypad button:active{transform:translateY(2px);box-shadow:none}
+.sequence-instruction{font-size:15px;line-height:1.6;color:#586e81;margin:0 0 16px}.sequence-slots{display:flex;gap:8px;margin-bottom:23px;justify-content:center;align-items:stretch}
+.sequence-slots>span,.sequence-slots>button{width:25%;min-height:130px;border:2px dashed #b2c5d4;border-radius:6px;position:relative;padding:13px 3px;background:#f3f7f9;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#355871;font:600 13px/1.35 var(--sans,system-ui)}
+.sequence-slots>.filled-slot{background:#fffaf0;border-style:solid;border-color:#75978b;cursor:pointer}.sequence-slots .winter-icon{width:66px;height:66px}.sequence-slots .empty-slot>span{font-size:29px;font-weight:400;color:#8299ac}.slot-number{position:absolute;top:3px;left:7px;font-size:12px}
+.task-items{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:0 0 24px}.task-item{flex:1;min-width:85px;max-width:145px;position:relative;display:flex;align-items:center;flex-direction:column;gap:5px;padding:12px 7px 16px;background:#fffdf6;border:1px solid #acbfce;border-radius:6px;box-shadow:0 4px 0 #dde5ec;color:#2b465d;font:600 15px/1.35 var(--sans,system-ui);cursor:pointer}
+.task-item .winter-icon{width:78px;height:78px}.task-item.selected{border:2px solid #2c735d;background:#edf5ef;padding:11px 6px 15px;box-shadow:0 4px 0 #d1e3d7}.item-selected{font-size:12px;color:#2c735d;margin-top:3px}.task-submit-row{display:flex;gap:20px;justify-content:center;align-items:center;flex-wrap:wrap}
+.switch-lamps{display:flex;justify-content:center;gap:15px;margin:10px 0 20px}.switch-lamp{background:#e9eef3;display:flex;flex-direction:column;border-radius:50% 50% 6px 6px;padding:5px 8px 13px}.switch-lamp.lit{background:#fff0bd;box-shadow:0 0 18px #e5bd4340}.switch-lamp small{font-size:14px}.switch-lamp .winter-icon{width:74px;height:74px}
+.switch-buttons{display:flex;gap:10px;margin:0 0 23px}.switch-buttons>.button{display:flex;flex:1;align-items:center;flex-direction:column;gap:7px;padding:13px 5px;min-width:0}.switch-buttons b{font-size:24px}.switch-buttons span{font-size:12px;line-height:1.4;white-space:normal}
+.earned-stamp{display:flex;align-items:center;justify-content:center;flex-direction:column;width:128px;height:128px;border:3px double #b52d42;border-radius:50%;margin:16px auto 20px;transform:rotate(-7deg);color:#a5283e;background:#fff7df}.earned-stamp .winter-icon{width:77px;height:77px}.earned-stamp>b{font-size:14px;letter-spacing:.03em;text-transform:uppercase}.stamp-story{font-size:17px!important;color:#2c735d!important}.restored-address{font-size:14px!important;letter-spacing:.02em;color:#2c735d!important;border-bottom:1px dashed #96b8a7;padding-bottom:13px}
+.shop .winter-puzzle-board{margin-top:20px}.shop .choices{margin:20px 0;display:grid;gap:10px}.shop .choice{border:1px solid #b8c7d6;border-radius:7px;padding:16px;background:#fff;color:#294a68;display:flex;align-items:center;gap:12px;font:600 18px/1.4 var(--sans,system-ui);cursor:pointer}.shop .choice:disabled{opacity:.5}.shop .choice-letter{font-size:14px;color:#7a91a6}.shop .puzzle-help{display:flex;justify-content:center;gap:15px}.shop .attempt-feedback{font-size:16px;color:#385c7e}.shop .attempt-feedback:empty{display:none}
+@media(max-width:520px){
+ .winter-stations{gap:5px;font-size:12px;margin-bottom:16px}.winter-stations>span{flex-direction:column;gap:4px;padding:7px 1px}.winter-stations b{width:21px;height:21px}.winter-puzzle-board{padding:16px 9px}.courier-note{padding:11px 12px;margin-bottom:20px}.courier-note p{font-size:14px}.toy-legend{gap:6px}.toy-tile{min-width:54px;padding:4px 2px 8px}.toy-tile .winter-icon{width:64px;height:64px}.toy-tile>span{font-size:12px}.toy-tag{font-size:21px;padding:4px 10px}.toy-target .winter-icon{width:70px;height:70px}.toy-target>div>.winter-icon{width:74px;height:74px}.stencil-layout{gap:6px}.stencil-layout>div>b{font-size:12px}.stencil-layout .winter-grid>span{font-size:18px}.fold-layout{gap:4px}.fold-layout .winter-icon{width:88px;height:88px}.fold-directions{max-width:95px;font-size:12px}.fold-layout b{font-size:12px}.folded-paper{width:60px;height:60px}.cube-net{grid-template-columns:repeat(4,54px);grid-template-rows:repeat(3,54px)}.cube-net .winter-icon{width:50px;height:50px}.sequence-slots{gap:5px}.sequence-slots>span,.sequence-slots>button{min-height:108px;font-size:11px}.sequence-slots .winter-icon{width:53px;height:53px}.task-item{font-size:14px;min-width:75px}.task-item .winter-icon{width:65px;height:65px}.switch-lamps{gap:7px}.switch-lamp{padding:4px 5px 10px}.switch-lamp .winter-icon{width:62px;height:62px}.switch-buttons{gap:7px}.switch-buttons span{font-size:11px}.winter-ui .illustrated-choices .choice{font-size:15px;min-height:123px}.illustrated-choices .winter-icon{width:75px;height:75px}.winter-board-note{font-size:12px}.delivery-rules{gap:6px;font-size:12px}.sorter-step{font-size:13px}.sorter-display b{font-size:32px}.task-submit-row{gap:14px}
+}
+@media(prefers-reduced-motion:no-preference){.earned-stamp{animation:stamp-arrives .25s ease-out}@keyframes stamp-arrives{from{opacity:0;transform:scale(1.15) rotate(-7deg)}to{opacity:1;transform:scale(1) rotate(-7deg)}}}
+
+.visually-hidden{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.winter-stations{background:#fffefb;border:1px solid #d4dfe8;border-radius:8px;padding:8px 7px;box-shadow:0 3px 0 #dbe4ec}.fragment-edge{font-size:12px;color:#72879a;font-weight:400}
+
+.task-submit-row .text-button{min-height:44px;padding:10px 8px}

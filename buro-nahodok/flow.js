@@ -32,7 +32,51 @@ export function readProgress(value, count) {
     const assisted=[...new Set(value.assisted.filter(index=>Number.isInteger(index)&&index>=0&&index<count))];
     if(assisted.length)result.assisted=assisted;
   }
+  if(value.taskInput&&value.taskInput.index===value.index){
+    const input=value.taskInput.value;
+    if(typeof input==='string'&&/^[0-9А-ЯЁA-Z]{0,8}$/u.test(input))result.taskInput={index:value.index,value:input};
+    else if(Array.isArray(input)&&input.length<=6&&input.every(id=>typeof id==='string'&&/^[a-z]{1,16}$/.test(id))&&new Set(input).size===input.length)result.taskInput={index:value.index,value:[...input]};
+  }
+  if(value.taskAttempts&&typeof value.taskAttempts==='object'&&!Array.isArray(value.taskAttempts)){
+    const attempts={};
+    for(const [key,n] of Object.entries(value.taskAttempts))if(/^(0|[1-9][0-9]*)$/.test(key)&&Number(key)<count&&Number.isInteger(n)&&n>0&&n<=99)attempts[key]=n;
+    if(Object.keys(attempts).length)result.taskAttempts=attempts;
+  }
   return result;
+}
+
+/** A partially assembled puzzle is saved, but is never counted as solved. */
+export function puzzleInput(mission,progress){
+  const task=mission?.interaction;if(!task)return null;
+  const supplied=progress.taskInput?.index===progress.index?progress.taskInput.value:undefined;
+  if(task.type==='code')return typeof supplied==='string'?[...supplied.toUpperCase()].filter(ch=>task.alphabet.includes(ch)).slice(0,task.length).join(''):'';
+  return Array.isArray(supplied)?[...new Set(supplied.filter(id=>task.items.some(item=>item.id===id)))].slice(0,task.type==='switches'?task.items.length:task.count):[];
+}
+export function setPuzzleInput(quest,progress,value){
+  if(progress?.phase!=='puzzle')return progress;
+  const mission=quest.missions[progress.index];if(!mission?.interaction)return progress;
+  const next={...progress,taskInput:{index:progress.index,value}};
+  return {...next,taskInput:{index:progress.index,value:puzzleInput(mission,next)}};
+}
+export function taskStatus(mission,value){
+  const task=mission.interaction;if(!task)return {complete:false,correct:false};
+  if(task.type==='code')return {complete:typeof value==='string'&&value.length===task.length,correct:value===task.answer};
+  if(!Array.isArray(value))return {complete:false,correct:false};
+  if(task.type==='switches'){
+    const lamps=[...task.initial];for(const id of value){const item=task.items.find(item=>item.id===id);if(item)for(const index of item.mask)lamps[index]=!lamps[index];}
+    return {complete:true,correct:lamps.every(Boolean),lamps};
+  }
+  const complete=value.length===task.count;
+  return {complete,correct:complete&&(task.type==='pick'?task.answer.every(id=>value.includes(id)):task.answer.every((id,i)=>value[i]===id))};
+}
+export function attemptTask(quest,progress){
+  if(progress?.phase!=='puzzle')return {correct:false,progress,incomplete:true};
+  const mission=quest.missions[progress.index];if(!mission?.interaction)return {correct:false,progress,incomplete:true};
+  const status=taskStatus(mission,puzzleInput(mission,progress));
+  if(!status.complete)return {correct:false,progress,incomplete:true};
+  if(status.correct)return answerMission(quest,progress,mission.answerIndex);
+  const attempts=Math.min(99,(progress.taskAttempts?.[progress.index]||0)+1);
+  return {correct:false,progress:{...progress,taskAttempts:{...progress.taskAttempts,[progress.index]:attempts},hints:attempts>=2?[...new Set([...progress.hints,progress.index])]:[...progress.hints]}};
 }
 
 /** Track a genuine attempt without advancing, so retries and help survive refresh. */

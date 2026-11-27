@@ -13,9 +13,9 @@ export const LOCATIONS = Object.freeze([
 ].map(Object.freeze));
 
 export const AGE_GROUPS = Object.freeze([
-  { id: '5-7', title: '5–7 лет', description: 'Простой счёт, цвета и внимательность. Взрослый может читать задания вслух.' },
-  { id: '8-10', title: '8–10 лет', description: 'Счёт, короткие шифры и логические цепочки.' },
-  { id: '11-13', title: '11–13 лет', description: 'Доли, закономерности и задачи в несколько действий.' },
+  { id: '5-7', title: '5–7 лет', description: 'Картинки, игрушечные шифры и простые цепочки. Взрослый может читать вслух.' },
+  { id: '8-10', title: '8–10 лет', description: 'Письма с шифрами, сборка посылок и маршруты саней.' },
+  { id: '11-13', title: '11–13 лет', description: 'Ледяные решётки, переключатели и логические задачи в несколько шагов.' },
 ].map(Object.freeze));
 
 export const THEMES = Object.freeze([
@@ -63,7 +63,7 @@ export function validateConfig(input) {
   const mode = ownValue(input, 'mode');
   if (mode !== undefined && mode !== 'cards' && mode !== 'screen') throw new Error('Выберите формат игры: в браузере или с карточками.');
   const edition = ownValue(input, 'edition');
-  if (edition !== undefined && edition !== 2) throw new Error('Этот набор загадок не поддерживается. Создайте новый квест.');
+  if (edition !== undefined && edition !== 2 && edition !== 3) throw new Error('Этот набор загадок не поддерживается. Создайте новый квест.');
   const suppliedRoute = ownValue(input, 'route');
   if (!Array.isArray(suppliedRoute) || suppliedRoute.length < 4 || suppliedRoute.length > 8) {
     throw new Error('Выберите от 4 до 8 разных тайников.');
@@ -81,7 +81,7 @@ export function validateConfig(input) {
   const suppliedNote = ownValue(input, 'giftNote');
   const giftNote = suppliedNote === undefined ? '' : textField(suppliedNote, 'Записка к подарку', 0, 120);
   // Keep the legacy canonical shape (and its IDs) for games with physical cards.
-  return Object.freeze({ v: 1, name, age, theme, route: Object.freeze(route), seed, giftNote, ...(mode === 'screen' ? { mode } : {}), ...(edition === 2 ? { edition } : {}) });
+  return Object.freeze({ v: 1, name, age, theme, route: Object.freeze(route), seed, giftNote, ...(mode === 'screen' ? { mode } : {}), ...(edition !== undefined ? { edition } : {}) });
 }
 
 function bytesToBase64(bytes) {
@@ -360,6 +360,150 @@ function editionTwoMakers(age, count, random) {
   return shuffle(selected,random).map(record=>record.make);
 }
 
+// Edition three is a separate story. Never change earlier banks: printed codes and
+// family links must continue to lead to exactly the same puzzles.
+const WINTER_STATIONS = [
+  {title:'Северная почта',stamp:'Письмо',story:'Снегирь-почтальон нашёл мешок писем. Метки на конвертах перепутались.',reward:'Письмо снова на своём месте. На пропуске появилась почтовая печать.'},
+  {title:'Ёлочная площадь',stamp:'Ёлка',story:'На площади уже пахнет хвоей. Но без твоей помощи ёлка ещё не готова к празднику.',reward:'Ёлочная площадь готова встречать Новый год. Ещё одна печать получена!'},
+  {title:'Мастерская подарков',stamp:'Подарок',story:'В мастерской шуршат ленты и бумага. Помоги закончить последнюю посылку.',reward:'Посылка готова к отправке. Мастер поставил на пропуск праздничную печать.'},
+  {title:'Станция саней',stamp:'Сани',story:'Олени уже на станции. Осталось разобраться с доставкой — и можно отправляться!',reward:'Маршрут проверен. Сани могут отправляться за твоим подарком.'},
+];
+function winterTask(stage,id,title,prompt,answer,choices,hint,explanation,visual,interaction,choiceArt){
+  return {...puzzle(id,title,prompt,answer,choices,hint,explanation),station:{index:stage,...WINTER_STATIONS[stage]},visual,...(interaction?{interaction}:{}),...(choiceArt?{choiceArt}:{})};
+}
+const toy = (kind,label,extra={}) => ({kind,label,...extra});
+const codeTask = (answer) => ({type:'code',answer:String(answer),length:String(answer).length,alphabet:'0123456789'});
+const orderTask = (items,answer) => ({type:'order',items,answer,count:answer.length});
+function ornamentCode(r,young){
+  const digits=shuffle(['2','3','5','7','8','9'],r).slice(0,4);
+  const kinds=[toy('star','Звезда'),toy('bell','Колокольчик'),toy('mitten','Варежка'),toy('ball','Шар')];
+  const order=shuffle([0,1,2],r),answer=order.map(i=>digits[i]).join('');
+  const legends=kinds.map((item,i)=>({...item,value:digits[i]}));
+  return winterTask(0,young?'snow-young-tags':'snow-middle-tags',young?'Бирки с ёлки':'Замок почтового мешка',`Каждая игрушка заменяет одну цифру. ${young?'Игрушки на письме потеряли цвет, но сохранили форму.':'Снегирь запер мешок кодом из игрушек.'} Рассмотри бирки и набери код для нижнего ряда слева направо.`,answer,[answer,answer.split('').reverse().join(''),digits[3]+answer.slice(1),answer.slice(0,2)+digits[3]],'Сначала найди первую игрушку на бирках. Запиши её цифру, затем переходи к следующей.',`Нужные бирки по порядку: ${order.map(i=>`${kinds[i].label.toLowerCase()} — ${digits[i]}`).join(', ')}. Код: ${answer}.`,{type:'legend',items:legends,target:order.map(i=>({...kinds[i],silhouette:young}))},codeTask(answer));
+}
+function parcelOrder(r,young){
+  const items=[toy('gift','Закрыть коробку',{id:'box'}),toy('ribbon','Завязать ленту',{id:'ribbon'}),toy('card','Прикрепить открытку',{id:'card'})];
+  return winterTask(2,young?'snow-young-pack':'snow-middle-pack','Последняя посылка','Открытку крепят к уже завязанной ленте. Ленту завязывают только на закрытой коробке. Нажимай на действия в том порядке, в котором нужно упаковать подарок.','Коробка → лента → открытка',['Коробка → лента → открытка','Лента → коробка → открытка','Открытка → лента → коробка'],'Подумай, что должно быть готово, прежде чем можно завязать ленту.','Сначала закрываем коробку, затем завязываем ленту, а уже к ней прикрепляем открытку.',{type:'parcel'},orderTask(shuffle(items,r),['box','ribbon','card']));
+}
+function houseLetters(r,young){
+  if(young){
+    const houses=shuffle([
+      {id:'a',label:'Дом А',symbols:['tree','star']},{id:'b',label:'Дом Б',symbols:['tree','bell']},
+      {id:'v',label:'Дом В',symbols:['bell','tree']},{id:'g',label:'Дом Г',symbols:['star','bell']},
+    ],r);
+    return winterTask(0,'snow-young-house','Кому это письмо?','Вместо адреса на конверте две картинки: сначала ёлка, потом колокольчик. Выбери дом с точно такими же картинками в таком же порядке.','Дом Б',houses.map(h=>h.label),'Порядок важен: ёлка должна быть слева, а колокольчик справа.','У дома Б сначала ёлка, затем колокольчик — точно как на конверте.',{type:'envelope',symbols:['tree','bell']},null,Object.fromEntries(houses.map(h=>[h.label,{kind:'house',label:h.label,symbols:h.symbols}])));
+  }
+  const houses=[{kind:'house',label:'Дом 1',number:'1',roof:'star',door:'round'},{kind:'house',label:'Дом 2',number:'2',roof:'moon',door:'square'},{kind:'house',label:'Дом 3',number:'3',roof:'star',door:'square'}];
+  return winterTask(0,'snow-middle-houses','Три письма без адресов','Снегирь записал приметы домов. Письмо 1: квадратная дверь, на крыше не звезда. Письмо 2: звезда на крыше, дверь не круглая. Письмо 3: круглая дверь. Введи номера домов по порядку писем.','231',['231','321','213','132'],'Сначала найди единственный дом с луной. Потом из двух домов со звездой выбери нужную дверь.','Первое письмо — дому 2 с луной. Второе — дому 3 с квадратной дверью и звездой. Третье — дому 1 с круглой дверью. Код 231.',{type:'row',items:houses},codeTask('231'));
+}
+function ribbonCode(r,young){
+  const items=[toy('tree','Ёлка',{value:'4'}),toy('star','Звезда',{value:'7'}),toy('bell','Колокольчик',{value:'2'})];
+  const target=shuffle(items,r),answer=target.map(t=>t.value).join('');
+  return winterTask(0,young?'snow-young-stamps':'snow-middle-stamps','Оттиски на конверте','На письме остались три оттиска. У каждого штампа свой номер. Набери номера штампов в том порядке, в котором стоят оттиски на письме.',answer,[answer,answer.slice(1)+answer[0],answer[2]+answer.slice(0,2),answer[1]+answer[0]+answer[2]],'Сопоставь каждый оттиск со штампом такой же формы. Цвет здесь не нужен.',`Слева направо: ${target.map(t=>`${t.label.toLowerCase()} — ${t.value}`).join(', ')}. Получается ${answer}.`,{type:'legend',items,target:target.map(t=>({...t,silhouette:true}))},codeTask(answer));
+}
+function garland(r,young){
+  const a=toy('ball','Шар в полоску',{pattern:'stripe',color:'red'}),b=toy('star','Золотая звезда',{color:'gold'}),c=toy('bell','Синий колокольчик',{color:'blue'});
+  const unit=young?[a,b]:[a,b,c],row=[...unit,...unit,...unit.slice(0,-1)],answer=unit.at(-1);
+  return winterTask(1,young?'snow-young-garland':'snow-middle-garland','Потерянная игрушка','Снегирь украшал ёлку одним и тем же узором. В конце гирлянды не хватает игрушки. Какую нужно повесить на свободное место?',answer.label,[a.label,b.label,c.label,'Зелёная варежка'],'Начни слева и найди короткий кусочек, который повторяется целиком.',`Узор повторяется: ${unit.map(t=>t.label.toLowerCase()).join(', ')}. На пустом месте должна быть ${answer.label.toLowerCase()}.`,{type:'garland',items:row},null,Object.fromEntries([...unit,c,toy('mitten','Зелёная варежка',{color:'green'})].map(t=>[t.label,t])));
+}
+function shadowTask(r,young){
+  const variants=shuffle([toy('mitten','Варежка с одной звездой',{pattern:'star'}),toy('mitten','Варежка в полоску',{pattern:'stripe'}),toy('bell','Колокольчик'),toy('ball','Шар со звездой',{pattern:'star'})],r);
+  if(young)return winterTask(1,'snow-young-shadow','Игрушка и её тень','На ёлке осталось пустое место. Здесь висела игрушка, чья тень нарисована на бирке. Найди такую же форму.','Колокольчик',variants.map(t=>t.label),'Смотри на внешний край: сверху маленькая петелька, снизу широкий раструб.','Тень расширяется книзу, а под краем виден язычок. Это колокольчик.',{type:'shadow',item:toy('bell','Тень колокольчика',{silhouette:true})},null,Object.fromEntries(variants.map(t=>[t.label,t])));
+  const correct=toy('flake','Снежинка Б',{spokes:5}),items=[toy('flake','Снежинка А',{spokes:6}),correct,toy('flake','Снежинка В',{spokes:6}),toy('flake','Снежинка Г',{spokes:6})];
+  return winterTask(1,'snow-middle-flake','Чужая снежинка','Мастерская делает снежинки с шестью лучами. Снегирь случайно принёс одну из другой коробки. Найди снежинку, у которой не шесть лучей.',correct.label,items.map(t=>t.label),'Удобно считать длинные лучи от центра по кругу. Маленькие веточки на них — не отдельные лучи.','У снежинки Б пять длинных лучей. У остальных — по шесть.',{type:'none'},null,Object.fromEntries(items.map(t=>[t.label,t])));
+}
+function snowmanOrder(r){
+  const items=[toy('snowball','Большой ком',{id:'big',size:1}),toy('snowball','Средний ком',{id:'middle',size:.73}),toy('snowball','Маленький ком',{id:'small',size:.48})];
+  return winterTask(2,'snow-young-snowman','Снеговик у мастерской','Выстрой снежные комья снизу вверх: первым выбери самый большой, а последним — самый маленький. Тогда снеговик будет устойчивым.','Большой → средний → маленький',['Большой → средний → маленький','Маленький → средний → большой','Средний → большой → маленький'],'Внизу нужна самая широкая опора. Каждый следующий ком меньше предыдущего.','Большой ком — внизу, средний — на нём, маленький — голова. Снеговик готов!',{type:'snowman'},orderTask(shuffle(items,r),['big','middle','small']));
+}
+function stickerOrder(r,young){
+  const items=[toy('flake','Снежинка',{id:'flake'}),toy('tree','Ёлка',{id:'tree'}),toy('gift','Подарок',{id:'gift'})];
+  return winterTask(2,young?'snow-young-card':'snow-middle-card','Открытка из наклеек','Снегирь хочет повторить открытку. Ёлка закрывает часть снежинки, а подарок закрывает нижние ветки ёлки. Выбери наклейки в порядке от первой до последней.','Снежинка → ёлка → подарок',['Снежинка → ёлка → подарок','Ёлка → снежинка → подарок','Подарок → ёлка → снежинка'],'Нижнюю наклейку приклеили первой. Сверху на неё уже наклеивали остальные.','Сначала приклеили снежинку. Поверх неё — ёлку. Последним приклеили подарок, поэтому он закрывает ветки.',{type:'layers'},orderTask(shuffle(items,r),['flake','tree','gift']));
+}
+function sleighRoad(r,young){
+  if(young){
+    const options=[{label:'Дорога А',symbols:['star','star','star']},{label:'Дорога Б',symbols:['star','bell','star']},{label:'Дорога В',symbols:['tree','star','tree']}];
+    return winterTask(3,'snow-young-road','Звёздная дорога','Почтовые сани едут по дороге, на которой все три знака — звёзды. Выбери дорогу для Снегиря.','Дорога А',options.map(x=>x.label),'Проверь все знаки на каждой дороге. Одной звезды недостаточно.','На дороге А три звезды. На других есть колокольчик или ёлки.',{type:'sleigh'},null,Object.fromEntries(options.map(x=>[x.label,{kind:'symbols',symbols:x.symbols,label:x.label}])));
+  }
+  return winterTask(3,'snow-middle-route','Повороты над городом','Сани начинают в клетке «СТАРТ» и смотрят вверх. Пролети одну клетку прямо, затем одну вправо относительно саней, затем одну влево относительно нового направления. Введи цифры трёх клеток, в которых остановился.','472',['472','478','875','498'],'Первый шаг — к 4. После поворота направо сани смотрят вправо. Налево от этого направления — вверх.','Из старта летим вверх к 4, вправо к 7, затем вверх к 2. Повороты считаются относительно саней. Код 472.',{type:'grid',columns:3,cells:['9','2','6','4','7','3','СТАРТ ↑','8','5']},codeTask('472'));
+}
+function deliveryOrder(r,young){
+  const items=[toy('house','Дом А',{id:'a',number:'А'}),toy('house','Дом Б',{id:'b',number:'Б'}),toy('house','Дом В',{id:'v',number:'В'})];
+  return winterTask(3,young?'snow-young-delivery':'snow-middle-delivery','Кто получит подарок первым?',young?'Подарок дому Б нужно доставить раньше, чем дому А. Дом В — последний в маршруте. Нажми на дома в порядке доставки.':'Сани должны закончить у дома В. К дому А можно попасть только после доставки в дом Б. Расставь дома по порядку.', 'Б → А → В',['Б → А → В','А → Б → В','В → Б → А'],'Сначала найди последний дом. Из двух оставшихся один должен идти раньше другого.','Дом В — последний. Дом Б должен быть раньше А. Поэтому маршрут: Б, А, В.',{type:'sleigh'},orderTask(shuffle(items,r),['b','a','v']));
+}
+function olderSorter(r){
+  const initial=shuffle(['2','4','6','8','9'],r).slice(0,3),output=[initial[1],initial[2],initial[0]],answer=initial.join('');
+  return winterTask(0,'snow-older-sorter','Сбой снежного сортировщика','Машина сначала меняет местами первую и последнюю цифры, а потом — первые две. На выходе получился номер на табло. Какой номер был на посылке до машины?',answer,[answer,output.join(''),initial[0]+initial[2]+initial[1],initial[1]+initial[0]+initial[2]],'Отмени действия в обратном порядке: сначала поменяй первые две цифры на табло, затем — крайние.',`Начальный номер ${answer}. После обмена крайних: ${[initial[2],initial[1],initial[0]].join('')}. После обмена первых двух: ${output.join('')}.`,{type:'sorter',output:output.join('')},codeTask(answer));
+}
+function olderStencil(){
+  return winterTask(0,'snow-older-stencil','Адрес под ледяными решётками','На табличку накладывают две решётки. Обе стрелки должны смотреть вверх: вторую решётку сначала поверни на пол-оборота. Читай цифры только в тех клетках, где отверстия совпадут, сверху вниз, а в строке — слева направо.','835',['835','825','853','385'],'После поворота отверстия второй решётки окажутся в клетках 1, 3, 4, 7 и 9. Теперь сравни их с первой.','У обеих решёток открыты клетки 1, 4 и 9. На табличке там стоят 8, 3 и 5. Код 835.',{type:'stencils',cells:['8','1','6','3','7','2','9','4','5'],masks:[[0,1,3,5,8],[0,2,5,6,8]]},codeTask('835'));
+}
+function olderBags(){
+  const items=[toy('bag','«Только шары»',{id:'balls'}),toy('bag','«Только звёзды»',{id:'stars'}),toy('bag','«Шары и звёзды»',{id:'mixed'})];
+  return winterTask(0,'snow-older-bags','Все ярлыки перепутаны','В одном мешке только шары, в другом только звёзды, в третьем — и шары, и звёзды. Все три ярлыка неверны. Из какого мешка нужно достать одну игрушку, не глядя, чтобы затем определить содержимое всех мешков?','«Шары и звёзды»',items.map(t=>t.label),'Мешок с надписью «Шары и звёзды» точно не смешанный. Одна игрушка полностью раскроет его содержимое.','Если из мешка «Шары и звёзды» вынуть шар, весь мешок с шарами. Оставшиеся мешки определяются по неверным ярлыкам. Со звездой рассуждение такое же.',{type:'none'},null,Object.fromEntries(items.map(t=>[t.label,t])));
+}
+function olderLights(r){
+  const masks=[[0,1],[1,2],[0,1,2]],answer=['a','c'];
+  return winterTask(1,'snow-older-lights','Капризная гирлянда','Кнопка А переключает левую и среднюю лампы. Б — среднюю и правую. В — все три. При нажатии горящая лампа гаснет, погасшая загорается. Вначале горят две левые. Включи все три лампы и нажми «Проверить».','А и В',['А и В','А и Б','Только В','Б и В'],'Кнопка В даёт нужный свет справа, но гасит две левые лампы. Какая кнопка вернёт их обратно?','Нажимаем А: обе левые лампы гаснут. Нажимаем В: загораются все три. Порядок этих двух нажатий можно поменять.',{type:'none'},{type:'switches',items:[{id:'a',label:'А',mask:masks[0]},{id:'b',label:'Б',mask:masks[1]},{id:'c',label:'В',mask:masks[2]}],initial:[true,true,false],answer,count:3});
+}
+function olderFold(){
+  const variants={
+    'Узор А':{kind:'holes',cells:[1,2,13,14],label:'Узор А'},'Узор Б':{kind:'holes',cells:[0,3,12,15],label:'Узор Б'},
+    'Узор В':{kind:'holes',cells:[5,6,9,10],label:'Узор В'},'Узор Г':{kind:'holes',cells:[4,7,8,11],label:'Узор Г'},
+  };
+  return winterTask(1,'snow-older-fold','Бумажная снежинка','Квадрат 4 × 4 сложили пополам слева направо, затем снизу вверх. В получившемся квадрате 2 × 2 сделали одно отверстие в центре верхней левой клетки. Каким станет лист, когда его развернут?','Узор А',Object.keys(variants),'При развороте каждый сгиб отражает отверстие как зеркало. Отверстий будет четыре.','Отверстия окажутся во 2-й и 3-й клетках верхней строки и во 2-й и 3-й клетках нижней строки.',{type:'fold'},null,variants);
+}
+function olderLoad(r){
+  const items=[toy('gift','Посылка 2 кг',{id:'two',value:'2 кг',color:'red'}),toy('gift','Посылка 3 кг',{id:'three',value:'3 кг',color:'blue'}),toy('gift','Посылка 5 кг',{id:'five',value:'5 кг',color:'green'}),toy('gift','Посылка 8 кг',{id:'eight',value:'8 кг',color:'gold'})];
+  return winterTask(2,'snow-older-load','Ровно две посылки','В маленькие сани помещаются ровно две посылки. Вместе они должны весить ровно 10 кг. Отметь две подходящие посылки и проверь загрузку.','2 кг и 8 кг',['2 кг и 8 кг','3 кг и 5 кг','2 кг и 5 кг','3 кг и 8 кг'],'Проверь пары. Нельзя взять одну посылку или набрать 10 кг тремя посылками.','Единственная подходящая пара — 2 кг и 8 кг. Вместе ровно 10 кг.',{type:'sleigh'},{type:'pick',items:shuffle(items,r),answer:['two','eight'],count:2});
+}
+function olderCube(){
+  const sets=[{label:'Звезда, ёлка, колокольчик',symbols:['star','tree','bell']},{label:'Звезда, подарок, ёлка',symbols:['star','gift','tree']},{label:'Варежка, колокольчик, снеговик',symbols:['mitten','bell','snowman']},{label:'Ёлка, снеговик, подарок',symbols:['tree','snowman','gift']}];
+  return winterTask(2,'snow-older-cube','Коробка с шестью наклейками','Из этой развёртки складывают куб. Какие три рисунка могут встретиться у одного угла коробки?',sets[0].label,sets.map(x=>x.label),'У одного угла не могут встретиться противоположные грани. Мысленно подними четыре боковые стенки.','Противоположны: варежка и колокольчик, ёлка и снеговик, звезда и подарок. В первом наборе противоположных пар нет.',{type:'cube'},null,Object.fromEntries(sets.map(x=>[x.label,{kind:'symbols',...x}])));
+}
+function olderCard(r){
+  const items=[toy('flake','Снежинка',{id:'flake'}),toy('tree','Ёлка',{id:'tree'}),toy('gift','Подарок',{id:'gift'}),toy('ribbon','Лента',{id:'ribbon'})];
+  return winterTask(2,'snow-older-card','Четыре слоя открытки','Подарок закрывает нижние ветви ёлки. Лента закрывает угол подарка. Ёлка закрывает часть снежинки. Расставь слои от самого нижнего до самого верхнего.','Снежинка → ёлка → подарок → лента',['Снежинка → ёлка → подарок → лента','Ёлка → снежинка → лента → подарок','Лента → подарок → ёлка → снежинка'],'Каждое «закрывает» означает, что эта деталь лежит выше другой. Собери все три условия в одну цепочку.','Снежинка внизу, над ней ёлка, затем подарок, а поверх подарка — лента.',{type:'layers',ribbon:true},orderTask(shuffle(items,r),['flake','tree','gift','ribbon']));
+}
+function olderGates(r){
+  const items=['a','b','v'].map((id,i)=>toy('house',`Дом ${'АБВ'[i]}`,{id,number:'АБВ'[i]}));
+  return winterTask(3,'snow-older-gates','Сани не проходят!','На санях подарки для домов А, Б и В. Дорога к А не пропускает сани с подарком Б, а дорога к В — с подарком А. К Б дорога свободна. После каждой доставки сани возвращаются на станцию. Оставлять недоставленные подарки на станции нельзя. В каком порядке ехать?', 'Б → А → В',['Б → А → В','А → Б → В','Б → В → А','В → А → Б'],'Чтобы проехать к А, сначала избавься от подарка Б. Чтобы проехать к В — от подарка А.','Сначала доставляем Б. После этого можно проехать к А. Когда А доставлен, дорога к В тоже открыта.',{type:'gates'},orderTask(shuffle(items,r),['b','a','v']));
+}
+function olderMidnight(r){
+  const minute=integer(r,40,55),duration=integer(r,5,7)*5,end=23*60+minute+duration,answer=clock(end%1440).replace(':','');
+  return winterTask(3,'snow-older-midnight','Доставка после полуночи',`Сани вылетают 31 декабря в 23:${minute}. Полёт занимает ${duration} минут без остановок. Введи время прибытия четырьмя цифрами по 24-часовым часам: например, 00:07 записывается как 0007.`,answer,[answer,clock((end+60)%1440).replace(':',''),clock((end+10)%1440).replace(':',''),clock((end-10)%1440).replace(':','')],`До полуночи остаётся ${60-minute} минут. Остаток полёта пройдёт уже 1 января.`,`23:${minute} + ${duration} минут = ${clock(end%1440)}. Четыре цифры времени: ${answer}.`,{type:'clock',start:`23:${minute}`,duration},codeTask(answer));
+}
+function tornAddress(r){
+  const items=[{id:'start',kind:'card',label:'СНЕ',edge:'Начало'},{id:'middle',kind:'card',label:'ЖНЫЙ ПРО',edge:'Середина'},{id:'end',kind:'card',label:'ЕЗД, 7',edge:'Конец'}];
+  return winterTask(2,'snow-middle-address','Разорванный адрес','Ветер разорвал адрес на три части. Начало и конец помечены. Собери части так, чтобы получилось название улицы и номер дома. Нажимай на обрывки по порядку.','СНЕ → ЖНЫЙ ПРО → ЕЗД, 7',['СНЕ → ЖНЫЙ ПРО → ЕЗД, 7','ЖНЫЙ ПРО → СНЕ → ЕЗД, 7','ЕЗД, 7 → СНЕ → ЖНЫЙ ПРО'],'Первый обрывок начинает слово «снежный». Название улицы заканчивается словом «проезд».','Получается адрес: СНЕЖНЫЙ ПРОЕЗД, 7. Начало — «СНЕ», затем «ЖНЫЙ ПРО», в конце «ЕЗД, 7».',{type:'torn'},orderTask(shuffle(items,r),['start','middle','end']));
+}
+const WINTER_BANKS={
+  '5-7':[
+    [(r)=>ornamentCode(r,true),(r)=>houseLetters(r,true),(r)=>ribbonCode(r,true)],
+    [(r)=>garland(r,true),(r)=>shadowTask(r,true)],
+    [(r)=>parcelOrder(r,true),snowmanOrder,(r)=>stickerOrder(r,true)],
+    [(r)=>sleighRoad(r,true),(r)=>deliveryOrder(r,true)],
+  ],
+  '8-10':[
+    [(r)=>ornamentCode(r,false),(r)=>houseLetters(r,false),(r)=>ribbonCode(r,false)],
+    [(r)=>garland(r,false),(r)=>shadowTask(r,false)],
+    [(r)=>parcelOrder(r,false),(r)=>stickerOrder(r,false),tornAddress],
+    [(r)=>sleighRoad(r,false),(r)=>deliveryOrder(r,false)],
+  ],
+  '11-13':[
+    [olderSorter,olderStencil,olderBags],
+    [olderLights,olderFold],
+    [olderLoad,olderCube,olderCard],
+    [olderGates,olderMidnight],
+  ],
+};
+function winterMakers(age,count,random){
+  const perStation=Array(4).fill(1);
+  const extras=shuffle([0,1,2,3],random);
+  for(let i=0;i<count-4;i++)perStation[extras[i]]++;
+  return WINTER_BANKS[age].flatMap((makers,index)=>shuffle(makers,random).slice(0,perStation[index]));
+}
+
 function stableHash(value) {
   const bytes = new TextEncoder().encode(value);
   let first = 0x811c9dc5, second = 0x9e3779b9;
@@ -374,18 +518,21 @@ function stableHash(value) {
 export function createQuest(input) {
   const config = validateConfig(input);
   const random = randomSource(config.seed);
-  const makers = config.edition === 2 ? editionTwoMakers(config.age, config.route.length, random) : shuffle(BANKS[config.age], random).slice(0, config.route.length);
+  const holiday=config.edition===3&&config.theme==='winter';
+  const makers = holiday ? winterMakers(config.age,config.route.length,random) : config.edition >= 2 ? editionTwoMakers(config.age, config.route.length, random) : shuffle(BANKS[config.age], random).slice(0, config.route.length);
   const missions = makers.map((make, index) => {
     const { answer, ...content } = make(random, config.theme);
     const choices = shuffle(content.choices, random);
     return Object.freeze({ ...content, choices: Object.freeze(choices), answerIndex: choices.indexOf(answer), locationId: config.route[index] });
   });
-  const intro = config.mode === 'screen'
+  const intro = holiday
+    ? `${config.name}, это Снегирь, дежурный новогодней почты! Метель стёрла адрес с твоего подарка. Пройди четыре станции, помоги подготовить праздник и собери ${counted(missions.length,'печать','печати','печатей')} в почтовый пропуск. Тогда мы восстановим адрес и доставим сюрприз!`
+    : config.mode === 'screen'
     ? `${config.name}, ${config.theme === 'winter' ? 'новогодняя почта' : 'секретная экспедиция'} приготовила для тебя ${counted(missions.length, 'загадку', 'загадки', 'загадок')}. Решай их по очереди в браузере. После последней загадки ты узнаешь, где спрятан подарок!`
     : config.theme === 'winter'
       ? `${config.name}, новогодняя почта приготовила для тебя ${counted(missions.length, 'загадку', 'загадки', 'загадок')}. Разгадывай их по очереди: каждая откроет следующий домашний тайник. В последнем ждёт подарок!`
       : `${config.name}, секретная экспедиция начинается! Впереди ${counted(missions.length, 'загадка', 'загадки', 'загадок')} и домашние тайники. Решай задания по очереди — последнее приведёт к подарку.`;
-  const ending = config.theme === 'winter'
+  const ending = holiday ? `${config.name}, адрес восстановлен, сани добрались, а подарок нашёл своего хозяина! Спасибо за помощь новогодней почте. Твой друг Снегирь. С Новым годом!` : config.theme === 'winter'
     ? `${config.name}, новогоднее приключение завершено! Все загадки разгаданы, а подарок найден. С Новым годом!`
     : `${config.name}, экспедиция завершена! Все загадки разгаданы, а подарок найден.`;
   return Object.freeze({ config, id: `quest-${stableHash(JSON.stringify(config))}`, missions: Object.freeze(missions), intro, ending });
