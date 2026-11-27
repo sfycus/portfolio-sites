@@ -266,3 +266,18 @@
 
 @media(max-width:370px){.courier-note{grid-template-columns:50px minmax(0,1fr);gap:10px;padding:12px}.courier-portrait,.courier-portrait .winter-icon{width:50px;height:50px}}
 .sales-pending{font-size:16px;color:#586f82;padding:12px 0}
+
+/* Optional narration and collected notes share the paper-and-ink palette. */
+.read-aloud-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:-6px 0 16px;text-align:left}
+.read-aloud-controls .text-button{min-height:44px;padding:9px 12px;border:1px solid #b7c8d5;border-radius:6px;background:#f1f6fa;color:#315775;font-size:15px;text-decoration:none;font-weight:600}
+.read-aloud-controls [aria-pressed="true"]{background:#e8f1eb;border-color:#7d9d8f;color:#2a6049}
+.read-status{font-size:14px;line-height:1.5;color:#536d81;margin:0;flex:1;min-width:170px}.read-status:empty{display:none}
+.journal-title{font-size:18px!important;margin:25px 0 13px!important;color:#2c4d67}
+.fragment-journal{list-style:none;padding:0;margin:0 0 22px;text-align:left;display:grid;gap:10px}
+.journal-entry{display:flex;align-items:flex-start;gap:12px;padding:14px;background:#fffdf5;border:1px solid #dfd5bb;border-radius:6px;box-shadow:0 2px 0 #e8e3d6}
+.journal-entry .journal-number{display:grid;place-items:center;width:28px;height:28px;flex:0 0 28px;border:1px solid #8ba993;border-radius:50%;color:#28644f;font-size:14px;font-weight:700}
+.journal-entry h3{font-size:16px!important;line-height:1.4!important;margin:1px 0 6px!important;color:#2d536b}.journal-entry p{font-size:16px!important;line-height:1.6!important;margin:0!important;color:#4a6377!important}
+.journal-entry.locked{background:#eef2f5;border-style:dashed;box-shadow:none;border-color:#c3cfd9}.journal-entry.locked .journal-number{color:#6e8293;border-color:#b7c6d1}.journal-entry.locked p{font-size:14px!important;color:#637b8d!important}
+@media(max-width:370px){.journal-entry{padding:11px;gap:9px}.read-aloud-controls{gap:4px}.read-status{font-size:13px}}
+
+.winter-ui.large-reading .journal-entry p{font-size:20px!important;line-height:1.7!important}.winter-ui.large-reading .read-aloud-controls .text-button{font-size:18px}
