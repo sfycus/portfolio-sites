@@ -175,6 +175,17 @@ export function holidayStage(missions, progress) {
   </section>`;
 }
 
+export function questAtmosphere() {
+  return `<div class="quest-atmosphere" aria-hidden="true">
+    <div class="atmosphere-aurora"><i></i><i></i></div>
+    <div class="atmosphere-stars">${Array.from({length:12},(_,i)=>`<span style="--spark:${i}"></span>`).join('')}</div>
+    <div class="atmosphere-glow"><span></span><span></span><span></span><span></span></div>
+    <div class="atmosphere-snow layer-far"></div><div class="atmosphere-snow layer-mid"></div><div class="atmosphere-snow layer-near"></div>
+    <div class="atmosphere-flight"><svg viewBox="0 0 160 76" aria-hidden="true" focusable="false"><path d="M4 46q31-24 54-7M17 58q19-15 35-13" fill="none" stroke="#f4d68e" stroke-width="2" stroke-linecap="round" stroke-dasharray="3 7"/><g transform="rotate(-12 99 34)"><rect x="63" y="12" width="76" height="49" rx="4" fill="#fff0cb" stroke="#bb9c68" stroke-width="2"/><path d="m64 15 37 26 37-26M65 59l25-22m47 22-25-22" fill="none" stroke="#b8a174" stroke-width="2"/><circle cx="101" cy="38" r="9" fill="#b74334"/><path d="m101 31 2 4 5 1-4 3 1 5-4-2-4 2 1-5-4-3 5-1z" fill="#f5d589"/></g></svg></div>
+    <div class="atmosphere-shine"></div>
+  </div>`;
+}
+
 /** Illustrated world panel. It reads progress, never a puzzle answer or a real hiding place. */
 export function holidayWorld(missions, progress, {imageUrl = './assets/winter-village.jpg', courierUrl = './assets/robin-postman.png'} = {}) {
   const state = stageState(missions, progress);
@@ -188,6 +199,7 @@ export function holidayWorld(missions, progress, {imageUrl = './assets/winter-vi
   const guide = finished ? 'Все письма собраны. Самое время найти свой подарок!' : state.phase === 'intro' ? 'Письмо ждёт! Поможешь вернуть потерянный адрес?' : hasStations ? 'Собирай фрагменты адреса. Я сохраню каждый в твоём почтовом пропуске.' : 'Каждое решение делает сюрприз чуть ближе.';
   return `<section class="quest-scene" aria-label="Новогодний городок" data-current="${state.current}" data-completed="${count}" style="--scene-focus:${focus}%">
     <img class="quest-scene-art" src="${stageEscape(imageUrl)}" width="1774" height="887" alt="Заснеженный новогодний городок: тёплая почта, нарядная ёлка, мастерская и сани в звёздном небе" fetchpriority="high">
+    ${questAtmosphere()}
     <div class="quest-scene-snow" aria-hidden="true"><i></i><i></i><i></i></div>
     <div class="quest-scene-lights${count ? ' is-awake' : ''}" aria-hidden="true">${state.complete.map((done,index)=>`<i class="quest-earned-light${done?' is-lit':''}" data-station="${index}"></i>`).join('')}</div>
     <div class="quest-scene-caption"><span class="quest-scene-kicker">Особая доставка · новогодняя почта</span><h2 class="quest-scene-title">${stageEscape(title)}</h2><p>${stageEscape(finished ? 'Письма нашли дорогу домой.' : station.setting)}</p><span class="quest-scene-progress">${stageEscape(status)}</span></div>

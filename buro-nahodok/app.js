@@ -1,12 +1,13 @@
-import { LOCATIONS, AGE_GROUPS, THEMES, validateConfig, encodeConfig, decodeConfig, createQuest } from './engine.js?v=1.13.0-beta.1';
-import { cardCodes, freshProgress, readProgress, answerMission, confirmCard, continueScreenQuest, attemptMission, solveWithHelp, isHintOpen, toggleHint, puzzleInput, setPuzzleInput, undoPuzzleInput, attemptTask } from './flow.js?v=1.13.0-beta.1';
-import { createHolidayAudio, holidayAudioControls } from './audio.js?v=1.13.0-beta.1';
-import { holidayStage, holidayWorld, holidayWorkbench, stationReward } from './stage.js?v=1.13.0-beta.1';
+import { LOCATIONS, AGE_GROUPS, THEMES, validateConfig, encodeConfig, decodeConfig, createQuest } from './engine.js?v=1.14.0-beta.1';
+import { cardCodes, freshProgress, readProgress, answerMission, confirmCard, continueScreenQuest, attemptMission, solveWithHelp, isHintOpen, toggleHint, puzzleInput, setPuzzleInput, undoPuzzleInput, attemptTask } from './flow.js?v=1.14.0-beta.1';
+import { createHolidayAudio, holidayAudioControls } from './audio.js?v=1.14.0-beta.1';
+import { createQuestMotion } from './motion.js?v=1.14.0-beta.1';
+import { holidayStage, holidayWorld, holidayWorkbench, stationReward } from './stage.js?v=1.14.0-beta.1';
 
 const app = document.querySelector('#app');
 document.body.classList.add('winter-ui');
 const printRoot = document.querySelector('#print-root');
-const RELEASE = { version: '1.13.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
+const RELEASE = { version: '1.14.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
 const IS_PURCHASED = document.body.dataset.sales === 'full';
 const IS_SHARED = document.body.dataset.shared === 'true';
 const DRAFT_KEY = 'bureau:draft:v1';
@@ -104,7 +105,7 @@ const drawings = {
 const icon = (id, cls='') => svg(drawings[id] || drawings.gift, cls);
 const brand = () => `<span class="brand-symbol">${svg('<path d="M6 10l12-4 13 5 11-4v31l-11 4-13-5-12 4zM18 6v31m13-26v31M21 20l7 9m0-9l-7 9"/>')}</span><span class="brand-name">Бюро находок<span class="brand-sub">новогодняя почта</span></span>`;
 function shell(content, mode='home') {
-  questAudio?.setScene({active:false});
+  questMotion.setActive(false);questAudio?.setScene({active:false});
   document.body.dataset.screen=mode;
   app.innerHTML=`${!storageAvailable ? '<div class="storage-notice">Сохранение доступно только в этой вкладке. Не закрывайте и не обновляйте вкладку.</div>' : ''}<div class="wrap"><header class="header"><button class="brand" data-action="home" aria-label="Бюро находок, на главную">${brand()}</button><div class="header-right"><span class="quiet beta-label">${IS_PURCHASED?'Полная версия':'Открытый тест · бесплатно'}</span>${IS_PURCHASED&&!IS_SHARED&&location.protocol!=='file:'?'<a class="text-button" href="/access">Моя покупка</a>':''}<button class="text-button" data-action="${mode==='home'?'create':'home'}">${mode==='home'?(draft.name?'Продолжить подготовку':'Собрать квест'):'На главную'}</button></div></header>${content}<footer class="footer"><span>Бюро находок · новогодние приключения дома</span><div class="footer-links">${RELEASE.feedbackUrl?`<a href="${escape(RELEASE.feedbackUrl)}" target="_blank" rel="noopener noreferrer">Оставить отзыв</a>`:'<button class="footer-button" data-action="beta-info">Об открытом тесте</button>'}<button class="footer-button" data-action="data-info">Как хранятся данные</button></div></footer></div>`;
 }
@@ -448,10 +449,14 @@ function createPassportSaver(){
 
 // HOLIDAY_RENDERER_END
 
+const questMotion=createQuestMotion({root:app,enabled:storage.get('bureau:motion:v1')!==false,onChange:syncMotionControls});
+function syncMotionControls(state){const enabled=state.enabled&&!state.reduced;for(const button of app.querySelectorAll('[data-action="motion-toggle"]')){button.setAttribute('aria-pressed',String(enabled));button.setAttribute('aria-label',state.reduced?'Анимация отключена настройками устройства':enabled?'Выключить анимацию':'Включить анимацию');button.disabled=state.reduced;button.textContent=state.reduced?'Без движения':'Анимация';}const shell=app.querySelector('.game-shell');if(shell){shell.setAttribute('data-motion',enabled?'on':'off');shell.classList[state.allowed?'remove':'add']('motion-suspended');}}
+function syncQuestMotion(){questMotion.sync(app);questMotion.setActive(document.body.dataset.screen==='game'&&!!progress&&progress.phase!=='done'&&!document.hidden&&!document.querySelector('.dialog-backdrop'));syncMotionControls(questMotion.state());}
+function celebrateQuestResult(result){if(!result.correct)return;document.querySelector('.station-reward')?.classList.add('motion-arrival');document.querySelector('.earned-stamp')?.classList.add('motion-arrival');const stationComplete=!!quest.missions[progress.index]?.station?.isLast;questAudio.celebrate({stationComplete});questMotion.celebrate({stationComplete,final:progress.phase==='treasure'});}
 const questAudio=createHolidayAudio({volume:Math.max(0,Math.min(1,Number(storage.get('bureau:music-volume:v1')??0.32))),onChange:syncQuestAudio});
 const questReader=createQuestReader({onChange(state,kind){syncReaderControls(state,kind);syncQuestSoundscape();}});
 function syncQuestAudio(state){const root=document.querySelector('#quest-audio');if(!root||document.activeElement?.name==='music-volume')return;const focused=document.activeElement?.dataset?.action==='music-toggle';root.innerHTML=holidayAudioControls(state);if(focused)root.querySelector('[data-action="music-toggle"]')?.focus({preventScroll:true});}
-function syncQuestSoundscape(){questAudio.setScene({station:quest?.missions[progress?.index]?.station?.index||0,active:document.body.dataset.screen==='game'&&!!progress&&!['intro','done'].includes(progress.phase)&&!document.hidden&&!document.querySelector('.dialog-backdrop'),ducked:questReader.state().speaking});}
+function syncQuestSoundscape(){syncQuestMotion();questAudio.setScene({station:quest?.missions[progress?.index]?.station?.index||0,active:document.body.dataset.screen==='game'&&!!progress&&!['intro','done'].includes(progress.phase)&&!document.hidden&&!document.querySelector('.dialog-backdrop'),ducked:questReader.state().speaking});}
 function syncWorkbench(mission){const root=document.querySelector('#live-workbench');if(root)root.innerHTML=holidayWorkbench(mission,puzzleInput(mission,progress),true);}
 let readerContext='';
 const passportSaver=createPassportSaver();
@@ -466,8 +471,21 @@ function gameFrame(content) {
   const audio=`<div id="quest-audio" class="quest-audio">${holidayAudioControls(questAudio.state())}</div>`;
   const passport=quest.config.edition===3&&storybook?winterPassport(quest.missions,solved):'';
   const desk=`${topline}${content}<p class="game-caption">${caption}</p>`;
-  const main=storybook?`<div class="adventure-layout"><aside class="adventure-world">${holidayWorld(quest.missions,progress)}${passport}${audio}</aside><section class="adventure-desk">${desk}</section></div>`:`${audio}${desk}`;
-  app.innerHTML=`${!storageAvailable?'<div class="storage-notice">Сохранение доступно только в этой вкладке. Не закрывайте и не обновляйте вкладку.</div>':''}<div class="game-shell ${storybook?'storybook-game':''}"><div class="snowfall" aria-hidden="true"><i></i><i></i><i></i></div><header class="game-header"><div><span class="game-wordmark">Бюро находок</span>${isDemo?'<span class="game-demo">Демо · 4 задания</span>':''}<span class="game-build">${RELEASE.version.replace('-beta.1','')}</span></div><div class="game-tools"><button class="game-tool" data-action="reading-size" aria-pressed="${largeReading}">${largeReading?'Обычный текст':'Крупный текст'}</button><button class="game-tool" data-action="game-help">Как играть</button>${progress.phase!=='done'?'<button class="game-tool" data-action="pause">Пауза</button>':''}</div></header><main class="game-main">${main}</main></div>`;
+  const world=`${holidayWorld(quest.missions,progress)}${passport}${audio}`;
+  const main=storybook?`<div class="adventure-layout"><aside class="adventure-world">${world}</aside><section class="adventure-desk">${desk}</section></div>`:`${audio}${desk}`;
+  const motionState=questMotion.state(), motionOn=motionState.enabled&&!motionState.reduced;
+  const header=`<div><span class="game-wordmark">Бюро находок</span>${isDemo?'<span class="game-demo">Демо · 4 задания</span>':''}<span class="game-build">${RELEASE.version.replace('-beta.1','')}</span></div><div class="game-tools"><button class="game-tool" data-action="reading-size" aria-pressed="${largeReading}">${largeReading?'Обычный текст':'Крупный текст'}</button><button class="game-tool motion-toggle" data-action="motion-toggle" aria-pressed="${motionOn}" aria-label="${motionOn?'Выключить анимацию':'Включить анимацию'}">Анимация</button><button class="game-tool" data-action="game-help">Как играть</button>${progress.phase!=='done'?'<button class="game-tool" data-action="pause">Пауза</button>':''}</div>`;
+  const viewKey=`${quest.id}:${isDemo}:${storybook}`, worldKey=`${viewKey}:${progress.index}:${progress.phase}`;
+  const liveDesk=app.querySelector('.adventure-desk'),liveWorld=app.querySelector('.adventure-world');
+  if(storybook&&app.dataset.questView===viewKey&&liveDesk&&liveWorld){
+    liveDesk.innerHTML=desk;
+    if(app.dataset.worldView!==worldKey)liveWorld.innerHTML=world;
+    app.querySelector('.game-header').innerHTML=header;
+  }else{
+    app.innerHTML=`${!storageAvailable?'<div class="storage-notice">Сохранение доступно только в этой вкладке. Не закрывайте и не обновляйте вкладку.</div>':''}<div class="game-shell ${storybook?'storybook-game':''}"><div class="snowfall" aria-hidden="true"><i></i><i></i><i></i></div><header class="game-header">${header}</header><main class="game-main">${main}</main></div>`;
+  }
+  if(app.dataset.worldView!==worldKey)app.querySelector('.quest-scene')?.classList.add('scene-arriving');
+  app.dataset.questView=viewKey;app.dataset.worldView=worldKey;
   document.querySelector('.game-card h1, .game-card h2')?.setAttribute('tabindex','-1');
   syncQuestSoundscape();
 }
@@ -580,7 +598,7 @@ async function copyLink(){
   catch{if(canPresent()){showDialog('Ссылка на квест',isLocalAddress()?'Эта ссылка работает только на этом компьютере. Для другого устройства скачайте файл игры.':'Выделите и скопируйте ссылку. Она содержит имя, маршрут и финальную записку.',`<label class="label" for="share-url">Ссылка для участников</label><input id="share-url" class="input" value="${escape(url.href)}" readonly><div class="actions"><button class="button" data-action="close-dialog">Готово</button></div>`);document.querySelector('#share-url')?.select();}}
 }
 function showDialog(title,text,controls){
-  questAudio.setScene({active:false});
+  questMotion.setActive(false);questAudio.setScene({active:false});
   closeDialog();lastFocus=document.activeElement;
   const wrap=document.createElement('div');wrap.className='dialog-backdrop';wrap.innerHTML=`<section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><h2 id="dialog-title">${escape(title)}</h2><p>${escape(text)}</p>${controls}</section>`;
   document.body.append(wrap);wrap.querySelector('button,input')?.focus();
@@ -589,6 +607,7 @@ function closeDialog(){const dialog=document.querySelector('.dialog-backdrop');i
 function handleAction(target){
   const action=target.dataset.action;
   if(IS_SHARED&&['create','new-quest','confirm-new-quest','return-setup','prepare','play','print','download','copy-link','restart-prepared','preview-question','preview-answer','shuffle-puzzles','confirm-shuffle','remember-format','forget-format'].includes(action)){notify('Подготовка доступна взрослому в его покупке. Продолжайте играть по семейной ссылке.');return;}
+  if(action==='motion-toggle'){questMotion.setEnabled(!questMotion.state().enabled);storage.set('bureau:motion:v1',questMotion.state().enabled);syncMotionControls(questMotion.state());return;}
   if(action==='music-toggle'){questAudio.setEnabled(!questAudio.state().enabled).then(()=>syncQuestSoundscape());return;}
   if(action==='inspect-clue'&&progress?.phase==='puzzle'){inspectWinterClue(quest.missions[progress.index],target);return;}
   if(action==='passport'&&quest){questReader.stop();const solved=['treasure','done'].includes(progress.phase)?quest.missions.length:progress.index+(progress.phase==='find'?1:0);showDialog('Твой почтовый пропуск','Четыре станции — четыре части потерянной адресной бирки.',winterPassport(quest.missions,solved,true)+'<button class="button" data-action="close-dialog">Продолжить приключение</button>');const heading=document.querySelector('.dialog h2');heading?.setAttribute('tabindex','-1');heading?.focus({preventScroll:true});const dialog=document.querySelector('.dialog');if(dialog)dialog.scrollTop=0;return;}
@@ -600,7 +619,7 @@ function handleAction(target){
     const mission=quest.missions[progress.index];
     showDialog('Разберём вместе','Можно показать этот экран взрослому и обсудить решение. Продолжение откроется, когда нажмёте «Теперь понятно».',`<p class="help-answer">Ответ: <b>${escape(mission.choices[mission.answerIndex])}</b></p><p class="help-explanation">${escape(mission.explanation)}</p><div class="actions"><button class="button" data-action="assist-confirm">Теперь понятно</button><button class="text-button" data-action="close-dialog">Подумать ещё</button></div>`);return;
   }
-  if(action==='assist-confirm'&&progress?.phase==='puzzle'){const result=solveWithHelp(quest,progress);if(result.correct){progress=result.progress;saveProgress();closeDialog();renderGame(true);}return;}
+  if(action==='assist-confirm'&&progress?.phase==='puzzle'){const result=solveWithHelp(quest,progress);if(result.correct){progress=result.progress;saveProgress();closeDialog();renderGame(true);celebrateQuestResult(result);}return;}
   if(action==='preview-question'){
     const mission=createQuest(draft).missions[0];
     showDialog('Попробуйте первую загадку','Это проверка для взрослого. Тайник, готовность и сохранённая игра останутся на месте.',`<h3 class="preview-title">${escape(mission.title)}</h3><p class="preview-prompt">${escape(mission.prompt)}</p>${winterVisual(mission)}${mission.interaction?'<p>В предпросмотре выберите готовый ответ из списка ниже.</p>':''}${winterChoices(mission,[],'preview-answer')}<p id="preview-feedback" class="hint-text" role="status"></p><button class="button" data-action="close-dialog">Вернуться к подготовке</button>`);return;
@@ -649,7 +668,7 @@ function handleAction(target){
     const mission=quest.missions[progress.index],task=mission.interaction;if(!task)return;
     let value=puzzleInput(mission,progress);
     if(action==='task-check'){
-      const result=attemptTask(quest,progress);progress=result.progress;if(result.correct)questAudio.celebrate({stationComplete:!!quest.missions[progress.index]?.station?.isLast});saveProgress();renderGame(result.correct);
+      const result=attemptTask(quest,progress);progress=result.progress;saveProgress();renderGame(result.correct);celebrateQuestResult(result);
       if(result.incomplete){const feedback=document.querySelector('#answer-feedback');feedback.textContent=task.type==='code'?`Нужно ввести ${task.length} цифры. Пока код не полный.`:`Сначала выбери все элементы: ${task.count}.`;feedback.focus();}
       else if(!result.correct)document.querySelector('#answer-feedback')?.focus();
       return;
@@ -670,7 +689,7 @@ function handleAction(target){
   if(action==='answer'){
     if(quest.missions[progress.index]?.interaction)return;
     const result=attemptMission(quest,progress,Number(target.dataset.answer));
-    progress=result.progress;if(result.correct)questAudio.celebrate({stationComplete:!!quest.missions[progress.index]?.station?.isLast});saveProgress();renderGame(result.correct);
+    progress=result.progress;saveProgress();renderGame(result.correct);celebrateQuestResult(result);
     if(!result.correct)document.querySelector('#answer-feedback')?.focus();
     return;
   }
@@ -717,7 +736,7 @@ document.addEventListener('keydown',event=>{
   if(event.key==='Tab'){const items=[...dialog.querySelectorAll('button,a,input,select,textarea,summary,[tabindex]')].filter(el=>!el.disabled&&el.getAttribute('tabindex')!=='-1'&&(!el.getClientRects||el.getClientRects().length>0));if(!items.length){event.preventDefault();return;}const first=items[0],last=items.at(-1);if(!items.includes(document.activeElement)){event.preventDefault();(event.shiftKey?last:first).focus();}else if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}
 });
 window.addEventListener('hashchange',route);
-window.addEventListener('pagehide',()=>{questReader.stop();questAudio.stop();});
+window.addEventListener('pagehide',()=>{questReader.stop();questAudio.stop();questMotion.setActive(false);});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)questReader.stop();syncQuestSoundscape();});
 if(document.body.dataset.startQuest&&!location.hash)history.replaceState(null,'','#play='+document.body.dataset.startQuest);
 route();
