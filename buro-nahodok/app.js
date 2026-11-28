@@ -1,17 +1,17 @@
-import { LOCATIONS, AGE_GROUPS, THEMES, validateConfig, encodeConfig, decodeConfig, createQuest, createAdventureDemo } from './engine.js?v=1.18.0-beta.1';
-import { cardCodes, freshProgress, readProgress, answerMission, confirmCard, continueScreenQuest, attemptMission, solveWithHelp, isHintOpen, toggleHint, puzzleInput, setPuzzleInput, undoPuzzleInput, attemptTask } from './flow.js?v=1.18.0-beta.1';
-import { createHolidayAudio, holidayAudioControls } from './audio.js?v=1.18.0-beta.1';
-import { objectKind, objectState, renderObjectPuzzle, applyObjectAction, createObjectDrag } from './objects.js?v=1.18.0-beta.1';
-import { questChapter, questChapterTransition, questInventory, questStoryBrief } from './story.js?v=1.18.0-beta.1';
-import { decorMarkup } from './decor.js?v=1.18.0-beta.1';
-import { renderSantaFinale, createSantaPlayer } from './santa.js?v=1.18.0-beta.1';
-import { createQuestMotion } from './motion.js?v=1.18.0-beta.1';
-import { holidayStage, holidayWorld, holidayWorkbench, stationReward } from './stage.js?v=1.18.0-beta.1';
+import { LOCATIONS, AGE_GROUPS, THEMES, validateConfig, encodeConfig, decodeConfig, createQuest, createAdventureDemo } from './engine.js?v=1.19.0-beta.1';
+import { cardCodes, freshProgress, readProgress, answerMission, confirmCard, continueScreenQuest, attemptMission, solveWithHelp, isHintOpen, toggleHint, puzzleInput, setPuzzleInput, undoPuzzleInput, attemptTask } from './flow.js?v=1.19.0-beta.1';
+import { createHolidayAudio, holidayAudioControls } from './audio.js?v=1.19.0-beta.1';
+import { objectKind, objectState, renderObjectPuzzle, applyObjectAction, createObjectDrag } from './objects.js?v=1.19.0-beta.1';
+import { questChapter, questChapterTransition, questInventory, questStoryBrief } from './story.js?v=1.19.0-beta.1';
+import { decorMarkup } from './decor.js?v=1.19.0-beta.1';
+import { renderSantaFinale, createSantaPlayer } from './santa.js?v=1.19.0-beta.1';
+import { createQuestMotion } from './motion.js?v=1.19.0-beta.1';
+import { holidayStage, holidayWorld, holidayWorkbench, stationReward } from './stage.js?v=1.19.0-beta.1';
 
 const app = document.querySelector('#app');
 document.body.classList.add('winter-ui');
 const printRoot = document.querySelector('#print-root');
-const RELEASE = { version: '1.18.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
+const RELEASE = { version: '1.19.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
 const IS_PURCHASED = document.body.dataset.sales === 'full';
 const IS_SHARED = document.body.dataset.shared === 'true';
 const DRAFT_KEY = 'bureau:draft:v1';

@@ -23,7 +23,7 @@ export function santaMessage({name,completedCount=4,postal=true}={}){
   return santaPhrases({name,completedCount,postal}).map(phrase=>phrase.text).join(' ');
 }
 
-export function renderSantaFinale({name,completedCount=4,postal=true,videoUrl='./assets/ded-moroz.mp4',posterUrl='./assets/ded-moroz-poster.jpg',audioUrl='./assets/ded-moroz-yulia.mp3?v=1.18.0'}={}){
+export function renderSantaFinale({name,completedCount=4,postal=true,videoUrl='./assets/ded-moroz.mp4',posterUrl='./assets/ded-moroz-poster.jpg',audioUrl='./assets/ded-moroz-yulia.mp3?v=1.19.0'}={}){
   const child=santaName(name),message=santaMessage({name:child,completedCount,postal});
   const recorded=santaRecordedName({name:child,postal});
   const audio=recorded?`<audio data-santa-audio preload="none"><source src="${santaEscape(audioUrl)}" type="audio/mpeg"></audio>`:'';
@@ -141,7 +141,7 @@ export function createSantaPlayer({root,speech=globalThis.speechSynthesis,Uttera
     if(santaHasRecording()){
       santaViewState='playing';
       const audio=santaAudio;santaPlaybackMode='recorded';
-      for(const [name,value] of Object.entries({'voice-name':'Santa - Public','voice-locale':'ru-RU','voice-rate':'','voice-pitch':'','voice-mode':'recorded','local-voices':JSON.stringify(localVoices.map(item=>item.name||''))}))video.setAttribute?.('data-santa-'+name,value);
+      for(const [name,value] of Object.entries({'voice-name':'Grigory - Warm & Expressive','voice-locale':'ru-RU','voice-rate':'','voice-pitch':'','voice-mode':'recorded','local-voices':JSON.stringify(localVoices.map(item=>item.name||''))}))video.setAttribute?.('data-santa-'+name,value);
       santaSnapshot={...santaSnapshot,playing:true,speaking:true,voiceAvailable:true,message:'Дед Мороз поздравляет тебя. Можно остановить поздравление.'};
       try{onBeforePlay();}catch{santaHalt('Не удалось начать поздравление. Текст остаётся ниже.','error');return Promise.resolve(false);}
       if(serial!==santaSerial)return Promise.resolve(false);
