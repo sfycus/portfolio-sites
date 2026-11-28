@@ -237,4 +237,14 @@
 .winter-ui.large-reading .game-card>.answer-explanation{font-size:23px!important}
 @media(max-width:520px){.winter-ui .game-tools{justify-content:space-between;gap:6px}.winter-ui .game-tools .game-tool{font-size:14px;padding:9px 11px}.puzzle-help{justify-content:space-between;gap:10px}.prep-tools{gap:8px 20px}.preview-choices{grid-template-columns:1fr}.winter-ui.large-reading .choices.compact-choices{grid-template-columns:1fr}.winter-ui .game-card>.attempt-feedback{font-size:15px!important}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.winter-ui .game-card{animation:none}.winter-ui .button{transition:none}}
+.saved-format-note{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 19px;margin-bottom:25px;border:1px solid #d8e0d6;background:#f2f5ed;border-radius:8px;color:#36513e;font-size:14px;line-height:1.6}
+.saved-format-note b{display:block;font-size:15px;margin-bottom:3px}
+.saved-format-note .text-button{flex-shrink:0;min-height:44px;font-size:14px}
+.format-preference{margin:30px 0 10px;padding:22px 24px;border:1px dashed #b9c6b7;border-radius:9px;background:#f6f7f0}
+.format-preference h3{margin:0 0 9px;font:700 19px/1.4 var(--sans);color:#334e3c}
+.format-preference p{font-size:14px;line-height:1.65;margin:0;color:#526251;max-width:55ch}
+.format-preference .format-status{margin:10px 0 16px;color:#334e3c}
+.format-preference .actions{gap:12px 20px;flex-wrap:wrap}
+.format-preference .text-button{font-size:14px;min-height:44px}
+@media(max-width:520px){.saved-format-note{align-items:flex-start;flex-direction:column;gap:6px}.saved-format-note .text-button{padding:5px 0}.format-preference{padding:20px 17px}}
 @media(max-width:520px){.winter-ui .header .brand{min-width:0}.winter-ui .header-right{flex-shrink:0;flex-wrap:wrap;justify-content:flex-end;gap:4px 10px;max-width:118px}}
