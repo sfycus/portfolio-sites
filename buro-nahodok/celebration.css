@@ -1,0 +1,154 @@
+/* Pine needles, paper stars and tiny warm lamps — original code-drawn decorations. */
+.game-shell:has(> .festive-decor),
+.wrap:has(> .festive-decor) { position: relative; isolation: isolate; }
+.festive-decor {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  overflow: clip;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  z-index: 2;
+  contain: paint;
+}
+.festive-decor,
+.festive-decor * { pointer-events: none !important; }
+.game-shell:has(> .festive-decor) > :is(.game-header,.game-main),
+.wrap:has(> .festive-decor) > :is(.header,main,.footer) { position: relative; z-index: 1; }
+.game-shell:has(> .festive-decor) .game-header,
+.winter-ui[data-screen="game"] .storybook-game:has(> .festive-decor) .game-header { padding-top: 35px; }
+.wrap:has(> .festive-decor) .header { padding-top: 18px; min-height: 118px; }
+.festive-garland {
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: max(100%, 940px);
+  height: 58px;
+  transform: translateX(-50%);
+  overflow: visible;
+  opacity: .97;
+  filter: drop-shadow(0 3px 1px #071d1c30);
+}
+.festive-hanging {
+  position: absolute;
+  top: 25px;
+  width: clamp(88px, 10vw, 150px);
+  height: auto;
+  color: #eee4c7;
+  opacity: .9;
+  filter: drop-shadow(0 3px 2px #0a241a24);
+}
+.festive-hanging--left { left: -38px; }
+.festive-hanging--right { right: -38px; }
+.festive-paper-flake { color: #f5e8c8; }
+.festive-paper-star {
+  position: absolute;
+  color: #c6ad74;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  line-height: 1;
+  opacity: .38;
+}
+.festive-paper-star--one { top: 274px; left: 13px; font-size: 32px; transform: rotate(-12deg); }
+.festive-paper-star--two { top: 446px; right: 12px; font-size: 40px; transform: rotate(8deg); }
+.festive-gift-stack {
+  position: absolute;
+  right: -23px;
+  bottom: 11px;
+  width: clamp(140px, 19vw, 238px);
+  height: auto;
+  opacity: .46;
+}
+.festive-decor--home .festive-hanging { top: 83px; opacity: .72; }
+.festive-decor--home .festive-paper-star { color: #9c6e43; opacity: .2; }
+.festive-decor--home .festive-gift-stack { opacity: .22; bottom: 36px; }
+.festive-decor--public .festive-hanging { top: 83px; opacity: .68; }
+.festive-decor--public .festive-gift-stack { opacity: .22; }
+
+/* Keep artwork additions within the painted town, away from the address caption. */
+.quest-scene > .festive-decor--scene { z-index: 2; border-radius: inherit; }
+.festive-decor--scene .festive-garland { top: -12px; height: 46px; min-width: 620px; opacity: .83; }
+.festive-decor--scene .festive-hanging { top: 19px; width: 91px; opacity: .72; }
+.festive-decor--scene .festive-hanging--left { left: -36px; }
+.festive-decor--scene .festive-hanging--right { right: -36px; }
+.festive-decor--scene .festive-paper-star { display: none; }
+.festive-tracks { position: absolute; right: -8px; bottom: 17%; width: 35%; height: auto; opacity: .55; transform: rotate(-13deg); }
+
+@keyframes festive-lamplight {
+  0%,100% { opacity: .68; }
+  46% { opacity: 1; }
+}
+@keyframes festive-gentle-sway {
+  0%,100% { rotate: -1deg; }
+  50% { rotate: 1.5deg; }
+}
+.festive-lamp { animation: festive-lamplight 6.8s ease-in-out infinite; animation-delay: calc(var(--festive-lamp,0) * -.71s); }
+.festive-swing { transform-box: fill-box; transform-origin: 50% -30px; animation: festive-gentle-sway 7.7s ease-in-out infinite; animation-delay: var(--festive-delay,0s); }
+.motion-suspended .festive-decor * { animation-play-state: paused; }
+[data-motion="off"] .festive-decor *,
+.festive-decor[data-motion="off"] * { animation: none !important; transition: none !important; }
+
+/* A calm, framed theatre for the separately implemented personalised finale. */
+.santa-finale {
+  margin: 28px 0;
+  padding: clamp(16px, 2.5vw, 28px);
+  border: 1px solid #c7a86f;
+  border-radius: 14px 14px 5px 5px;
+  background: linear-gradient(145deg, #fff7e2, #f0e1bd);
+  color: #293b31;
+  box-shadow: inset 0 0 0 5px #fff4d94d, 0 5px 0 #8d634f24;
+  text-align: left;
+}
+.santa-finale h2 { margin: 0 0 10px; color: #27483c; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(26px, 3vw, 36px); line-height: 1.12; }
+.santa-copy { max-width: 46ch; margin: 0 0 18px; color: #5f5c4a; font-size: 16px; line-height: 1.55; }
+.santa-stage {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  border: 4px solid #6b4331;
+  border-radius: 9px;
+  background: #173d35;
+  box-shadow: 0 0 0 1px #c2a471, inset 0 0 35px #0a292b66;
+  isolation: isolate;
+}
+.santa-stage > :is(video,canvas,svg,img) { width: 100%; height: 100%; display: block; object-fit: cover; }
+.santa-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px; margin-top: 18px; }
+.santa-controls :is(button,a) { min-height: 44px; }
+.game-card .santa-controls .button { width: auto; margin-top: 0; flex: 1 1 180px; }
+.santa-status { min-height: 1.5em; margin: 12px 0 0; color: #48674f; font-size: 14px; line-height: 1.5; }
+.santa-transcript { margin-top: 18px; border-top: 1px dashed #bfa775; padding-top: 12px; color: #4d594a; font-size: 15px; }
+.santa-transcript summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+.santa-transcript p { margin: 8px 0 0; font-size: 16px; line-height: 1.6; color: inherit; }
+.santa-finale :focus-visible { outline: 3px solid #446b86; outline-offset: 4px; }
+
+@media (max-width: 760px) {
+  .festive-garland { top: -11px; height: 48px; width: 960px; opacity: .94; }
+  .festive-hanging { top: 36px; width: 92px; opacity: .48; }
+  .festive-hanging--left { left: -52px; }
+  .festive-hanging--right { right: -52px; }
+  .festive-paper-star { display: none; }
+  .festive-gift-stack { width: 128px; right: -32px; bottom: 8px; opacity: .2; }
+  .game-shell:has(> .festive-decor) .game-header,
+  .winter-ui[data-screen="game"] .storybook-game:has(> .festive-decor) .game-header { padding-top: 32px; }
+  .wrap:has(> .festive-decor) .header { min-height: 99px; height: auto; padding-top: 28px; padding-bottom: 17px; }
+  .festive-decor--home .festive-hanging,
+  .festive-decor--public .festive-hanging { top: 92px; opacity: .34; }
+  .festive-decor--scene .festive-hanging { top: 15px; width: 77px; opacity: .63; }
+  .festive-decor--scene .festive-hanging--left { left: -37px; }
+  .festive-decor--scene .festive-hanging--right { right: -37px; }
+  .festive-decor--scene .festive-garland { top: -11px; height: 37px; }
+  .festive-tracks { bottom: 22%; opacity: .4; }
+  .santa-finale { margin: 24px 0; padding: 16px; }
+  .santa-stage { aspect-ratio: 4/3; border-width: 3px; }
+  .santa-copy { font-size: 16px; margin-bottom: 14px; }
+  .santa-controls { gap: 9px; }
+  .santa-controls .button { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .festive-decor *, .santa-finale * { animation: none !important; transition: none !important; }
+}
+@media print {
+  .festive-decor, .santa-finale { display: none !important; }
+}

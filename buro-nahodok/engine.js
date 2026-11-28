@@ -588,7 +588,7 @@ export function createQuest(input) {
 /** A fixed family adventure; ordinary generated age routes and saved editions stay unchanged. */
 export function createAdventureDemo(){
   const plan=['snow-middle-houses','snow-middle-stamps','snow-middle-garland','snow-older-fold','snow-middle-address','snow-older-load','snow-middle-route','snow-older-midnight'];
-  const config={v:1,edition:3,name:'Саша',age:'11-13',theme:'winter',mode:'screen',route:LOCATIONS.slice(0,8).map(item=>item.id),seed:20261128,giftNote:''};
+  const config={v:1,edition:3,name:'Юля',age:'11-13',theme:'winter',mode:'screen',route:LOCATIONS.slice(0,8).map(item=>item.id),seed:20261128,giftNote:''};
   const found=new Map();
   for(let seed=1;seed<=40&&found.size<plan.length;seed++)for(const age of ['8-10','11-13']){
     for(const mission of createQuest({...config,age,seed}).missions)if(plan.includes(mission.id)&&!found.has(mission.id))found.set(mission.id,mission);
@@ -609,6 +609,6 @@ export function createAdventureDemo(){
     return {...source,locationId:config.route[index],station:{index:stage,...base,story:lines[index][0],reward:lines[index][1],step,total:2,isLast,fragment:isLast?stage+1:null}};
   });
   return Object.freeze({config,id:'quest-winter-adventure-v1',adventure:true,missions:Object.freeze(missions),
-    intro:'Саша, это Снегирь! Вечером перед Новым годом метель сорвала адресную бирку с особой посылки. Четыре кусочка разлетелись по почте, ёлочной площади, мастерской и станции саней. Пройдём восемь поручений, поможем жителям городка и восстановим адрес. Каждая законченная глава вернёт один фрагмент.',
+    intro:'Юля, это Снегирь! Вечером перед Новым годом метель сорвала адресную бирку с особой посылки. Четыре кусочка разлетелись по почте, ёлочной площади, мастерской и станции саней. Пройдём восемь поручений, поможем жителям городка и восстановим адрес. Каждая законченная глава вернёт один фрагмент.',
     ending:'Все письма доставлены, фонарь горит, посылки уложены, время прибытия известно. Четыре фрагмента соединились, и Снегирь завершил первую доставку нового года. Спасибо, напарник!'});
 }
