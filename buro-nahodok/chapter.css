@@ -1,0 +1,371 @@
+/* Small chapter notes and three working mechanisms from the New Year post office. */
+.quest-chapter,
+.chapter-objective,
+.chapter-memory,
+.chapter-next,
+.chapter-inventory {
+  box-sizing: border-box;
+  min-width: 0;
+}
+.quest-chapter {
+  margin: 0 0 18px;
+  padding: 16px 18px 15px;
+  border: 1px solid #d5b782;
+  border-left: 4px solid #a64232;
+  border-radius: 3px 9px 9px 3px;
+  background: linear-gradient(105deg, #fff8e5, #f7e8c9);
+  color: #344638;
+  box-shadow: 0 3px 0 #1b332523;
+}
+.quest-chapter .chapter-kicker {
+  display: block;
+  margin: 0 0 5px;
+  color: #8f4132;
+  font-size: 13px;
+  font-weight: 750;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.quest-chapter h2 {
+  margin: 0 0 7px;
+  color: #264638;
+  font: 700 25px/1.16 Georgia, 'Times New Roman', serif;
+  text-wrap: balance;
+}
+.quest-chapter p {
+  margin: 0;
+  color: #59614d;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.chapter-objective {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 13px 0 0;
+  padding-top: 12px;
+  border-top: 1px dashed #bea574;
+  color: #344d38;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.chapter-objective > span:first-child {
+  flex: 0 0 25px;
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border: 1px solid #b89156;
+  border-radius: 50%;
+  color: #8b412d;
+  background: #f3dfb4;
+  font-weight: 800;
+}
+.chapter-objective b { font-weight: 650; }
+.chapter-memory {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 13px 0;
+  padding: 12px 14px;
+  border: 1px solid #b4a87899;
+  border-radius: 5px;
+  color: #eee2bc;
+  background: #244a3f;
+  font-size: 15px;
+  line-height: 1.45;
+}
+.chapter-memory .winter-icon { width: 42px; height: 42px; flex: 0 0 42px; margin: 0; }
+.chapter-memory b, .chapter-memory strong { display: block; color: #fff0cb; font-weight: 700; }
+.chapter-memory p, .chapter-memory small { margin: 3px 0 0; color: #dacda7; font: inherit; }
+.chapter-next {
+  position: relative;
+  margin: 22px 0 15px;
+  padding: 19px 20px;
+  border: 1px solid #a6b797;
+  border-top: 3px solid #527452;
+  border-radius: 4px;
+  background: linear-gradient(100deg, #f0f3df, #fff4d8);
+  box-shadow: 0 3px 0 #b3b79133;
+  color: #3c5036;
+}
+.chapter-next h3 { margin: 0 0 9px; font: 700 25px/1.2 Georgia, 'Times New Roman', serif; color: #31503c; }
+.chapter-next p { margin: 0 0 14px; color: #4c5a43; font-size: 16px; line-height: 1.55; }
+.chapter-next p:last-child { margin-bottom: 0; }
+.chapter-inventory {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.chapter-inventory > li,
+.chapter-inventory > span {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 8px;
+  border: 1px solid #a1ac843f;
+  border-radius: 4px;
+  color: #d9dfbd;
+  background: #163c335c;
+  font-size: 14px;
+  line-height: 1.3;
+}
+.chapter-inventory .winter-icon { width: 31px; height: 31px; flex: 0 0 31px; margin: 0; }
+.chapter-inventory .is-locked { color: #b7c4ac; background: #183e35; border-style: dashed; }
+.chapter-inventory .is-locked .winter-icon { opacity: .36; filter: saturate(.2); }
+.chapter-inventory .is-found { color: #fff0c8; border-color: #c4a46b77; background: #385d46; }
+.chapter-inventory b { display: block; overflow-wrap: anywhere; }
+
+/* Each envelope has its own little instruction. Opening one reveals its address clues. */
+.object-mail-route { min-width: 0; }
+.object-envelope-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; margin: 0 0 18px; align-items: stretch; }
+.object-envelope {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  min-height: 110px;
+  padding: 17px 9px 12px;
+  border: 1px solid #bba174;
+  border-radius: 2px 2px 5px 5px;
+  background:
+    linear-gradient(145deg, #fffae9 0 47%, #d4bc914d 48% 49%, transparent 50%) top left / 50.2% 46px no-repeat,
+    linear-gradient(-145deg, #fffae9 0 47%, #d4bc914d 48% 49%, transparent 50%) top right / 50.2% 46px no-repeat,
+    #f7e8c7;
+  color: #4b4c36;
+  box-shadow: 1px 3px 0 #b99c6d55;
+  font: inherit;
+  text-align: center;
+  cursor: pointer;
+  transition: transform .16s ease, background-color .16s ease;
+}
+.object-envelope:hover { transform: translateY(-2px); }
+.object-envelope .winter-icon { width: 46px; height: 46px; }
+.object-envelope-number { position: relative; display: inline-grid; place-items: center; min-width: 28px; height: 28px; padding: 0 7px; border: 2px double #a3523b; border-radius: 50%; background: #a34231; color: #ffebc6; font-size: 15px; line-height: 1; }
+.object-envelope-body { display: block; width: 100%; color: #46533b; font-size: 14px; line-height: 1.45; overflow-wrap: anywhere; }
+.object-envelope.is-open { align-items: flex-start; justify-content: flex-start; min-height: 110px; padding-top: 13px; background: #fff8e5; border-top: 3px solid #a74b36; text-align: left; }
+.object-envelope.is-open .object-envelope-number { background: #f0dfb5; color: #8e3d2c; }
+.object-envelope.is-open::before { content: ''; position: absolute; left: 5px; top: -7px; right: 5px; height: 3px; background: #d5bd91; transform: rotate(-1deg); }
+.object-mail-slots { margin-top: 18px; }
+.object-mail-slots .object-slot { min-height: 135px; }
+.object-mail-slots .object-slot > .winter-icon { width: 70px; height: 70px; }
+.object-house-tray .object-token { min-height: 135px; }
+.object-house-tray .object-token-symbol .winter-icon { width: 84px; height: 84px; }
+.object-mail-route .object-house-tray { border-top: 2px solid #849a65; background: linear-gradient(#ccd8aa44, transparent 27px); }
+
+/* The sheet keeps a four-by-four grid, with the folds visible as a pair of creases. */
+.object-snowflake { position: relative; max-width: 100%; min-width: 0; }
+.object-fold-guide { display: flex; align-items: stretch; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 0 0 17px; }
+.object-fold-step { flex: 1 1 85px; padding: 9px; border: 1px dashed #b5ad8c; background: #f1ebd5; color: #4c5d48; text-align: center; font-size: 14px; line-height: 1.4; }
+.object-fold-step b { display: block; color: #7b4130; }
+.object-paper-grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+  width: min(100%, 288px);
+  margin: 13px auto 18px;
+  padding: 7px;
+  border: 1px solid #b4bba2;
+  background: #edf1df;
+  box-shadow: 4px 5px 0 #939a7340;
+  isolation: isolate;
+}
+.object-paper-grid::before,
+.object-paper-grid::after { content: ''; position: absolute; z-index: 1; pointer-events: none; border-color: #a69d848c; }
+.object-paper-grid::before { top: 7px; bottom: 7px; left: 50%; border-left: 1px dashed #b4a686; }
+.object-paper-grid::after { top: 50%; right: 7px; left: 7px; border-top: 1px dashed #b4a686; }
+.object-hole {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  width: 100%;
+  min-height: 44px;
+  aspect-ratio: 1;
+  padding: 2px;
+  border: 1px solid #d3d6bc;
+  border-radius: 1px;
+  background: #fffdf1;
+  color: #76816a;
+  box-shadow: inset 0 0 8px #e4ddc866;
+  font: 500 14px/1 system-ui, sans-serif;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color .15s ease;
+}
+.object-hole:nth-child(even) { background: #fbf9e9; }
+.object-hole:hover { background: #eee3bf; }
+.object-hole.is-punched { color: #fff3d4; background: #fffdf1; }
+.object-hole.is-punched::before { content: ''; position: absolute; z-index: 0; width: 46%; aspect-ratio: 1; border-radius: 50%; border: 1px solid #798c76; background: radial-gradient(circle at 65% 65%, #3f6452, #16392f); box-shadow: inset 2px 3px 3px #0b241d66, 1px 1px 0 #fff; }
+.object-hole.is-punched > * { position: relative; z-index: 1; }
+.object-paper-axis { pointer-events: none; opacity: .5; }
+
+/* A real clock face: the hands answer the player's controls, not an animated timer. */
+.object-clock { width: 100%; min-width: 0; text-align: center; }
+.object-clock-mission { display: flex; align-items: stretch; justify-content: center; gap: 8px; margin: 0 0 16px; font-size: 15px; line-height: 1.4; }
+.object-clock-mission > * { min-width: 0; flex: 1; padding: 9px; border: 1px solid #bbaa82; border-radius: 3px; background: #fff7df; }
+.object-clock-mission b, .object-clock-mission strong { display: block; color: #90422e; font-weight: 750; }
+.object-clock-face {
+  position: relative;
+  width: min(100%, 272px);
+  aspect-ratio: 1;
+  margin: 0 auto 14px;
+  border: 9px solid #865837;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, transparent 63%, #ae88534d 63.5% 64%, transparent 64.5%),
+    radial-gradient(circle at 38% 30%, #fffdf1, #f4e4bd 76%);
+  box-shadow: 0 0 0 2px #d7b777, 0 6px 0 #6d4a2c, 0 10px 20px #79583724, inset 0 0 0 2px #e6cea1;
+  color: #34523d;
+  isolation: isolate;
+}
+.object-clock-face::before { content: ''; position: absolute; inset: 5px; border: 1px solid #b2935a88; border-radius: 50%; pointer-events: none; }
+.object-clock-number { position: absolute; display: grid; place-items: center; width: 28px; height: 28px; margin: -14px 0 0 -14px; color: #40533c; font: 700 20px/1 Georgia, 'Times New Roman', serif; }
+.object-clock-hand { position: absolute; z-index: 2; bottom: 50%; left: 50%; width: 6px; margin-left: -3px; border-radius: 4px 4px 1px 1px; background: #355641; transform: rotate(var(--hand-angle, 0deg)); transform-origin: 50% 100%; box-shadow: 1px 1px 1px #284b3322; }
+.object-clock-hand.hour-hand { height: 26%; width: 7px; margin-left: -3.5px; background: #314d3b; }
+.object-clock-hand.minute-hand { height: 36%; width: 4px; margin-left: -2px; background: #9c3e2e; }
+.object-clock-center { position: absolute; z-index: 3; width: 15px; height: 15px; top: 50%; left: 50%; margin: -7.5px 0 0 -7.5px; border: 3px solid #b78a49; border-radius: 50%; background: #9f4030; box-shadow: 0 1px 2px #4d332b55; }
+.object-clock-readout { display: inline-block; margin: 8px auto 4px; padding: 7px 19px; border: 1px solid #8c6c45; border-radius: 4px; background: #2b493c; color: #ffedbb; box-shadow: inset 0 2px 3px #112f285c; font: 700 33px/1.1 ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: .055em; }
+.object-clock-day { display: block; color: #715d42; font-size: 14px; line-height: 1.4; margin: 5px 0 14px; }
+.object-clock-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; margin: 14px 0 4px; }
+.object-clock-controls button { min-width: 0; min-height: 46px; padding: 8px 5px; border: 1px solid #b39a70; border-radius: 4px; color: #435039; background: #fff5d9; box-shadow: 0 2px 0 #c0a67a; font: 650 15px/1.3 system-ui, sans-serif; overflow-wrap: anywhere; cursor: pointer; touch-action: manipulation; }
+.object-clock-controls button:hover { background: #efe0b9; }
+.object-clock-controls button:active { transform: translateY(1px); box-shadow: 0 1px 0 #c0a67a; }
+.object-envelope:focus-visible,
+.object-hole:focus-visible,
+.object-clock-controls button:focus-visible { outline: 3px solid #315f83; outline-offset: 3px; z-index: 4; }
+
+@media (max-width: 620px) {
+  .quest-chapter { margin-bottom: 12px; padding: 12px 13px; }
+  .quest-chapter h2 { font-size: 22px; }
+  .quest-chapter p { font-size: 15px; line-height: 1.45; }
+  .chapter-objective { margin-top: 10px; padding-top: 9px; font-size: 14px; }
+  .chapter-memory { padding: 9px 11px; gap: 8px; font-size: 14px; }
+  .chapter-memory .winter-icon { width: 35px; height: 35px; flex-basis: 35px; }
+  .chapter-next { padding: 14px; }
+  .chapter-next h3 { font-size: 23px; }
+  .chapter-inventory { gap: 5px; }
+  .chapter-inventory > li, .chapter-inventory > span { padding: 6px; font-size: 13px; }
+  .chapter-inventory .winter-icon { width: 26px; height: 26px; flex-basis: 26px; }
+  .object-envelope-row { gap: 6px; }
+  .object-envelope { padding: 13px 6px 9px; }
+  .object-envelope-body { font-size: 14px; }
+  .object-mail-slots .object-slot { min-height: 113px; }
+  .object-mail-slots .object-slot > .winter-icon { width: 56px; height: 56px; }
+  .object-house-tray .object-token { min-height: 115px; }
+  .object-house-tray .object-token-symbol .winter-icon { width: 65px; height: 65px; }
+  .object-clock-number { font-size: 18px; }
+  .object-clock-controls button { font-size: 14px; }
+}
+@media (max-width: 400px) {
+  .object-envelope-row { grid-template-columns: minmax(0, 1fr); }
+  .object-envelope { min-height: 52px; padding: 9px 11px; flex-direction: row; justify-content: flex-start; gap: 9px; text-align: left; background-size: 60px 100%, 60px 100%; }
+  .object-envelope-number { flex: 0 0 28px; }
+  .object-envelope.is-open { min-height: 52px; padding-top: 9px; }
+  .object-envelope-body { flex: 1; }
+  .object-paper-grid { padding: 4px; gap: 1px; }
+  .object-paper-grid::before { top: 4px; bottom: 4px; }
+  .object-paper-grid::after { left: 4px; right: 4px; }
+  .object-clock-face { border-width: 7px; }
+  .object-clock-number { width: 24px; height: 24px; margin: -12px 0 0 -12px; font-size: 17px; }
+  .object-clock-controls { gap: 5px; }
+  .object-clock-controls button { padding: 8px 3px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .object-envelope.is-open .object-envelope-body { animation: chapter-letter-reveal .23s ease-out both; }
+  @keyframes chapter-letter-reveal { from { opacity: .4; transform: translateY(3px); } to { opacity: 1; transform: translateY(0); } }
+}
+[data-motion="off"] :is(.object-envelope, .object-envelope-body, .object-hole, .object-clock-controls button) { animation: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .object-envelope, .object-envelope-body, .object-hole, .object-clock-controls button { animation: none !important; transition: none !important; }
+}
+
+/* Renderer contracts: envelopes are containers with a separate, keyboard-operable flap. */
+.object-envelope-open {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  width: 100%;
+  min-height: 44px;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: #73452f;
+  font: 700 14px/1.35 system-ui, sans-serif;
+  text-align: inherit;
+  cursor: pointer;
+}
+.object-envelope-open:focus-visible { outline: 3px solid #315f83; outline-offset: 3px; }
+.object-envelope-body > p { margin: 0 0 9px; font-size: 14px; line-height: 1.45; }
+.object-envelope-body .object-token { width: 100%; min-height: 70px; padding: 9px 5px; }
+.object-envelope-body .object-token .winter-icon { width: 40px; height: 40px; }
+.object-envelope-body .object-token .object-token-label { font-size: 14px; }
+.object-mail-slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 9px; min-width: 0; }
+.object-mail-slots[data-house-count="4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.object-mailbox { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding-top: 9px; border-top: 2px solid #7b8f5d; }
+.object-house-sign { min-width: 0; color: #43553b; text-align: center; font-size: 14px; line-height: 1.4; }
+.object-house-sign > .winter-icon { width: min(100%, 88px); height: 88px; margin: 0 auto 5px; }
+.object-house-sign :is(b,strong) { display: block; color: #3b563d; font-size: 16px; line-height: 1.3; }
+.object-house-sign small { display: block; margin-top: 4px; color: #6c694d; font-size: 13px; line-height: 1.35; }
+.object-mail-slots .object-slot { min-height: 92px; padding: 8px 4px; }
+.object-mail-slots .object-slot > .winter-icon { width: 45px; height: 45px; }
+.object-clock-face { --clock-number-radius: clamp(70px, 20vw, 103px); }
+.object-clock-number {
+  top: 50%;
+  left: 50%;
+  margin: 0;
+  transform: translate(-50%, -50%) rotate(var(--number-angle, 0deg)) translateY(calc(-1 * var(--clock-number-radius)));
+}
+.object-clock-number > span { display: block; transform: rotate(calc(-1 * var(--number-angle, 0deg))); }
+.object-hole-mark { position: relative; z-index: 1; }
+@media (max-width: 620px) {
+  .object-mail-slots { gap: 6px; }
+  .object-mail-slots[data-house-count="4"] { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .object-house-sign > .winter-icon { height: 70px; }
+  .object-mail-slots .object-slot { min-height: 80px; }
+  .object-house-sign :is(b,strong) { font-size: 15px; }
+}
+@media (max-width: 400px) {
+  .object-envelope-open { flex: 0 0 62px; width: 62px; align-self: flex-start; justify-content: flex-start; }
+  .object-envelope-body { min-width: 0; }
+  .object-envelope-body > p { margin-bottom: 8px; }
+  .object-envelope-body .object-token { min-height: 58px; padding: 7px 5px; flex-direction: row; }
+  .object-envelope-body .object-token .winter-icon { width: 33px; height: 33px; }
+  .object-envelope-body .object-token .object-token-label { font-size: 14px; }
+  .object-house-sign > .winter-icon { height: 56px; }
+}
+@supports (width: 1cqw) {
+  .object-clock-face { container-type: inline-size; }
+  .object-clock-number { --clock-number-radius: 40cqw; }
+}
+.object-letter-symbols { display: flex; align-items: center; justify-content: center; gap: 4px; margin: 5px 0 9px; }
+.object-letter-symbols .winter-icon { width: 39px; height: 39px; margin: 0; }
+.object-fold-step p { margin: 8px 0 0; font-size: 14px; line-height: 1.4; }
+.object-fold-mark {
+  display: block;
+  position: relative;
+  width: 55px;
+  height: 45px;
+  margin: 1px auto;
+  border: 1px solid #a8b29a;
+  background: #fffced;
+  box-shadow: 2px 2px 0 #b3b69344;
+}
+.object-fold-mark::before { content: ''; position: absolute; inset: 0 50% 0 0; border-right: 1px dashed #a5a27f; background: #d5dfbd; }
+.object-fold-mark::after { content: ''; position: absolute; width: 12px; height: 12px; top: 15px; right: 10px; border-top: 2px solid #9b4a34; border-right: 2px solid #9b4a34; transform: rotate(45deg); }
+.object-fold-mark.fold-vertical::before { inset: 50% 0 0; border-right: 0; border-top: 1px dashed #a5a27f; }
+.object-fold-mark.fold-vertical::after { top: 7px; right: 20px; transform: rotate(-45deg); }
+.object-folded-mini { display: grid; grid-template-columns: 1fr 1fr; width: 45px; height: 45px; margin: 1px auto; border: 1px solid #9fab92; background: #fffced; box-shadow: 2px 2px 0 #b3b69344; }
+.object-folded-mini i { position: relative; border: .5px solid #d4d8bd; }
+.object-folded-mini .mini-punched::before { content: ''; position: absolute; top: 50%; left: 50%; width: 9px; height: 9px; margin: -4.5px; border-radius: 50%; background: #385b46; box-shadow: inset 1px 1px 1px #17372955; }
+.object-paper-axis { display: none; }

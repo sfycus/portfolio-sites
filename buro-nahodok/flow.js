@@ -46,6 +46,7 @@ export function readProgress(value, count) {
     const sceneState={index:value.index,opened:state.opened===true,selected:valid(state.selected)?state.selected:''};
     if(Array.isArray(state.slots)&&state.slots.length<=6&&state.slots.every(valid))sceneState.slots=[...state.slots];
     else sceneState.slots=[];
+    if(Array.isArray(state.revealed))sceneState.revealed=[...new Set(state.revealed.filter(id=>typeof id==='string'&&/^letter[0-2]$/.test(id)))].slice(0,3);
     result.sceneState=sceneState;
   }
   if(value.taskAttempts&&typeof value.taskAttempts==='object'&&!Array.isArray(value.taskAttempts)){
