@@ -1,13 +1,14 @@
-import { LOCATIONS, AGE_GROUPS, THEMES, validateConfig, encodeConfig, decodeConfig, createQuest } from './engine.js?v=1.14.0-beta.1';
-import { cardCodes, freshProgress, readProgress, answerMission, confirmCard, continueScreenQuest, attemptMission, solveWithHelp, isHintOpen, toggleHint, puzzleInput, setPuzzleInput, undoPuzzleInput, attemptTask } from './flow.js?v=1.14.0-beta.1';
-import { createHolidayAudio, holidayAudioControls } from './audio.js?v=1.14.0-beta.1';
-import { createQuestMotion } from './motion.js?v=1.14.0-beta.1';
-import { holidayStage, holidayWorld, holidayWorkbench, stationReward } from './stage.js?v=1.14.0-beta.1';
+import { LOCATIONS, AGE_GROUPS, THEMES, validateConfig, encodeConfig, decodeConfig, createQuest } from './engine.js?v=1.15.0-beta.1';
+import { cardCodes, freshProgress, readProgress, answerMission, confirmCard, continueScreenQuest, attemptMission, solveWithHelp, isHintOpen, toggleHint, puzzleInput, setPuzzleInput, undoPuzzleInput, attemptTask } from './flow.js?v=1.15.0-beta.1';
+import { createHolidayAudio, holidayAudioControls } from './audio.js?v=1.15.0-beta.1';
+import { objectKind, objectState, renderObjectPuzzle, applyObjectAction, createObjectDrag } from './objects.js?v=1.15.0-beta.1';
+import { createQuestMotion } from './motion.js?v=1.15.0-beta.1';
+import { holidayStage, holidayWorld, holidayWorkbench, stationReward } from './stage.js?v=1.15.0-beta.1';
 
 const app = document.querySelector('#app');
 document.body.classList.add('winter-ui');
 const printRoot = document.querySelector('#print-root');
-const RELEASE = { version: '1.14.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
+const RELEASE = { version: '1.15.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
 const IS_PURCHASED = document.body.dataset.sales === 'full';
 const IS_SHARED = document.body.dataset.shared === 'true';
 const DRAFT_KEY = 'bureau:draft:v1';
@@ -105,7 +106,7 @@ const drawings = {
 const icon = (id, cls='') => svg(drawings[id] || drawings.gift, cls);
 const brand = () => `<span class="brand-symbol">${svg('<path d="M6 10l12-4 13 5 11-4v31l-11 4-13-5-12 4zM18 6v31m13-26v31M21 20l7 9m0-9l-7 9"/>')}</span><span class="brand-name">Бюро находок<span class="brand-sub">новогодняя почта</span></span>`;
 function shell(content, mode='home') {
-  questMotion.setActive(false);questAudio?.setScene({active:false});
+  objectDrag.cancel();questMotion.setActive(false);questAudio?.setScene({active:false});
   document.body.dataset.screen=mode;
   app.innerHTML=`${!storageAvailable ? '<div class="storage-notice">Сохранение доступно только в этой вкладке. Не закрывайте и не обновляйте вкладку.</div>' : ''}<div class="wrap"><header class="header"><button class="brand" data-action="home" aria-label="Бюро находок, на главную">${brand()}</button><div class="header-right"><span class="quiet beta-label">${IS_PURCHASED?'Полная версия':'Открытый тест · бесплатно'}</span>${IS_PURCHASED&&!IS_SHARED&&location.protocol!=='file:'?'<a class="text-button" href="/access">Моя покупка</a>':''}<button class="text-button" data-action="${mode==='home'?'create':'home'}">${mode==='home'?(draft.name?'Продолжить подготовку':'Собрать квест'):'На главную'}</button></div></header>${content}<footer class="footer"><span>Бюро находок · новогодние приключения дома</span><div class="footer-links">${RELEASE.feedbackUrl?`<a href="${escape(RELEASE.feedbackUrl)}" target="_blank" rel="noopener noreferrer">Оставить отзыв</a>`:'<button class="footer-button" data-action="beta-info">Об открытом тесте</button>'}<button class="footer-button" data-action="data-info">Как хранятся данные</button></div></footer></div>`;
 }
@@ -286,8 +287,24 @@ function winterControls(mission,value){
   }
   return `<div class="sequence-puzzle"><p class="sequence-instruction">${task.type==='order'?'Нажимай по порядку. Чтобы убрать шаг, нажми на него ещё раз.':`Отметь ${task.count} посылки. Повторное нажатие снимает отметку.`}</p><p class="task-progress" aria-live="polite">${task.type==='order'?'Собрано шагов':'Выбрано посылок'}: ${value.length} из ${task.count}</p><div class="task-items">${task.items.map(item=>`<button type="button" class="task-item ${value.includes(item.id)?'selected':''}" data-focus="item-${item.id}" data-action="task-toggle" data-value="${item.id}" aria-pressed="${value.includes(item.id)}">${winterTile(item)}${value.includes(item.id)?`<span class="item-selected">${task.type==='order'?'Шаг '+(value.indexOf(item.id)+1):'Выбрано'}</span>`:''}</button>`).join('')}</div><div class="task-submit-row"><button type="button" class="button" data-action="task-check">${task.type==='pick'?'Проверить посылки':'Проверить порядок'}</button><button type="button" class="text-button undo-task" data-action="task-undo" data-focus="undo" ${value.length?'':'disabled'}>${task.type==='order'?'Убрать последний шаг':'Снять последнюю отметку'}</button><button type="button" class="text-button" data-action="task-clear" data-focus="reset">Сначала</button></div></div>`;
 }
-function missionReadingText(mission,value){
-  const v=mission.visual,task=mission.interaction,parts=[mission.title,mission.prompt];
+function winterPuzzlePrompt(mission,progress){
+  const kind=objectKind(mission);
+  if(kind&&progress&&!objectState(mission,progress).opened)return 'Снегирь оставил для тебя письмо. Открой конверт и прочитай поручение.';
+  if(kind==='stamps')return 'На письме остались оттиски игрушек. Найди штампы такой же формы и поставь их на нужные места слева направо.';
+  if(kind==='ornament')return mission.prompt+' Возьми подходящую игрушку и повесь её на свободное место.';
+  if(kind==='assembly')return mission.prompt.replace(/Нажимай на обрывки по порядку\./u,'Переложи обрывки на письмо, чтобы восстановить адрес.').replace(/Нажимай[^.]*\./u,'Разложи предметы на столе в нужном порядке.');
+  if(kind==='route')return mission.prompt.replace(/Введи цифры трёх клеток, в которых остановился\./u,'Перемещай сани по соседним клеткам. На карте останется твой маршрут.');
+  if(kind==='cargo')return mission.prompt.replace(/Отметь две подходящие посылки и проверь загрузку\./u,'Выбери две подходящие посылки и загрузи сани.')+' Переложи выбранные посылки на сани.';
+  return mission.prompt;
+}
+function winterPuzzleSurface(mission,progress,tried=[]){
+  if(objectKind(mission))return renderObjectPuzzle(mission,progress,winterIcon);
+  const value=puzzleInput(mission,progress);
+  return winterVisual(mission)+`<div id="live-workbench">${holidayWorkbench(mission,value,true)}</div>`+(mission.interaction?winterControls(mission,value):winterChoices(mission,tried));
+}
+function missionReadingText(mission,value,progress){
+  if(progress&&objectKind(mission)&&!objectState(mission,progress).opened)return mission.title+'. '+winterPuzzlePrompt(mission,progress);
+  const v=mission.visual,task=mission.interaction,parts=[mission.title,winterPuzzlePrompt(mission)];
   const symbolNames={tree:'ёлка',star:'звезда',bell:'колокольчик',ball:'шар',mitten:'варежка',gift:'подарок',snowman:'снеговик',moon:'луна'};
   if(v?.type==='legend')parts.push('Бирки: '+v.items.map(t=>`${t.label}: ${t.value}`).join('. '),'Картинки на письме слева направо: '+v.target.map(t=>t.label).join(', '));
   if(v?.type==='row')parts.push(v.items.map(t=>`${t.label}. ${winterDescription(t)}`).join('. '));
@@ -302,6 +319,7 @@ function missionReadingText(mission,value){
   if(v?.type==='sorter')parts.push('Номер на выходе: '+[...v.output].join(', '));
   if(v?.type==='cube')parts.push('Развёртка: ряд слева направо — варежка, ёлка, колокольчик, снеговик. Звезда над ёлкой. Подарок под ёлкой.');
   if(!task)parts.push('Варианты: '+mission.choices.map((choice,i)=>`${i+1}. ${choice}. ${winterDescription(mission.choiceArt?.[choice])}`).join('. '));
+  else if(objectKind(mission)){if(task.items)parts.push('Предметы: '+task.items.map(item=>item.label).join(', '));parts.push(objectKind(mission)==='route'?'Нажимай на соседние клетки карты. Можно отменить последний шаг.':'Выбери предмет, затем нажми на его место. Предметы также можно перетаскивать. Когда всё готово, проверь сборку.');}
   else if(task.type==='code')parts.push(`Введи код. Количество цифр: ${task.length}.`);
   else if(task.type==='switches'){
     const lamps=[...task.initial];for(const id of Array.isArray(value)?value:[]){const item=task.items.find(x=>x.id===id);if(item)for(const index of item.mask)lamps[index]=!lamps[index];}
@@ -449,9 +467,23 @@ function createPassportSaver(){
 
 // HOLIDAY_RENDERER_END
 
+const objectDrag=createObjectDrag({root:app,onAction:performObjectAction});
+function performObjectAction(target){
+  if(progress?.phase!=='puzzle'||document.querySelector('.dialog-backdrop'))return;
+  const data=target.dataset||target;
+  const result=applyObjectAction(quest,progress,{action:data.action,value:data.value,slot:data.slot});
+  if(!result.handled)return;
+  progress=result.progress;saveProgress();renderGame(!!result.correct);celebrateQuestResult(result);
+  const feedback=document.querySelector('#answer-feedback');
+  if(result.feedback&&feedback){feedback.textContent=result.feedback;if(data.action==='object-check')feedback.focus();}
+  if(!result.correct&&data.action!=='object-check'){
+    const control=result.focus?document.querySelector(`[data-focus="${result.focus}"]`):null;
+    if(control)control.focus({preventScroll:true});else restoreTaskFocus({dataset:data});
+  }
+}
 const questMotion=createQuestMotion({root:app,enabled:storage.get('bureau:motion:v1')!==false,onChange:syncMotionControls});
 function syncMotionControls(state){const enabled=state.enabled&&!state.reduced;for(const button of app.querySelectorAll('[data-action="motion-toggle"]')){button.setAttribute('aria-pressed',String(enabled));button.setAttribute('aria-label',state.reduced?'Анимация отключена настройками устройства':enabled?'Выключить анимацию':'Включить анимацию');button.disabled=state.reduced;button.textContent=state.reduced?'Без движения':'Анимация';}const shell=app.querySelector('.game-shell');if(shell){shell.setAttribute('data-motion',enabled?'on':'off');shell.classList[state.allowed?'remove':'add']('motion-suspended');}}
-function syncQuestMotion(){questMotion.sync(app);questMotion.setActive(document.body.dataset.screen==='game'&&!!progress&&progress.phase!=='done'&&!document.hidden&&!document.querySelector('.dialog-backdrop'));syncMotionControls(questMotion.state());}
+function syncQuestMotion(){objectDrag.sync();questMotion.sync(app);questMotion.setActive(document.body.dataset.screen==='game'&&!!progress&&progress.phase!=='done'&&!document.hidden&&!document.querySelector('.dialog-backdrop'));syncMotionControls(questMotion.state());}
 function celebrateQuestResult(result){if(!result.correct)return;document.querySelector('.station-reward')?.classList.add('motion-arrival');document.querySelector('.earned-stamp')?.classList.add('motion-arrival');const stationComplete=!!quest.missions[progress.index]?.station?.isLast;questAudio.celebrate({stationComplete});questMotion.celebrate({stationComplete,final:progress.phase==='treasure'});}
 const questAudio=createHolidayAudio({volume:Math.max(0,Math.min(1,Number(storage.get('bureau:music-volume:v1')??0.32))),onChange:syncQuestAudio});
 const questReader=createQuestReader({onChange(state,kind){syncReaderControls(state,kind);syncQuestSoundscape();}});
@@ -496,13 +528,13 @@ function renderGame(focus=false) {
   const holiday=quest.config.edition===3&&winter;
   const screen=isScreenMode(quest.config);
   if(progress.phase==='intro') {
-    gameFrame(`<article class="game-card"><div class="intro-seal">${winter?'Новогодняя<br>почта<br>Особая доставка':'Секретная<br>экспедиция'}</div>${holiday?`<div class="intro-courier">${winterCourier()}</div>`:''}<span class="eyebrow red">${escape(THEMES.find(t=>t.id===quest.config.theme).title)}</span><h1>${holiday?'Дело о пропавшем<br>адресе':winter?'Пришло письмо<br>с сюрпризом!':'Есть секретное дело!'}</h1><p class="game-prompt">${escape(quest.intro)}${isDemo?'<span class="demo-intro-note">Это пробная игра из четырёх заданий. Настоящий подарок готовить не нужно.</span>':''}</p><p>${holiday?(screen?'Вводи секретные коды, собирай посылки и выбирай путь для саней. Карточки печатать не нужно.':'Решай новогодние задания на экране, а затем ищи домашние карточки с кодами.') :screen?'Нажимай на верный ответ. Если будет сложно — открой подсказку. Печатать карточки и вводить коды с карточек не нужно.':'Выбирай ответы, находи указанные тайники и вводи четыре цифры с карточек. В последнем месте будет подарок.'}</p><button class="button" data-action="start">Начать приключение</button></article>`);
+    gameFrame(`<article class="game-card"><div class="intro-seal">${winter?'Новогодняя<br>почта<br>Особая доставка':'Секретная<br>экспедиция'}</div>${holiday?`<div class="intro-courier">${winterCourier()}</div>`:''}<span class="eyebrow red">${escape(THEMES.find(t=>t.id===quest.config.theme).title)}</span><h1>${holiday?'Дело о пропавшем<br>адресе':winter?'Пришло письмо<br>с сюрпризом!':'Есть секретное дело!'}</h1><p class="game-prompt">${escape(quest.intro)}${isDemo?'<span class="demo-intro-note">Это пробная игра из четырёх заданий. Настоящий подарок готовить не нужно.</span>':''}</p><p>${holiday?(screen?'Открывай письма, собирай посылки, развешивай игрушки и управляй санями. Карточки печатать не нужно.':'Решай новогодние задания на экране, а затем ищи домашние карточки с кодами.') :screen?'Нажимай на верный ответ. Если будет сложно — открой подсказку. Печатать карточки и вводить коды с карточек не нужно.':'Выбирай ответы, находи указанные тайники и вводи четыре цифры с карточек. В последнем месте будет подарок.'}</p><button class="button" data-action="start">Начать приключение</button></article>`);
   } else if(progress.phase==='puzzle') {
     const tried=(progress.mistakes?.[progress.index]||[]).filter(index=>index!==m.answerIndex&&index<m.choices.length);
     const attempts=m.interaction?(progress.taskAttempts?.[progress.index]||0):tried.length;
     const feedback=attempts>=2?'Давай воспользуемся подсказкой. Можно также разобрать задачу вместе со взрослым.':attempts?'Предыдущий ответ не подошёл. Можно изменить его и проверить ещё раз.':'';
     const legacyFeedback=tried.length===1?'Этот вариант уже проверили. Попробуй другой или открой подсказку.':feedback;
-    gameFrame(`<article class="game-card ${m.station?'holiday-game-card':''}">${m.station?m.station.step===1?`<div class="courier-note"><div class="courier-portrait">${winterCourier()}</div><div><span class="courier-label">Снегирь на связи</span><p>${escape(m.station.story)}</p></div></div>`:`<p class="courier-mini">${escape(m.station.story)}</p>`:''}<span class="eyebrow red">${m.station?escape(m.station.title)+' · ':''}Загадка ${progress.index+1}</span><h1>${escape(m.title)}</h1>${readAloudControls()}<p class="game-prompt">${escape(m.prompt)}</p>${winterVisual(m)}<div id="live-workbench">${holidayWorkbench(m,puzzleInput(m,progress),true)}</div><p class="feedback attempt-feedback" id="answer-feedback" tabindex="-1" role="status" aria-live="polite">${escape(m.interaction?feedback:legacyFeedback)}</p>${m.interaction?winterControls(m,puzzleInput(m,progress)):winterChoices(m,tried)}<div class="puzzle-help-area"><div class="puzzle-help"><button class="hint-button" data-action="hint" aria-expanded="${isHintOpen(progress,progress.index)}" aria-controls="mission-hint">${isHintOpen(progress,progress.index)?'Скрыть подсказку':'Нужна подсказка?'}</button><button class="hint-button" data-action="assist">Разобрать вместе</button></div><p class="hint-text" id="mission-hint" ${isHintOpen(progress,progress.index)?'':'hidden'}>${escape(m.hint)}</p>${hintReadingControls(isHintOpen(progress,progress.index))}</div></article>`);
+    gameFrame(`<article class="game-card ${m.station?'holiday-game-card':''}">${m.station?m.station.step===1?`<div class="courier-note"><div class="courier-portrait">${winterCourier()}</div><div><span class="courier-label">Снегирь на связи</span><p>${escape(m.station.story)}</p></div></div>`:`<p class="courier-mini">${escape(m.station.story)}</p>`:''}<span class="eyebrow red">${m.station?escape(m.station.title)+' · ':''}Загадка ${progress.index+1}</span><h1>${escape(m.title)}</h1>${readAloudControls()}<p class="game-prompt">${escape(winterPuzzlePrompt(m,progress))}</p>${winterPuzzleSurface(m,progress,tried)}<p class="feedback attempt-feedback" id="answer-feedback" tabindex="-1" role="status" aria-live="polite">${escape(m.interaction?feedback:legacyFeedback)}</p><div class="puzzle-help-area"><div class="puzzle-help"><button class="hint-button" data-action="hint" aria-expanded="${isHintOpen(progress,progress.index)}" aria-controls="mission-hint">${isHintOpen(progress,progress.index)?'Скрыть подсказку':'Нужна подсказка?'}</button><button class="hint-button" data-action="assist">Разобрать вместе</button></div><p class="hint-text" id="mission-hint" ${isHintOpen(progress,progress.index)?'':'hidden'}>${escape(m.hint)}</p>${hintReadingControls(isHintOpen(progress,progress.index))}</div></article>`);
   } else if(progress.phase==='find') {
     if(screen) {
       gameFrame(`<article class="game-card answer-success">${stationReward(quest.missions,progress)}<div class="answer-tick" aria-hidden="true">✓</div><span class="eyebrow red">Загадка ${progress.index+1} разгадана</span><h1>${m.station?(m.station.isLast?'Фрагмент найден!':'Посылка готова!'):'Верно!'}</h1>${m.station?`<div class="earned-stamp">${winterIcon({kind:['envelope','tree','gift','sleigh'][m.station.index]})}<b>${escape(m.station.stamp)}</b></div><p class="stamp-story">${escape(m.station.reward)}</p>`:''}<p class="correct-answer">Ответ: <b>${escape(m.choices[m.answerIndex])}</b></p><p class="answer-explanation">${escape(m.explanation)}</p><p class="success-next-note">Впереди ещё ${quest.missions.length-progress.index-1} ${pluralWord(quest.missions.length-progress.index-1,'загадка','загадки','загадок')}. Продолжаем?</p><button class="button" data-action="next-screen">Следующая загадка</button></article>`);
@@ -598,7 +630,7 @@ async function copyLink(){
   catch{if(canPresent()){showDialog('Ссылка на квест',isLocalAddress()?'Эта ссылка работает только на этом компьютере. Для другого устройства скачайте файл игры.':'Выделите и скопируйте ссылку. Она содержит имя, маршрут и финальную записку.',`<label class="label" for="share-url">Ссылка для участников</label><input id="share-url" class="input" value="${escape(url.href)}" readonly><div class="actions"><button class="button" data-action="close-dialog">Готово</button></div>`);document.querySelector('#share-url')?.select();}}
 }
 function showDialog(title,text,controls){
-  questMotion.setActive(false);questAudio.setScene({active:false});
+  objectDrag.cancel();questMotion.setActive(false);questAudio.setScene({active:false});
   closeDialog();lastFocus=document.activeElement;
   const wrap=document.createElement('div');wrap.className='dialog-backdrop';wrap.innerHTML=`<section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><h2 id="dialog-title">${escape(title)}</h2><p>${escape(text)}</p>${controls}</section>`;
   document.body.append(wrap);wrap.querySelector('button,input')?.focus();
@@ -606,6 +638,7 @@ function showDialog(title,text,controls){
 function closeDialog(){const dialog=document.querySelector('.dialog-backdrop');if(dialog){dialog.remove();lastFocus?.focus?.();}}
 function handleAction(target){
   const action=target.dataset.action;
+  if(action.startsWith('object-')){performObjectAction(target);return;}
   if(IS_SHARED&&['create','new-quest','confirm-new-quest','return-setup','prepare','play','print','download','copy-link','restart-prepared','preview-question','preview-answer','shuffle-puzzles','confirm-shuffle','remember-format','forget-format'].includes(action)){notify('Подготовка доступна взрослому в его покупке. Продолжайте играть по семейной ссылке.');return;}
   if(action==='motion-toggle'){questMotion.setEnabled(!questMotion.state().enabled);storage.set('bureau:motion:v1',questMotion.state().enabled);syncMotionControls(questMotion.state());return;}
   if(action==='music-toggle'){questAudio.setEnabled(!questAudio.state().enabled).then(()=>syncQuestSoundscape());return;}
@@ -613,7 +646,7 @@ function handleAction(target){
   if(action==='passport'&&quest){questReader.stop();const solved=['treasure','done'].includes(progress.phase)?quest.missions.length:progress.index+(progress.phase==='find'?1:0);showDialog('Твой почтовый пропуск','Четыре станции — четыре части потерянной адресной бирки.',winterPassport(quest.missions,solved,true)+'<button class="button" data-action="close-dialog">Продолжить приключение</button>');const heading=document.querySelector('.dialog h2');heading?.setAttribute('tabindex','-1');heading?.focus({preventScroll:true});const dialog=document.querySelector('.dialog');if(dialog)dialog.scrollTop=0;return;}
   if(action==='save-passport'&&quest){const completed=['treasure','done'].includes(progress.phase)?quest.missions.length:progress.index+(progress.phase==='find'?1:0);return passportSaver.save(quest.missions,completed,target,document.querySelector('#'+target.dataset.exportStatus));}
   if(action==='read-hint'&&progress?.phase==='puzzle'&&isHintOpen(progress,progress.index)){questReader.toggle('Подсказка. '+quest.missions[progress.index].hint,'hint');return;}
-  if(action==='read-quest'&&progress?.phase==='puzzle'){questReader.toggle(missionReadingText(quest.missions[progress.index],puzzleInput(quest.missions[progress.index],progress)));return;}
+  if(action==='read-quest'&&progress?.phase==='puzzle'){questReader.toggle(missionReadingText(quest.missions[progress.index],puzzleInput(quest.missions[progress.index],progress),progress));return;}
   if(action==='reading-size'){largeReading=!largeReading;storage.set('bureau:large-reading:v1',largeReading);applyReadingSize();renderGame();document.querySelector('[data-action="reading-size"]')?.focus();return;}
   if(action==='assist'&&progress?.phase==='puzzle'){questReader.stop();
     const mission=quest.missions[progress.index];
@@ -736,7 +769,7 @@ document.addEventListener('keydown',event=>{
   if(event.key==='Tab'){const items=[...dialog.querySelectorAll('button,a,input,select,textarea,summary,[tabindex]')].filter(el=>!el.disabled&&el.getAttribute('tabindex')!=='-1'&&(!el.getClientRects||el.getClientRects().length>0));if(!items.length){event.preventDefault();return;}const first=items[0],last=items.at(-1);if(!items.includes(document.activeElement)){event.preventDefault();(event.shiftKey?last:first).focus();}else if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}
 });
 window.addEventListener('hashchange',route);
-window.addEventListener('pagehide',()=>{questReader.stop();questAudio.stop();questMotion.setActive(false);});
+window.addEventListener('pagehide',()=>{questReader.stop();questAudio.stop();objectDrag.cancel();questMotion.setActive(false);});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)questReader.stop();syncQuestSoundscape();});
 if(document.body.dataset.startQuest&&!location.hash)history.replaceState(null,'','#play='+document.body.dataset.startQuest);
 route();

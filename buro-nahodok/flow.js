@@ -41,6 +41,13 @@ export function readProgress(value, count) {
     if(typeof input==='string'&&/^[0-9А-ЯЁA-Z]{0,8}$/u.test(input))result.taskInput={index:value.index,value:input};
     else if(Array.isArray(input)&&input.length<=6&&input.every(id=>typeof id==='string'&&/^[a-z]{1,16}$/.test(id))&&new Set(input).size===input.length)result.taskInput={index:value.index,value:[...input]};
   }
+  if(value.sceneState&&value.sceneState.index===value.index&&value.phase==='puzzle'){
+    const state=value.sceneState,valid=id=>typeof id==='string'&&/^(?:[a-z][a-z0-9-]{0,31})?$/.test(id);
+    const sceneState={index:value.index,opened:state.opened===true,selected:valid(state.selected)?state.selected:''};
+    if(Array.isArray(state.slots)&&state.slots.length<=6&&state.slots.every(valid))sceneState.slots=[...state.slots];
+    else sceneState.slots=[];
+    result.sceneState=sceneState;
+  }
   if(value.taskAttempts&&typeof value.taskAttempts==='object'&&!Array.isArray(value.taskAttempts)){
     const attempts={};
     for(const [key,n] of Object.entries(value.taskAttempts))if(/^(0|[1-9][0-9]*)$/.test(key)&&Number(key)<count&&Number.isInteger(n)&&n>0&&n<=99)attempts[key]=n;
@@ -143,7 +150,8 @@ export function answerMission(quest, progress, answerIndex) {
 
 export function confirmCard(quest, progress, code) {
   if (quest.config.mode === 'screen' || progress.phase !== 'find' || String(code).trim() !== cardCodes(quest)[progress.index]) return { correct: false, progress };
-  return { correct: true, progress: { ...progress, index: progress.index + 1, phase: 'puzzle' } };
+  const {sceneState,...next}=progress;
+  return { correct: true, progress: { ...next, index: progress.index + 1, phase: 'puzzle' } };
 }
 
 export function continueScreenQuest(quest, progress) {
@@ -151,5 +159,6 @@ export function continueScreenQuest(quest, progress) {
     || !Number.isInteger(progress.index) || progress.index < 0 || progress.index >= quest.missions.length - 1) {
     return { correct: false, progress };
   }
-  return { correct: true, progress: { ...progress, index: progress.index + 1, phase: 'puzzle' } };
+  const {sceneState,...next}=progress;
+  return { correct: true, progress: { ...next, index: progress.index + 1, phase: 'puzzle' } };
 }
