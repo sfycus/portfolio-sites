@@ -1,14 +1,32 @@
-// An original, quiet sixteen-beat score. Each station has its own celesta phrase.
-// The notes are synthesized locally; no recordings or network requests are used.
-const audioHolidayPhrases = [
-  [[74,1],[78,.5],[81,.5],[76,2],[79,1],[78,1],[74,2],[73,.5],[71,.5],[74,2],[78,1],[76,1],[74,3]],
-  [[76,1],[79,.5],[83,.5],[81,2],[78,1],[76,1],[74,2],[78,.5],[79,.5],[81,2],[83,1],[79,1],[78,3]],
-  [[71,1],[74,.5],[78,.5],[76,2],[73,1],[71,1],[69,2],[73,.5],[76,.5],[78,2],[74,1],[73,1],[74,3]],
-  [[78,1],[81,.5],[86,.5],[83,2],[81,1],[78,1],[79,2],[81,.5],[78,.5],[76,2],[74,1],[78,1],[74,3]]
+// Jingle Bells / The One Horse Open Sleigh — J. Pierpont (1857).
+// A locally synthesized instrumental arrangement of the familiar chorus;
+// no lyrics, recordings, downloaded samples or network requests are used.
+// Source: Library of Congress, https://www.loc.gov/item/2023812429/.
+const audioHolidayChorus = [
+  [76,.5],[76,.5],[76,1], [76,.5],[76,.5],[76,1],
+  [76,.5],[79,.5],[72,.75],[74,.25],[76,2],
+  [77,.5],[77,.5],[77,.75],[77,.25],
+  [77,.5],[76,.5],[76,.5],[76,.25],[76,.25],
+  [76,.5],[74,.5],[74,.5],[76,.5],[74,1],[79,1],
+  [76,.5],[76,.5],[76,1], [76,.5],[76,.5],[76,1],
+  [76,.5],[79,.5],[72,.75],[74,.25],[76,2],
+  [77,.5],[77,.5],[77,.75],[77,.25],
+  [77,.5],[76,.5],[76,.5],[76,.5],
+  [79,.5],[79,.5],[77,.5],[74,.5],[72,2]
 ];
-const audioHolidayChords = [[50,57,66],[47,54,62],[43,50,59],[45,52,59]];
-const audioHolidayHarmony = [[0,1,2,3],[2,0,1,3],[1,2,0,3],[0,2,3,0]];
-const audioHolidayBeat = 60 / 76;
+// C, F and G major; each two-beat bar has a plucked root/fifth bass
+// and soft offbeat chords. The stations move the same hook into four keys.
+const audioHolidayChords = [[60,64,67],[60,65,69],[59,62,67]];
+const audioHolidayRoots = [48,53,43];
+const audioHolidayHarmony = [0,0,0,0,1,0,2,2,0,0,0,0,1,0,2,0];
+const audioHolidayStations = [
+  {transpose:0, melody:.096, sleigh:.019, offbeats:true},
+  {transpose:2, melody:.092, sleigh:.017, offbeats:true},
+  {transpose:5, melody:.088, sleigh:.018, offbeats:false},
+  {transpose:7, melody:.086, sleigh:.016, offbeats:true}
+];
+const audioHolidayBeat = 60 / 108;
+const audioHolidayCycleBeats = 32;
 const audioHolidayClamp = (value, fallback) => typeof value === 'number' && Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : fallback;
 const audioHolidayFrequency = midi => 440 * 2 ** ((midi - 69) / 12);
 const audioHolidayEscape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -89,7 +107,7 @@ export function createHolidayAudio(audioOptions = {}) {
   function audioPermitted() {
     return audioEnabled && audioUnlocked && audioScene.active && audioVolume > 0 && audioContext?.state === 'running';
   }
-  function audioTone(audioMidi, audioStart, audioDuration, audioStrength, audioKind = 'bell') {
+  function audioTone(audioMidi, audioStart, audioDuration, audioStrength, audioKind = 'bell', audioRatio = 1) {
     const audioOscillator = audioContext.createOscillator(), audioGain = audioContext.createGain();
     const audioVoice = {oscillator:audioOscillator, gain:audioGain};
     audioVoices.add(audioVoice);
@@ -100,9 +118,9 @@ export function createHolidayAudio(audioOptions = {}) {
     };
     try {
       audioOscillator.type = audioKind === 'bell' ? 'triangle' : 'sine';
-      audioOscillator.frequency.setValueAtTime(audioHolidayFrequency(audioMidi), audioStart);
+      audioOscillator.frequency.setValueAtTime(audioHolidayFrequency(audioMidi) * audioRatio, audioStart);
       audioGain.gain.setValueAtTime(0, audioStart);
-      audioGain.gain.linearRampToValueAtTime(audioStrength, audioStart + (audioKind === 'harmony' ? .16 : .012));
+      audioGain.gain.linearRampToValueAtTime(audioStrength, audioStart + (audioKind === 'harmony' ? .035 : audioKind === 'sleigh' || audioKind === 'bass' ? .004 : .008));
       audioGain.gain.exponentialRampToValueAtTime(.0001, audioStart + audioDuration);
       audioOscillator.connect(audioGain);
       audioGain.connect(audioFilter);
@@ -116,21 +134,44 @@ export function createHolidayAudio(audioOptions = {}) {
       throw audioException;
     }
   }
-  function audioBell(audioMidi, audioStart, audioDuration, audioStrength = .075) {
+  function audioBell(audioMidi, audioStart, audioDuration, audioStrength = .096) {
     audioTone(audioMidi, audioStart, audioDuration, audioStrength);
-    // A short, quiet upper partial gives the triangle its soft bell-like strike.
+    // A short, quiet upper partial gives the melody a clear little bell strike.
     audioTone(audioMidi + 12, audioStart, Math.min(.5, audioDuration), audioStrength * .14, 'partial');
   }
+  function audioSleigh(audioStart, audioStrength) {
+    // Four inharmonic, high sine partials make a brief sleigh-bell jingle.
+    // Their combined peak is below .044, even at the strongest accent.
+    // Every partial uses the same tracked/faded/stopped voice lifecycle.
+    [[1,1,.11],[1.414,.62,.085],[1.937,.44,.07],[2.637,.25,.055]].forEach(([audioRatio, audioLevel, audioLength]) => {
+      audioTone(98, audioStart, audioLength, audioStrength * audioLevel, 'sleigh', audioRatio);
+    });
+  }
   function audioPhrase() {
-    const audioResult = [];
+    const audioResult = [], audioStation = audioHolidayStations[audioScene.station];
     let audioBeat = 0;
-    for (const [audioMidi, audioLength] of audioHolidayPhrases[audioScene.station]) {
-      audioResult.push({beat:audioBeat, midi:audioMidi, length:Math.min(1.7, audioLength * audioHolidayBeat + .35), kind:'bell'});
+    for (const [audioMidi, audioLength] of audioHolidayChorus) {
+      audioResult.push({beat:audioBeat, midi:audioMidi + audioStation.transpose,
+        length:Math.min(1.28, audioLength * audioHolidayBeat * .9 + .10),
+        strength:audioStation.melody, kind:'bell'});
       audioBeat += audioLength;
     }
-    audioHolidayHarmony[audioScene.station].forEach((audioChord, audioIndex) => {
-      for (const audioMidi of audioHolidayChords[audioChord]) audioResult.push({beat:audioIndex * 4, midi:audioMidi, length:3.05, kind:'harmony'});
+    audioHolidayHarmony.forEach((audioChord, audioIndex) => {
+      const audioBar = audioIndex * 2;
+      for (const audioOffset of [0,1]) {
+        audioResult.push({beat:audioBar + audioOffset,
+          midi:audioHolidayRoots[audioChord] + audioStation.transpose + (audioOffset ? 7 : 0),
+          length:.24, strength:.055, kind:'bass'});
+        for (const audioMidi of audioHolidayChords[audioChord]) {
+          audioResult.push({beat:audioBar + audioOffset + .5, midi:audioMidi + audioStation.transpose,
+            length:.36, strength:.018, kind:'harmony'});
+        }
+      }
     });
+    for (let audioBeat = 0; audioBeat < audioHolidayCycleBeats; audioBeat += .5) {
+      if (audioBeat % 1 && !audioStation.offbeats) continue;
+      audioResult.push({beat:audioBeat, strength:audioStation.sleigh * (audioBeat % 1 ? .64 : 1), kind:'sleigh'});
+    }
     return audioResult.sort((audioA, audioB) => audioA.beat - audioB.beat);
   }
   function audioSchedule() {
@@ -139,18 +180,19 @@ export function createHolidayAudio(audioOptions = {}) {
     try {
       const audioNow = audioContext.currentTime;
       // A sleeping/background tab never catches up by playing a burst of notes.
-      if (audioOrigin + (audioCycle * 16 + audioEvents[audioEventIndex].beat) * audioHolidayBeat < audioNow - .2) {
+      if (audioOrigin + (audioCycle * audioHolidayCycleBeats + audioEvents[audioEventIndex].beat) * audioHolidayBeat < audioNow - .2) {
         audioHalt();
         audioOrigin = audioNow + .045;
         audioCycle = 0;
         audioEventIndex = 0;
       }
       audioPlaying = true;
-      while (audioOrigin + (audioCycle * 16 + audioEvents[audioEventIndex].beat) * audioHolidayBeat <= audioNow + .18) {
+      while (audioOrigin + (audioCycle * audioHolidayCycleBeats + audioEvents[audioEventIndex].beat) * audioHolidayBeat <= audioNow + .18) {
         const audioEvent = audioEvents[audioEventIndex];
-        const audioStart = Math.max(audioNow + .005, audioOrigin + (audioCycle * 16 + audioEvent.beat) * audioHolidayBeat);
-        if (audioEvent.kind === 'harmony') audioTone(audioEvent.midi, audioStart, audioEvent.length, .026, 'harmony');
-        else audioBell(audioEvent.midi, audioStart, audioEvent.length);
+        const audioStart = Math.max(audioNow + .005, audioOrigin + (audioCycle * audioHolidayCycleBeats + audioEvent.beat) * audioHolidayBeat);
+        if (audioEvent.kind === 'sleigh') audioSleigh(audioStart, audioEvent.strength);
+        else if (audioEvent.kind === 'bell') audioBell(audioEvent.midi, audioStart, audioEvent.length, audioEvent.strength);
+        else audioTone(audioEvent.midi, audioStart, audioEvent.length, audioEvent.strength, audioEvent.kind);
         audioEventIndex += 1;
         if (audioEventIndex === audioEvents.length) { audioEventIndex = 0; audioCycle += 1; }
       }
@@ -189,7 +231,7 @@ export function createHolidayAudio(audioOptions = {}) {
           audioMaster = audioContext.createGain();
           audioFilter = audioContext.createBiquadFilter();
           audioFilter.type = 'lowpass';
-          audioFilter.frequency.setValueAtTime(2900, audioContext.currentTime);
+          audioFilter.frequency.setValueAtTime(7500, audioContext.currentTime);
           audioFilter.Q.setValueAtTime(.45, audioContext.currentTime);
           audioMaster.gain.setValueAtTime(0, audioContext.currentTime);
           audioFilter.connect(audioMaster);
@@ -232,7 +274,7 @@ export function createHolidayAudio(audioOptions = {}) {
     celebrate({stationComplete:audioStationComplete = false} = {}) {
       if (!audioPermitted()) return false;
       try {
-        const audioNotes = audioStationComplete ? [74,78,81,86] : [81,86];
+        const audioNotes = (audioStationComplete ? [72,76,79,84] : [79,84]).map(audioMidi => audioMidi + audioHolidayStations[audioScene.station].transpose);
         audioNotes.forEach((audioMidi, audioIndex) => audioBell(audioMidi, audioContext.currentTime + .015 + audioIndex * .14, .85, .064));
         return true;
       } catch { audioFail(); return false; }
@@ -251,7 +293,7 @@ export function holidayAudioControls(audioCurrentState = {}, {idPrefix:audioIdPr
   const audioControlId = `${String(audioIdPrefix).replace(/[^a-zA-Z0-9_-]/g, '') || 'holiday'}-music-volume`;
   const audioChecked = Boolean(audioCurrentState.enabled);
   const audioDisabled = audioCurrentState.unavailable ? ' disabled' : '';
-  const audioStatus = audioCurrentState.unavailable ? 'Музыка недоступна в этом браузере.' : audioCurrentState.error === 'blocked' ? 'Не удалось включить музыку. Попробуйте ещё раз.' : audioCurrentState.enabled ? audioCurrentState.volume===0 ? 'Музыка включена · громкость 0%' : audioCurrentState.ducked ? 'Музыка тише, пока звучит голос.' : audioCurrentState.playing ? 'Играет новогодняя мелодия' : 'Музыка на паузе' : 'Музыка выключена';
+  const audioStatus = audioCurrentState.unavailable ? 'Музыка недоступна в этом браузере.' : audioCurrentState.error === 'blocked' ? 'Не удалось включить музыку. Попробуйте ещё раз.' : audioCurrentState.enabled ? audioCurrentState.volume===0 ? 'Музыка включена · громкость 0%' : audioCurrentState.ducked ? 'Музыка тише, пока звучит голос.' : audioCurrentState.playing ? 'Новогодние бубенцы · Jingle Bells' : 'Музыка на паузе' : 'Музыка выключена';
   return `<div class="holiday-audio" role="group" aria-label="Музыка">
     <button type="button" class="music-toggle" data-action="music-toggle" aria-pressed="${audioChecked}"${audioDisabled}>${audioChecked ? 'Выключить музыку' : 'Включить музыку'}</button>
     <label for="${audioControlId}">Громкость музыки</label>

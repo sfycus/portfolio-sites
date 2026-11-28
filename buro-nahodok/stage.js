@@ -175,6 +175,27 @@ export function holidayStage(missions, progress) {
   </section>`;
 }
 
+/** Illustrated world panel. It reads progress, never a puzzle answer or a real hiding place. */
+export function holidayWorld(missions, progress, {imageUrl = './assets/winter-village.jpg', courierUrl = './assets/robin-postman.png'} = {}) {
+  const state = stageState(missions, progress);
+  const hasStations = state.tasks.some(mission => stageStationIndex(mission) >= 0);
+  const station = stageStations[state.current];
+  const count = state.complete.filter(Boolean).length;
+  const finished = hasStations && count === 4;
+  const focus = [17, 40, 65, 87][state.current];
+  const title = finished ? 'Праздник спасён!' : hasStations ? station.title : 'Новогодняя почта';
+  const status = hasStations ? `Фрагментов адреса: ${count} из 4` : `Разгадано: ${state.solved} из ${state.tasks.length}`;
+  const guide = finished ? 'Все письма собраны. Самое время найти свой подарок!' : state.phase === 'intro' ? 'Письмо ждёт! Поможешь вернуть потерянный адрес?' : hasStations ? 'Собирай фрагменты адреса. Я сохраню каждый в твоём почтовом пропуске.' : 'Каждое решение делает сюрприз чуть ближе.';
+  return `<section class="quest-scene" aria-label="Новогодний городок" data-current="${state.current}" data-completed="${count}" style="--scene-focus:${focus}%">
+    <img class="quest-scene-art" src="${stageEscape(imageUrl)}" width="1774" height="887" alt="Заснеженный новогодний городок: тёплая почта, нарядная ёлка, мастерская и сани в звёздном небе" fetchpriority="high">
+    <div class="quest-scene-snow" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="quest-scene-lights${count ? ' is-awake' : ''}" aria-hidden="true">${state.complete.map((done,index)=>`<i class="quest-earned-light${done?' is-lit':''}" data-station="${index}"></i>`).join('')}</div>
+    <div class="quest-scene-caption"><span class="quest-scene-kicker">Особая доставка · новогодняя почта</span><h2 class="quest-scene-title">${stageEscape(title)}</h2><p>${stageEscape(finished ? 'Письма нашли дорогу домой.' : station.setting)}</p><span class="quest-scene-progress">${stageEscape(status)}</span></div>
+  </section>
+  ${hasStations ? `<ol class="quest-stops" aria-label="Станции приключения">${stageStations.map((stop,index) => `<li data-station="${index}" class="quest-stop${state.current === index ? ' is-current' : ''}${state.complete[index] ? ' is-complete' : ''}"${state.current === index ? ' aria-current="step"' : ''}><span class="quest-stop-number" aria-hidden="true">${state.complete[index] ? '✓' : index + 1}</span><span class="quest-stop-name">${stop.short}</span><span class="visually-hidden">${state.complete[index] ? ': пройдено' : state.current === index ? ': ты здесь' : ': впереди'}</span></li>`).join('')}</ol>` : ''}
+  <div class="quest-guide"><img class="quest-guide-portrait" src="${stageEscape(courierUrl)}" width="256" height="256" alt="Снегирь-почтальон с письмом"><div><b>Снегирь на связи</b><p>${stageEscape(guide)}</p></div></div>`;
+}
+
 function stageIconDrawing(item) {
   const colors = { red: '#c66e60', blue: '#678fa7', green: '#558578', gold: '#d4ad6c' };
   const color = colors[item?.color] || '#c66e60';
