@@ -903,7 +903,714 @@ button,input,select,textarea{font:inherit}button,a,input,textarea{touch-action:m
 
 .passport-preview{display:block;width:100%;height:auto;border:1px solid #d9dfd8;border-radius:5px;margin:15px auto 0;background:#fffdf8}
 </style>
-  <script type="module">/** Pure, dependency-free quest generation. Treat all returned text as text, never HTML. */
+  <style>/* A winter night outside, a bright working table inside. */
+.winter-ui[data-screen="game"] {background:#132e45;}
+.winter-ui[data-screen="game"] .game-shell {min-height:100vh;background:#132e45;color:#263e54;}
+.winter-ui[data-screen="game"] .game-shell::before {display:none;}
+.winter-ui[data-screen="game"] .game-shell::after {display:none;}
+.winter-ui[data-screen="game"] .game-header {position:relative;z-index:2;max-width:1020px;margin:auto;border-bottom:1px solid #ffffff20;padding:24px 30px 20px;min-height:0;}
+.winter-ui[data-screen="game"] .game-wordmark {color:#fff4d9;letter-spacing:-.035em;}
+.winter-ui[data-screen="game"] .game-demo {color:#e7d2a2;background:#ffffff09;border:1px solid #e7d2a24d;}
+.winter-ui[data-screen="game"] .game-tool {color:#fff6dd;border:1px solid #a8bed24d;background:#233e55;border-radius:7px;min-height:44px;padding:10px 13px;}
+.winter-ui[data-screen="game"] .game-tool:hover {background:#34536d;}
+.winter-ui[data-screen="game"] .game-main {position:relative;z-index:1;max-width:900px;margin:auto;padding:20px 30px 55px;}
+.winter-ui[data-screen="game"] .game-main:has(.holiday-game-card) {max-width:900px;}
+.winter-ui[data-screen="game"] .game-topline {color:#e2eaf0;margin:22px 3px 16px;}
+.winter-ui[data-screen="game"] .game-topline .quiet {color:#e2eaf0;}
+.winter-ui[data-screen="game"] .dot {border-color:#b8c9d4;background:#29455a;}
+.winter-ui[data-screen="game"] .dot.active {background:#e8bb5c;border-color:#e8bb5c;box-shadow:0 0 0 3px #e8bb5c22;}
+.winter-ui[data-screen="game"] .dot.complete {background:#a5c8ac;border-color:#a5c8ac;}
+.winter-ui[data-screen="game"] .game-card {position:relative;overflow:hidden;background:#fffaf0;border:1px solid #dcccb0;border-radius:13px;box-shadow:0 7px 0 #0b2132,0 22px 50px #06111c44;padding:36px 50px 40px;margin:0;}
+.winter-ui[data-screen="game"] .game-card::before {content:'';display:block;position:absolute;left:0;right:0;top:0;height:7px;background:repeating-linear-gradient(125deg,#aa3445 0 17px,#fff7df 17px 27px,#466c88 27px 44px,#fff7df 44px 54px);}
+.winter-ui[data-screen="game"] .game-card h1 {font-size:clamp(29px,4.7vw,43px);line-height:1.16;letter-spacing:-.035em;color:#203b51;margin-top:20px;}
+.winter-ui[data-screen="game"] .game-card>.game-prompt {font-size:19px;line-height:1.75;max-width:650px;margin-left:auto;margin-right:auto;}
+.winter-ui[data-screen="game"] .game-caption {color:#ccdae4;font-size:14px;line-height:1.7;max-width:650px;margin:25px auto 0;}
+.winter-ui[data-screen="game"] .holiday-passport {background:#ebe0c6;border-color:#d6bd8b;margin-bottom:18px;box-shadow:0 3px 0 #0c2436;}
+.game-main>.holiday-passport .passport-fragments,.demo-view #demo-body>.holiday-passport .passport-fragments{display:none;}
+.game-main>.holiday-passport .passport-summary,.demo-view #demo-body>.holiday-passport .passport-summary{width:100%;display:flex;align-items:center;justify-content:space-between;gap:15px;}
+.game-main>.holiday-passport .passport-summary>b,.demo-view #demo-body>.holiday-passport .passport-summary>b{white-space:nowrap;}
+.winter-ui[data-screen="game"] .courier-note {background:#edf1e7;border:1px solid #d2ddc8;border-left:4px solid #6e8c6b;box-shadow:none;margin:0 0 25px;padding:14px 17px;}
+.winter-ui[data-screen="game"] .courier-portrait {background:#f9efd6;border-color:#d4c7a4;}
+.winter-ui[data-screen="game"] .courier-label {color:#4e6d4a;}
+.winter-ui[data-screen="game"] .courier-note p {color:#3c5545;}
+.winter-ui[data-screen="game"] .winter-puzzle-board {background:#f3e8ce;border:1px solid #d6c5a1;border-radius:9px;box-shadow:inset 0 2px 0 #e2d4b7;padding:22px 18px;}
+.winter-ui[data-screen="game"] .stamped-envelope {background:#fffdf5;border-color:#c0ad86;box-shadow:3px 4px 0 #d8c6a2;}
+.winter-ui[data-screen="game"] .task-item {background:#fffdf5;border-color:#b5bca8;box-shadow:0 4px 0 #d5dccd;transition:transform .15s ease,background .15s ease;}
+.winter-ui[data-screen="game"] .task-item:hover {transform:translateY(-3px);background:#fff6db;}
+.winter-ui[data-screen="game"] .task-item.selected {background:#edf3e4;border-color:#557953;box-shadow:0 4px 0 #bccdb5;}
+.winter-ui[data-screen="game"] .puzzle-keypad button {border-color:#c1baa8;background:#fffdf6;box-shadow:0 3px 0 #d5ccb9;}
+.winter-ui[data-screen="game"] .puzzle-keypad button:hover {background:#f5e4b8;}
+.winter-ui[data-screen="game"] .puzzle-code-input {background:#fffdf7;border:2px solid #657b82;color:#203b51;box-shadow:inset 0 3px 0 #e8e1d2;border-radius:6px;}
+.snowfall {position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:0;}
+.snowfall i {position:absolute;top:-400px;left:0;width:100%;height:calc(100% + 400px);background-image:radial-gradient(circle,#e6f0f2aa 1px,transparent 2px);background-size:93px 121px;opacity:.42;}
+.snowfall i:nth-child(2) {background-size:151px 173px;background-position:33px 79px;opacity:.27;}
+.snowfall i:nth-child(3) {background-size:251px 231px;background-position:125px 11px;opacity:.24;}
+.holiday-stage {position:relative;margin:15px 0 20px;border:1px solid #afc3ce55;background:#1c3b51;border-radius:12px;overflow:hidden;box-shadow:0 4px 0 #0e2333;color:#fff0c9;}
+.holiday-stage .stage-scene {display:block;width:100%;height:auto;max-height:225px;}
+.stage-labels{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));list-style:none;margin:0;padding:0 14px;background:#1b394d;gap:10px;}
+.stage-stop{display:flex;align-items:center;justify-content:center;gap:7px;color:#b5c8cc;font-size:14px;line-height:1.4;padding:9px 0 12px;border-bottom:2px solid transparent;}
+.stage-stop>span:first-child{display:grid;place-items:center;width:21px;height:21px;border:1px solid #738d98;border-radius:50%;font-size:12px;flex-shrink:0;}
+.stage-stop.is-current{border-color:#ecc873;color:#fff2c8;font-weight:700;}
+.stage-stop.is-complete{color:#bad5b8;}.stage-stop.is-complete>span:first-child{background:#7ba783;color:#132e45;border-color:#7ba783;}
+.game-build{font-size:12px;color:#bacbd7;letter-spacing:.03em;}
+.stage-current {display:flex;align-items:center;justify-content:space-between;gap:15px;padding:12px 18px;background:#173347;color:#f8e8bd;font-size:15px;line-height:1.45;border-top:1px solid #acc4ce22;}
+.stage-current b {font-size:17px;}
+.stage-current p {margin:0;}
+.stage-station {transition:opacity .4s ease;}
+.stage-window {transition:fill .8s ease,filter .8s ease;}
+.stage-window.is-lit {filter:drop-shadow(0 0 5px #ffe097a0);}
+.stage-courier {transform-box:fill-box;transform-origin:50% 70%;}
+.holiday-workbench {position:relative;margin:20px auto 25px;padding:17px 15px 13px;border:1px solid #b9c8c6;border-radius:9px;background:#e8efeb;color:#35564c;}
+.holiday-workbench .workbench-status {font-size:14px;line-height:1.5;margin:10px 0 0;color:#3c5d50;}
+.workbench-lock {display:block;width:100%;max-width:340px;height:113px;margin:auto;}
+.workbench-digit {transition:opacity .18s ease;}
+.workbench-load {display:flex;justify-content:center;gap:9px;align-items:end;min-height:60px;}
+.workbench-parcel {width:50px;height:50px;opacity:.25;transition:opacity .2s ease,transform .2s ease;}
+.workbench-parcel.is-loaded {opacity:1;transform:translateY(-3px);}
+.workbench-envelopes .workbench-parcel>svg{display:block;width:100%;height:100%;}
+.workbench-selection .workbench-load{align-items:stretch;gap:8px;}
+.workbench-selection .workbench-parcel{width:22%;max-width:140px;height:auto;display:flex;align-items:center;flex-direction:column;gap:5px;opacity:.65;padding:8px 3px;background:#f3f6ec;border:1px dashed #a9b9a4;border-radius:6px;}
+.workbench-selection .workbench-parcel.is-loaded{opacity:1;background:#fff5d6;border-style:solid;border-color:#b99c69;}
+.workbench-selection button.workbench-parcel{font-family:inherit;color:inherit;cursor:pointer;}
+.workbench-selection button.workbench-parcel:hover{background:#ffe9b0;}
+.workbench-selection button.workbench-parcel:focus-visible{outline:3px solid #4268a3;outline-offset:3px;}
+.workbench-item-art{display:block;width:65px;height:65px;max-width:100%;}
+.workbench-position{font-size:13px;color:#63765f;}
+.workbench-item-label{font-size:14px;line-height:1.4;overflow-wrap:anywhere;max-width:100%;}
+.workbench-runner{max-width:450px;margin:0 auto;}.workbench-runner svg{display:block;width:100%;height:30px;}
+.station-reward {padding:20px 16px;margin:8px 0 24px;background:#e7efe1;border:1px solid #b6c7a8;border-radius:8px;text-align:center;color:#36533b;position:relative;}
+.station-reward h2 {font-size:23px;line-height:1.3;margin:10px 0;}
+.station-reward p {font-size:16px;line-height:1.6;margin:9px auto;max-width:45ch;}
+.reward-stamp {max-width:100px;max-height:100px;margin:auto;}
+.reward-fragment {display:inline-block;background:#fff6d9;border:1px dashed #ac9867;padding:9px 16px;border-radius:4px;font-size:15px;transform:rotate(-2deg);}
+.station-reward~.earned-stamp {display:none;}
+.clue-tile {font:inherit;color:inherit;cursor:pointer;border:1px solid transparent;background:#ffffff55;border-radius:8px;transition:transform .15s ease,background .15s ease;min-width:0;}
+.clue-tile:hover,.clue-tile[aria-expanded="true"] {background:#fffaf0;border-color:#b29a68;transform:translateY(-3px);}
+.clue-tile:focus-visible {outline:3px solid #4268a3;outline-offset:3px;}
+.inspect-instruction {margin:0 0 13px;font-size:14px;color:#536b6d;line-height:1.5;}
+.clue-detail {margin:12px 0 22px;padding:18px 12px;border:1px dashed #a9956d;background:#fff9e9;border-radius:7px;}
+.clue-detail>span {display:block;font-size:14px;line-height:1.6;margin-top:10px;color:#5e6558;}
+.inspected-toy {display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;font-size:19px;}
+.inspected-toy .winter-icon {width:115px;height:115px;}
+.inspected-toy .toy-tag {font-size:32px;}
+.quest-audio {color:#eef0db;}
+.holiday-audio {display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:14px;}
+.holiday-audio button {min-height:44px;border:1px solid #c8d7dd66;background:#233e55;color:#fff2cf;border-radius:7px;padding:9px 15px;font:600 14px/1.4 var(--sans,system-ui);cursor:pointer;}
+.holiday-audio button[aria-pressed="true"] {background:#d9c68d;color:#203b42;border-color:#e7d59a;}
+.holiday-audio label {display:flex;align-items:center;gap:10px;font-size:14px;}
+.holiday-audio input[type="range"] {width:105px;min-height:44px;accent-color:#e3c580;cursor:pointer;}
+.holiday-audio .music-status {margin:0;font-size:13px;line-height:1.5;flex-basis:100%;color:#d9e1e0;}
+.holiday-audio .music-status:empty {display:none;}
+.demo-view .holiday-stage {margin-top:20px;}
+.demo-view .holiday-audio {color:#3b5362;margin:10px 0 20px;}
+.demo-view .holiday-audio .music-status {color:#526c77;}
+.demo-view #demo-body {border:1px solid #d6c7a8;background:#fffaf0;border-radius:12px;padding:28px 32px 34px;box-shadow:0 5px 0 #dad7c7;}
+.demo-view .toy-tile.clue-tile {flex:1;}
+@media(prefers-reduced-motion:no-preference) {
+ .snowfall i {animation:quiet-snow 22s linear infinite;}
+ .snowfall i:nth-child(2) {animation-duration:34s;animation-delay:-12s;}
+ .snowfall i:nth-child(3) {animation-duration:43s;animation-delay:-23s;}
+ .stage-courier {animation:courier-breath 3s ease-in-out infinite;}
+ .stage-window.is-lit {animation:window-glow 3s ease-in-out infinite alternate;}
+ .station-reward {animation:reward-arrives .45s ease-out both;}
+ .inspected-toy {animation:reward-arrives .2s ease-out both;}
+ @keyframes quiet-snow {to{transform:translateY(400px);}}
+ @keyframes courier-breath {50%{transform:translateY(-3px) rotate(-2deg);}}
+ @keyframes window-glow {to{filter:drop-shadow(0 0 8px #ffe097bb);}}
+ @keyframes reward-arrives {from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
+}
+@media(max-width:600px) {
+ .winter-ui[data-screen="game"] .game-header {padding:20px 17px 16px;gap:15px;}
+ .winter-ui[data-screen="game"] .game-header>div:first-child {gap:12px;}
+ .winter-ui[data-screen="game"] .game-header>div:first-child{gap:8px;flex-wrap:wrap;}
+ .winter-ui[data-screen="game"] .game-wordmark{font-size:20px;}
+ .winter-ui[data-screen="game"] .game-demo{font-size:10px;padding:5px 8px;margin:0;}
+ .winter-ui[data-screen="game"] .game-build{font-size:11px;}
+ .winter-ui[data-screen="game"] .game-tools {justify-content:flex-start;gap:7px;}
+ .winter-ui[data-screen="game"] .game-tool {font-size:13px;padding:9px 10px;flex:1;}
+ .winter-ui[data-screen="game"] .game-main {padding:17px 13px 38px;}
+ .winter-ui[data-screen="game"] .game-card {padding:27px 19px 30px;border-radius:10px;}
+ .winter-ui[data-screen="game"] .game-card h1 {font-size:31px;}
+ .winter-ui[data-screen="game"] .game-card>.game-prompt {font-size:18px;line-height:1.7;}
+ .winter-ui[data-screen="game"] .winter-puzzle-board {padding:18px 10px;}
+ .stage-current {font-size:13px;gap:8px;padding:11px 13px;}
+ .stage-current b {font-size:15px;}
+ .stage-current{display:block;}.stage-current span{display:block;margin-top:4px;}
+ .stage-labels{gap:5px;padding:0 8px;}.stage-stop{font-size:12px;gap:4px;}.stage-stop>span:first-child{width:18px;height:18px;font-size:11px;}
+ .holiday-stage .stage-scene {min-height:112px;object-fit:cover;}
+ .holiday-audio{display:grid;grid-template-columns:max-content minmax(0,1fr);align-items:center;gap:6px 13px;}
+ .holiday-audio .music-toggle{grid-column:1;grid-row:1/span 2;font-size:14px;padding:9px 12px;}
+ .holiday-audio label{grid-column:2;grid-row:1;font-size:13px;gap:6px;}
+ .holiday-audio input[type="range"]{grid-column:2;grid-row:2;width:100%;min-height:24px;margin:0;}
+ .holiday-audio .music-status{grid-column:1/-1;}
+ .winter-ui[data-screen="game"] .toy-tile .winter-icon {width:58px;height:58px;}
+ .winter-ui[data-screen="game"] .toy-tag {font-size:24px;}
+ .clue-tile {padding:5px 1px 9px!important;}
+ .inspected-toy .winter-icon {width:100px;height:100px;}
+ .holiday-workbench {padding:13px 10px;}
+ .workbench-digit {min-width:37px;min-height:45px;font-size:25px;}
+ .demo-view #demo-body {padding:23px 17px 28px;}
+ .station-reward {padding:17px 12px;}
+}
+@media(prefers-reduced-motion:reduce) {
+ .snowfall {display:none;}
+ .holiday-stage *,.holiday-workbench *,.station-reward,.clue-tile,.inspected-toy {animation:none!important;transition:none!important;}
+}
+@media print {.holiday-stage,.holiday-audio,.holiday-workbench,.snowfall,.inspect-instruction,.clue-detail{display:none!important}}
+</style>
+  <script type="module">// An original, quiet sixteen-beat score. Each station has its own celesta phrase.
+// The notes are synthesized locally; no recordings or network requests are used.
+const audioHolidayPhrases = [
+  [[74,1],[78,.5],[81,.5],[76,2],[79,1],[78,1],[74,2],[73,.5],[71,.5],[74,2],[78,1],[76,1],[74,3]],
+  [[76,1],[79,.5],[83,.5],[81,2],[78,1],[76,1],[74,2],[78,.5],[79,.5],[81,2],[83,1],[79,1],[78,3]],
+  [[71,1],[74,.5],[78,.5],[76,2],[73,1],[71,1],[69,2],[73,.5],[76,.5],[78,2],[74,1],[73,1],[74,3]],
+  [[78,1],[81,.5],[86,.5],[83,2],[81,1],[78,1],[79,2],[81,.5],[78,.5],[76,2],[74,1],[78,1],[74,3]]
+];
+const audioHolidayChords = [[50,57,66],[47,54,62],[43,50,59],[45,52,59]];
+const audioHolidayHarmony = [[0,1,2,3],[2,0,1,3],[1,2,0,3],[0,2,3,0]];
+const audioHolidayBeat = 60 / 76;
+const audioHolidayClamp = (value, fallback) => typeof value === 'number' && Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : fallback;
+const audioHolidayFrequency = midi => 440 * 2 ** ((midi - 69) / 12);
+const audioHolidayEscape = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+
+/**
+ * Construction is silent and creates no AudioContext or timers. Only an explicit
+ * setEnabled(true), called from a user gesture, creates/resumes the context.
+ * setScene can subsequently pause/resume an already permitted soundtrack.
+ */
+function createHolidayAudio(audioOptions = {}) {
+  let audioContext = null, audioMaster = null, audioFilter = null;
+  let audioEnabled = false, audioUnlocked = false, audioUnavailable = false;
+  let audioVolume = audioHolidayClamp(audioOptions.volume, .28);
+  let audioScene = {station:0, active:false, ducked:false};
+  let audioPlaying = false, audioError = null, audioTimer = null;
+  let audioRequest = 0, audioOrigin = 0, audioCycle = 0, audioEventIndex = 0;
+  let audioEvents = [], audioLastState = '';
+  const audioVoices = new Set();
+  const audioTimers = audioOptions.timers || {
+    setTimeout: (...args) => globalThis.setTimeout(...args),
+    clearTimeout: id => globalThis.clearTimeout(id)
+  };
+  const audioFactory = audioOptions.audioContextFactory || (() => {
+    const audioConstructor = globalThis.AudioContext || globalThis.webkitAudioContext;
+    return audioConstructor ? new audioConstructor() : null;
+  });
+  const audioState = () => ({enabled:audioEnabled, volume:audioVolume, unavailable:audioUnavailable,
+    playing:audioPlaying, error:audioError, station:audioScene.station, active:audioScene.active, ducked:audioScene.ducked});
+  function audioEmit() {
+    const audioSnapshot = audioState(), audioSerialized = JSON.stringify(audioSnapshot);
+    if (audioSerialized === audioLastState) return;
+    audioLastState = audioSerialized;
+    try { audioOptions.onChange?.(audioSnapshot); } catch {
+      // If the host UI fails, leave no music loop running beyond its controls.
+      audioEnabled = false;
+      audioUnlocked = false;
+      audioUnavailable = true;
+      audioError = 'unavailable';
+      audioHalt();
+      try { audioLevel(); } catch { /* The audio device may also have disappeared. */ }
+    }
+  }
+  function audioDisconnect(audioNode) {
+    try { audioNode?.disconnect(); } catch { /* Already disconnected. */ }
+  }
+  function audioLevel() {
+    if (!audioMaster || !audioContext) return;
+    const audioNow = audioContext.currentTime;
+    audioMaster.gain.cancelScheduledValues(audioNow);
+    audioMaster.gain.setTargetAtTime(audioEnabled && audioScene.active ? audioVolume * (audioScene.ducked ? .28 : 1) : 0, audioNow, .035);
+  }
+  function audioHalt() {
+    if (audioTimer !== null) audioTimers.clearTimeout(audioTimer);
+    audioTimer = null;
+    audioPlaying = false;
+    const audioNow = audioContext?.currentTime || 0;
+    for (const audioVoice of audioVoices) {
+      try {
+        audioVoice.gain.gain.cancelScheduledValues(audioNow);
+        audioVoice.gain.gain.setTargetAtTime(0, audioNow, .008);
+        audioVoice.oscillator.stop(audioNow + .035);
+      } catch {
+        audioDisconnect(audioVoice.oscillator);
+        audioDisconnect(audioVoice.gain);
+      }
+    }
+    audioVoices.clear();
+  }
+  function audioFail() {
+    audioEnabled = false;
+    audioUnlocked = false;
+    audioUnavailable = true;
+    audioError = 'unavailable';
+    audioHalt();
+    try { audioLevel(); } catch { /* The audio device may have disappeared. */ }
+    audioEmit();
+  }
+  function audioPermitted() {
+    return audioEnabled && audioUnlocked && audioScene.active && audioVolume > 0 && audioContext?.state === 'running';
+  }
+  function audioTone(audioMidi, audioStart, audioDuration, audioStrength, audioKind = 'bell') {
+    const audioOscillator = audioContext.createOscillator(), audioGain = audioContext.createGain();
+    const audioVoice = {oscillator:audioOscillator, gain:audioGain};
+    audioVoices.add(audioVoice);
+    audioOscillator.onended = () => {
+      audioVoices.delete(audioVoice);
+      audioDisconnect(audioOscillator);
+      audioDisconnect(audioGain);
+    };
+    try {
+      audioOscillator.type = audioKind === 'bell' ? 'triangle' : 'sine';
+      audioOscillator.frequency.setValueAtTime(audioHolidayFrequency(audioMidi), audioStart);
+      audioGain.gain.setValueAtTime(0, audioStart);
+      audioGain.gain.linearRampToValueAtTime(audioStrength, audioStart + (audioKind === 'harmony' ? .16 : .012));
+      audioGain.gain.exponentialRampToValueAtTime(.0001, audioStart + audioDuration);
+      audioOscillator.connect(audioGain);
+      audioGain.connect(audioFilter);
+      audioOscillator.start(audioStart);
+      audioOscillator.stop(audioStart + audioDuration + .02);
+    } catch (audioException) {
+      try { audioOscillator.stop(); } catch { /* It may not have started. */ }
+      audioDisconnect(audioOscillator);
+      audioDisconnect(audioGain);
+      audioVoices.delete(audioVoice);
+      throw audioException;
+    }
+  }
+  function audioBell(audioMidi, audioStart, audioDuration, audioStrength = .075) {
+    audioTone(audioMidi, audioStart, audioDuration, audioStrength);
+    // A short, quiet upper partial gives the triangle its soft bell-like strike.
+    audioTone(audioMidi + 12, audioStart, Math.min(.5, audioDuration), audioStrength * .14, 'partial');
+  }
+  function audioPhrase() {
+    const audioResult = [];
+    let audioBeat = 0;
+    for (const [audioMidi, audioLength] of audioHolidayPhrases[audioScene.station]) {
+      audioResult.push({beat:audioBeat, midi:audioMidi, length:Math.min(1.7, audioLength * audioHolidayBeat + .35), kind:'bell'});
+      audioBeat += audioLength;
+    }
+    audioHolidayHarmony[audioScene.station].forEach((audioChord, audioIndex) => {
+      for (const audioMidi of audioHolidayChords[audioChord]) audioResult.push({beat:audioIndex * 4, midi:audioMidi, length:3.05, kind:'harmony'});
+    });
+    return audioResult.sort((audioA, audioB) => audioA.beat - audioB.beat);
+  }
+  function audioSchedule() {
+    audioTimer = null;
+    if (!audioPermitted()) { audioHalt(); audioEmit(); return; }
+    try {
+      const audioNow = audioContext.currentTime;
+      // A sleeping/background tab never catches up by playing a burst of notes.
+      if (audioOrigin + (audioCycle * 16 + audioEvents[audioEventIndex].beat) * audioHolidayBeat < audioNow - .2) {
+        audioHalt();
+        audioOrigin = audioNow + .045;
+        audioCycle = 0;
+        audioEventIndex = 0;
+      }
+      audioPlaying = true;
+      while (audioOrigin + (audioCycle * 16 + audioEvents[audioEventIndex].beat) * audioHolidayBeat <= audioNow + .18) {
+        const audioEvent = audioEvents[audioEventIndex];
+        const audioStart = Math.max(audioNow + .005, audioOrigin + (audioCycle * 16 + audioEvent.beat) * audioHolidayBeat);
+        if (audioEvent.kind === 'harmony') audioTone(audioEvent.midi, audioStart, audioEvent.length, .026, 'harmony');
+        else audioBell(audioEvent.midi, audioStart, audioEvent.length);
+        audioEventIndex += 1;
+        if (audioEventIndex === audioEvents.length) { audioEventIndex = 0; audioCycle += 1; }
+      }
+      audioTimer = audioTimers.setTimeout(audioSchedule, 90);
+      audioEmit();
+    } catch { audioFail(); }
+  }
+  function audioUpdate() {
+    try {
+      audioLevel();
+      if (!audioPermitted()) audioHalt();
+      else if (!audioPlaying) {
+        audioEvents = audioPhrase();
+        audioOrigin = audioContext.currentTime + .045;
+        audioCycle = 0;
+        audioEventIndex = 0;
+        audioSchedule();
+      }
+      audioEmit();
+    } catch { audioFail(); }
+  }
+  function audioContextChanged() {
+    if (audioContext?.state === 'closed') { audioFail(); return; }
+    audioUpdate();
+  }
+  return {
+    async setEnabled(audioNextEnabled) {
+      const audioThisRequest = ++audioRequest;
+      audioError = null;
+      audioEnabled = Boolean(audioNextEnabled) && !audioUnavailable;
+      if (!audioEnabled) { audioUpdate(); return false; }
+      try {
+        if (!audioContext) {
+          audioContext = audioFactory();
+          if (!audioContext) { audioFail(); return false; }
+          audioMaster = audioContext.createGain();
+          audioFilter = audioContext.createBiquadFilter();
+          audioFilter.type = 'lowpass';
+          audioFilter.frequency.setValueAtTime(2900, audioContext.currentTime);
+          audioFilter.Q.setValueAtTime(.45, audioContext.currentTime);
+          audioMaster.gain.setValueAtTime(0, audioContext.currentTime);
+          audioFilter.connect(audioMaster);
+          audioMaster.connect(audioContext.destination);
+          if (audioContext.addEventListener) audioContext.addEventListener('statechange', audioContextChanged);
+          else audioContext.onstatechange = audioContextChanged;
+        }
+        // Keep resume inside this explicit gesture method, before the first await.
+        const audioResume = audioContext.resume();
+        audioEmit();
+        await audioResume;
+        if (audioThisRequest !== audioRequest || !audioEnabled) return false;
+        if (audioContext.state !== 'running') throw new Error('Audio is suspended');
+        audioUnlocked = true;
+        audioUpdate();
+        return audioEnabled;
+      } catch {
+        if (audioThisRequest !== audioRequest) return false;
+        audioEnabled = false;
+        audioUnlocked = false;
+        audioError = audioUnavailable ? 'unavailable' : 'blocked';
+        audioHalt();
+        try { audioLevel(); } catch { audioFail(); }
+        audioEmit();
+        return false;
+      }
+    },
+    setVolume(audioNextVolume) {
+      audioVolume = audioHolidayClamp(audioNextVolume, audioVolume);
+      audioUpdate();
+    },
+    setScene(audioNextScene = {}) {
+      const audioStation = Number.isInteger(audioNextScene.station) ? Math.max(0, Math.min(3, audioNextScene.station)) : audioScene.station;
+      if (audioStation !== audioScene.station) audioHalt();
+      audioScene = {station:audioStation,
+        active:typeof audioNextScene.active === 'boolean' ? audioNextScene.active : audioScene.active,
+        ducked:typeof audioNextScene.ducked === 'boolean' ? audioNextScene.ducked : audioScene.ducked};
+      audioUpdate();
+    },
+    celebrate({stationComplete:audioStationComplete = false} = {}) {
+      if (!audioPermitted()) return false;
+      try {
+        const audioNotes = audioStationComplete ? [74,78,81,86] : [81,86];
+        audioNotes.forEach((audioMidi, audioIndex) => audioBell(audioMidi, audioContext.currentTime + .015 + audioIndex * .14, .85, .064));
+        return true;
+      } catch { audioFail(); return false; }
+    },
+    stop() {
+      audioRequest += 1;
+      audioEnabled = false;
+      audioUpdate();
+    },
+    state:audioState
+  };
+}
+
+/** HTML for the app's delegated click/input handlers; safe across full rerenders. */
+function holidayAudioControls(audioCurrentState = {}, {idPrefix:audioIdPrefix = 'holiday'} = {}) {
+  const audioControlId = `${String(audioIdPrefix).replace(/[^a-zA-Z0-9_-]/g, '') || 'holiday'}-music-volume`;
+  const audioChecked = Boolean(audioCurrentState.enabled);
+  const audioDisabled = audioCurrentState.unavailable ? ' disabled' : '';
+  const audioStatus = audioCurrentState.unavailable ? 'Музыка недоступна в этом браузере.' : audioCurrentState.error === 'blocked' ? 'Не удалось включить музыку. Попробуйте ещё раз.' : audioCurrentState.enabled ? audioCurrentState.volume===0 ? 'Музыка включена · громкость 0%' : audioCurrentState.ducked ? 'Музыка тише, пока звучит голос.' : audioCurrentState.playing ? 'Играет новогодняя мелодия' : 'Музыка на паузе' : 'Музыка выключена';
+  return `<div class="holiday-audio" role="group" aria-label="Музыка">
+    <button type="button" class="music-toggle" data-action="music-toggle" aria-pressed="${audioChecked}"${audioDisabled}>${audioChecked ? 'Выключить музыку' : 'Включить музыку'}</button>
+    <label for="${audioControlId}">Громкость музыки</label>
+    <input id="${audioControlId}" name="music-volume" type="range" min="0" max="100" step="1" value="${Math.round(audioHolidayClamp(audioCurrentState.volume, .28) * 100)}" aria-label="Громкость музыки"${audioDisabled}>
+    <span class="music-status" role="status">${audioHolidayEscape(audioStatus)}</span>
+  </div>`;
+}
+
+
+// Decorative feedback uses public puzzle fields and never checks an answer.
+const stageStations = [
+  {
+    title: 'Северная почта',
+    short: 'Почта',
+    setting: 'Под снежной крышей ждут письма и почтовые мешки.',
+    celebration: 'На Северной почте зажглись окна!',
+  },
+  {
+    title: 'Ёлочная площадь',
+    short: 'Ёлка',
+    setting: 'На площади покачиваются игрушки и мерцает снежная ёлка.',
+    celebration: 'Праздничная ёлка засияла!',
+  },
+  {
+    title: 'Мастерская подарков',
+    short: 'Мастерская',
+    setting: 'В тёплой мастерской готовят ленты, открытки и посылки.',
+    celebration: 'Мастерская готова к празднику!',
+  },
+  {
+    title: 'Станция саней',
+    short: 'Сани',
+    setting: 'Над заснеженными крышами ждут почтовые сани.',
+    celebration: 'Почтовые сани готовы к полёту!',
+  },
+];
+
+function stageEscape(value) {
+  return String(value ?? '').replace(/[&<>"']/g, character => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  })[character]);
+}
+
+function stageStationIndex(mission) {
+  const index = mission?.station?.index;
+  return Number.isInteger(index) && index >= 0 && index < 4 ? index : -1;
+}
+
+function stageState(missions, progress) {
+  const tasks = Array.isArray(missions) ? missions : [];
+  const validIndex = Number.isInteger(progress?.index)
+    && progress.index >= 0 && progress.index < tasks.length;
+  const phase = progress?.phase;
+  const validPhase = ['intro', 'puzzle', 'find', 'treasure', 'done'].includes(phase)
+    && (phase !== 'intro' || progress.index === 0)
+    && (phase !== 'find' || progress.index < tasks.length - 1)
+    && (!['treasure', 'done'].includes(phase) || progress.index === tasks.length - 1);
+  const index = validIndex && validPhase ? progress.index : 0;
+  const solved = validIndex && validPhase && phase !== 'intro'
+    ? index + (['find', 'treasure', 'done'].includes(phase) ? 1 : 0)
+    : 0;
+  const members = stageStations.map((_, station) => tasks
+    .map((mission, taskIndex) => stageStationIndex(mission) === station ? taskIndex : -1)
+    .filter(taskIndex => taskIndex >= 0));
+  const complete = members.map(indices => indices.length > 0
+    && indices.every(taskIndex => taskIndex < solved));
+  const current = stageStationIndex(tasks[index]);
+  return { tasks, index, phase, solved, complete, current: current < 0 ? 0 : current };
+}
+
+function stageWindow(x, y, lit, width = 20, height = 25) {
+  return `<g class="stage-window${lit ? ' is-lit' : ''}">
+    <rect x="${x}" y="${y}" width="${width}" height="${height}" rx="3" fill="${lit ? '#ffda8a' : '#405c70'}" stroke="#284958" stroke-width="3"/>
+    <path d="M${x + width / 2} ${y}v${height}m${-width / 2} ${-height / 2}h${width}" stroke="#284958" stroke-width="2"/>
+  </g>`;
+}
+
+function stagePine(x, y, scale = 1) {
+  return `<g transform="translate(${x} ${y}) scale(${scale})">
+    <path d="M-3 0h6v-42h-6z" fill="#765d52"/>
+    <path d="m0-96 24 35H13l23 34H20L43-5h-86l23-22h-16l23-34h-11z" fill="#376b64"/>
+    <path d="m0-96 12 19-12-4-12 4zm-19 44 19-7 19 7-10-16H-9zm-12 27 31-9 31 9-12-18H-19z" fill="#eff8f7"/>
+  </g>`;
+}
+
+function stageBird(x, y) {
+  return `<g transform="translate(${x} ${y})"><g class="stage-courier">
+    <ellipse cx="0" cy="15" rx="23" ry="5" fill="#5c8292" opacity=".16"/>
+    <path d="m-15 1-13 8 15 1" fill="#294756"/>
+    <ellipse cx="0" cy="-1" rx="17" ry="15" fill="#e96657"/>
+    <path d="M-11-11c10-17 27-8 27 2-7-4-17-4-27-2" fill="#294756"/>
+    <path d="M-11-4c-9-1-11 12 0 14 10 2 12-10 0-14" fill="#3c6670"/>
+    <circle cx="11" cy="-12" r="2" fill="#fffaf0"/>
+    <path d="m16-8 9 4-9 3" fill="#eab96c"/>
+    <path d="M-5 14v6m12-7v7" stroke="#294756" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="m-2-10 10 15" stroke="#f4ce85" stroke-width="3"/>
+    <rect x="0" y="1" width="16" height="13" rx="2" fill="#fff5d8" stroke="#8e6c48" stroke-width="1.5"/>
+    <path d="m1 2 7 6 7-6" fill="none" stroke="#bb634e" stroke-width="1.5"/>
+  </g></g>`;
+}
+
+function stageScene(complete, current) {
+  const [post, tree, workshop, sleigh] = complete;
+  const stationClass = index => `stage-station${complete[index] ? ' is-complete' : ''}${current === index ? ' is-current' : ''}`;
+  const snow = [[30, 38, 2], [79, 65, 2.5], [155, 25, 2], [201, 75, 2], [258, 30, 3], [355, 61, 2], [409, 25, 2.5], [449, 85, 2], [568, 38, 2.5], [622, 71, 2], [682, 26, 3], [785, 65, 2], [811, 22, 2.5]];
+  return `<svg class="stage-scene" viewBox="0 0 840 270" aria-hidden="true" focusable="false">
+    <rect width="840" height="270" rx="24" fill="#203e55"/>
+    <circle cx="737" cy="47" r="18" fill="#f1d9a3"/><circle cx="746" cy="39" r="18" fill="#203e55"/>
+    <path d="M0 151Q98 91 200 150T420 142T650 139T840 145V270H0z" fill="#426377"/>
+    <path d="M0 181q113-29 213 1t204-1 207 0 216-7v96H0z" fill="#eaf4f4"/>
+    <path d="M0 227q121-24 223 3t193-3 217-2 207-4v49H0z" fill="#fffaf0"/>
+    <g fill="#fffdf8" class="stage-snow">${snow.map(([x, y, radius]) => `<circle cx="${x}" cy="${y}" r="${radius}"/>`).join('')}</g>
+    <path class="stage-route" d="M109 221q100 25 202 0t210 0 205-12" fill="none" stroke="#a6bfc4" stroke-width="3" stroke-dasharray="4 10" stroke-linecap="round"/>
+    ${stagePine(37, 203, .64)}${stagePine(202, 203, .47)}${stagePine(416, 202, .62)}${stagePine(620, 207, .5)}${stagePine(811, 193, .76)}
+    <g class="${stationClass(0)}" data-station="0">
+      <rect x="68" y="114" width="113" height="92" rx="3" fill="#cb7262" stroke="#795349" stroke-width="3"/>
+      <path d="m54 118 72-58 70 58z" fill="#a04b4e" stroke="#795349" stroke-width="3" stroke-linejoin="round"/>
+      <path d="m54 115 72-58 70 58-14 2-56-44-57 45z" fill="#fffcf0"/>
+      <path d="M153 75V52h17v36" fill="#9f5651" stroke="#795349" stroke-width="3"/>
+      <path d="M150 51h23" stroke="#fffaf0" stroke-width="7" stroke-linecap="round"/>
+      <g class="stage-smoke" fill="#fffaf0" opacity=".75"><circle cx="163" cy="38" r="7"/><circle cx="169" cy="26" r="10"/></g>
+      ${stageWindow(79, 137, post)}${stageWindow(148, 137, post)}
+      <path d="M113 205v-49a14 14 0 0 1 28 0v49" fill="#355c68" stroke="#795349" stroke-width="3"/>
+      <circle cx="133" cy="179" r="2.5" fill="#f5cb80"/>
+      <rect x="107" y="121" width="40" height="18" rx="3" fill="#f8e5bb" stroke="#795349" stroke-width="2"/>
+      <path d="m116 126 11 8 11-8m-22 0h22v10h-22z" fill="none" stroke="#a6524b" stroke-width="1.8"/>
+      <path d="M63 205h122" stroke="#fffcf0" stroke-width="8" stroke-linecap="round"/>
+      <rect x="56" y="173" width="20" height="19" rx="4" fill="#376b64"/>
+      <path d="M66 193v18m-6-30h12" stroke="#284958" stroke-width="3"/>
+    </g>
+    <g class="${stationClass(1)}" data-station="1">
+      <ellipse cx="314" cy="209" rx="64" ry="9" fill="#bfd4d5"/>
+      <path d="M307 180h14v29h-14z" fill="#87644f"/>
+      <path d="m314 63 31 42h-14l28 39h-17l32 46H254l32-46h-17l28-39h-14z" fill="#34796c" stroke="#285a55" stroke-width="3" stroke-linejoin="round"/>
+      <path d="m314 65 15 22-15-4-15 4m-23 55 38-10 39 10m-82 34 43-12 44 12" fill="none" stroke="#ecf6e9" stroke-width="7" stroke-linecap="round"/>
+      <path d="m293 107 41 12m-55 31 70 15" stroke="#e8c981" stroke-width="3" fill="none"/>
+      <path class="stage-window${tree ? ' is-lit' : ''}" d="m314 47 5 10 11 2-8 8 2 11-10-5-10 5 2-11-8-8 11-2z" fill="${tree ? '#ffd67d' : '#d2ae76'}" stroke="#a9844a" stroke-width="2"/>
+      ${[[296, 115], [333, 136], [286, 164], [322, 177], [346, 181]].map(([x, y], index) => `<circle class="stage-window${tree ? ' is-lit' : ''}" cx="${x}" cy="${y}" r="5" fill="${tree ? ['#ffe1a0', '#ec8c75', '#ffe1a0'][index % 3] : '#8fb3a1'}"/>`).join('')}
+      <rect x="266" y="190" width="22" height="18" rx="2" fill="#cf7864"/><path d="M277 190v18m-11-12h22" stroke="#f2d597" stroke-width="3"/>
+      <rect x="337" y="195" width="27" height="15" rx="2" fill="#c3a273"/><path d="M349 195v15" stroke="#a85350" stroke-width="4"/>
+    </g>
+    <g class="${stationClass(2)}" data-station="2">
+      <rect x="466" y="123" width="117" height="83" rx="3" fill="#e5be87" stroke="#856b50" stroke-width="3"/>
+      <path d="m451 126 72-57 76 57z" fill="#467975" stroke="#315c5c" stroke-width="3" stroke-linejoin="round"/>
+      <path d="m451 123 72-58 76 58-16 1-60-45-57 45z" fill="#fffcf0"/>
+      <path d="M470 154h108m-108 19h108m-108 19h108" stroke="#c59e70" stroke-width="2"/>
+      ${stageWindow(476, 141, workshop, 28, 27)}${stageWindow(548, 141, workshop, 25, 27)}
+      <path d="M515 205v-43h23v43" fill="#9c514e" stroke="#856b50" stroke-width="3"/>
+      <circle cx="532" cy="183" r="2" fill="#f5cb80"/>
+      <circle cx="524" cy="113" r="11" fill="#f6dfae" stroke="#315c5c" stroke-width="2"/>
+      <path d="M518 113h12m-6-6v12" stroke="#a65750" stroke-width="3"/>
+      <path d="M460 206h127" stroke="#fffcf0" stroke-width="8" stroke-linecap="round"/>
+      <rect x="568" y="185" width="25" height="22" rx="2" fill="#b66358"/><path d="M580 185v22m-12-14h25" stroke="#eed299" stroke-width="3"/>
+      <rect x="448" y="192" width="23" height="15" rx="2" fill="#59837a"/><path d="M460 192v15" stroke="#e8c981" stroke-width="3"/>
+    </g>
+    <g class="${stationClass(3)}" data-station="3">
+      <path d="M653 170q60-22 126-4" stroke="#afcbd3" stroke-width="11" fill="none" stroke-linecap="round"/>
+      <path d="M663 157V104m0 4h27" stroke="#7b6652" stroke-width="4" stroke-linecap="round"/>
+      <path d="m670 101 23 4-4 14-19-4z" fill="#e5bc7c"/>
+      <path class="stage-flight-trail${sleigh ? ' is-lit' : ''}" d="M676 78q60-42 119-13" fill="none" stroke="${sleigh ? '#d6a951' : '#a5c2ca'}" stroke-width="2" stroke-dasharray="3 7"/>
+      <g class="stage-sleigh" transform="translate(689 92) rotate(-8)">
+        <path d="m0 25 9 30h49l15-31-28 5-5-19H22v20z" fill="#b65b58" stroke="#754c48" stroke-width="3" stroke-linejoin="round"/>
+        <path d="m9 55-5 11h58q17 0 16-13M20 55l-4 11m36-11-4 11" fill="none" stroke="#cfaa68" stroke-width="4" stroke-linecap="round"/>
+        <rect x="15" y="9" width="24" height="23" rx="2" fill="#568978"/><path d="M27 9v23m-12-14h24" stroke="#efd18f" stroke-width="4"/>
+        <rect x="36" y="3" width="23" height="28" rx="2" fill="#e4b56f"/><path d="M47 3v28m-11-18h23" stroke="#b45a56" stroke-width="3"/>
+      </g>
+      <path class="stage-window${sleigh ? ' is-lit' : ''}" d="m774 85 4 8 9 1-6 7 1 9-8-4-8 4 2-9-7-7 9-1z" fill="${sleigh ? '#ffd67d' : '#bfd5da'}"/>
+      <path d="M653 209q64-17 138-4" stroke="#fffaf0" stroke-width="13" fill="none" stroke-linecap="round"/>
+    </g>
+    ${stageBird([111, 314, 521, 724][current], 230)}
+  </svg>`;
+}
+
+/** A snowy route, with lights earned only by solving every task at a station. */
+function holidayStage(missions, progress) {
+  const state = stageState(missions, progress);
+  if (!state.tasks.some(mission => stageStationIndex(mission) >= 0)) return '';
+  const current = stageStations[state.current];
+  const count = state.complete.filter(Boolean).length;
+  return `<section class="holiday-stage" aria-label="Снежный почтовый городок" data-current="${state.current}" data-completed="${count}">
+    ${stageScene(state.complete, state.current)}
+    <ol class="stage-labels">${stageStations.map((station, index) => `<li class="stage-stop${state.complete[index] ? ' is-complete' : ''}${state.current === index ? ' is-current' : ''}"${state.current === index ? ' aria-current="step"' : ''}><span aria-hidden="true">${state.complete[index] ? '✓' : index + 1}</span>${station.short}<span class="visually-hidden">: ${state.complete[index] ? 'станция готова' : state.current === index ? 'Снегирь здесь' : 'впереди'}</span></li>`).join('')}</ol>
+    <p class="stage-current"><b>${count === 4 ? 'Городок готов к празднику!' : `Снегирь сейчас: ${current.title}.`}</b> <span>${count === 4 ? 'Все четыре фрагмента адресной бирки собраны.' : current.setting}</span></p>
+  </section>`;
+}
+
+function stageIconDrawing(item) {
+  const colors = { red: '#c66e60', blue: '#678fa7', green: '#558578', gold: '#d4ad6c' };
+  const color = colors[item?.color] || '#c66e60';
+  const ink = '#385565';
+  if (item?.kind === 'card' || item?.kind === 'envelope') {
+    return `<rect x="12" y="24" width="76" height="54" rx="5" fill="#fff8df" stroke="${ink}" stroke-width="3"/><path d="m14 27 36 29 36-29M14 76l24-23m48 23L62 53" fill="none" stroke="${ink}" stroke-width="3"/>`;
+  }
+  if (item?.kind === 'tree') {
+    return `<path d="M45 75h10v17H45z" fill="#967450"/><path d="m50 13 22 29H61l18 25H66l19 19H15l19-19H21l18-25H28z" fill="#558578" stroke="${ink}" stroke-width="3"/><path d="m32 53 35 9m-39 9 42 9" stroke="#f5d898" stroke-width="4"/>`;
+  }
+  if (item?.kind === 'ribbon') {
+    return `<path d="M49 44C17 52 13 13 37 25l13 17c16-35 49-16 31-1-9 7-21 7-30 4L73 81l-15-5-8 13-9-39-9 36-8-12-14 3 24-33" fill="${color}" stroke="${ink}" stroke-width="3" stroke-linejoin="round"/><circle cx="48" cy="46" r="8" fill="#e6c17d"/>`;
+  }
+  if (item?.kind === 'snowball') {
+    const size = Number.isFinite(item.size) ? Math.min(1, Math.max(.2, item.size)) : 1;
+    return `<circle cx="50" cy="${85 - 32 * size}" r="${32 * size}" fill="#fffdf5" stroke="#6d96a9" stroke-width="3"/><path d="M22 87h57" stroke="#bfd4d8" stroke-width="3" stroke-linecap="round"/>`;
+  }
+  if (item?.kind === 'flake') {
+    return Array.from({ length: 6 }, (_, index) => `<path transform="rotate(${index * 60} 50 50)" d="M50 50V14m0 17-10-10m10 10 10-10" fill="none" stroke="#678fa7" stroke-width="4" stroke-linecap="round"/>`).join('');
+  }
+  if (item?.kind === 'house') {
+    const number = typeof item.number === 'string' ? stageEscape(item.number.slice(0, 3)) : '';
+    return `<path d="M22 44h56v43H22z" fill="#e8c995" stroke="${ink}" stroke-width="3"/><path d="m12 45 38-31 38 31z" fill="${color}" stroke="${ink}" stroke-width="3"/><path d="M42 65h17v22H42z" fill="#558578"/>${number ? `<text x="50" y="60" fill="${ink}" font-size="19" font-weight="700" text-anchor="middle">${number}</text>` : ''}`;
+  }
+  return `<rect x="19" y="34" width="62" height="50" rx="4" fill="${color}" stroke="${ink}" stroke-width="3"/><path d="M16 29h68v15H16z" fill="${color}" stroke="${ink}" stroke-width="3"/><path d="M46 30h10v54H46z" fill="#f2d597"/><path d="M50 29C24 31 26 8 42 19l8 10c8-23 32-16 20-5-5 4-12 5-20 5" fill="none" stroke="#edcf8f" stroke-width="5"/>`;
+}
+
+function stageItemIcon(item) {
+  const drawing = item ? stageIconDrawing(item)
+    : '<rect x="18" y="28" width="64" height="56" rx="5" fill="none" stroke="#b3c8ca" stroke-width="3" stroke-dasharray="5 5"/><path d="M50 41v28m-14-14h28" stroke="#b3c8ca" stroke-width="3" stroke-linecap="round"/>';
+  return `<svg class="workbench-item-art" viewBox="0 0 100 100" aria-hidden="true" focusable="false">${drawing}</svg>`;
+}
+
+function stageCodeInput(task, input) {
+  const length = Number.isInteger(task.length) ? Math.min(8, Math.max(0, task.length)) : 0;
+  const alphabet = typeof task.alphabet === 'string' ? task.alphabet.slice(0, 64) : '0123456789';
+  const value = typeof input === 'string'
+    ? Array.from(input.slice(0, 128).toUpperCase()).filter(character => alphabet.includes(character)).slice(0, length).join('')
+    : '';
+  return { length, value };
+}
+
+function stageCodeWorkbench(task, input) {
+  const { length, value } = stageCodeInput(task, input);
+  if (!length) return '';
+  const width = 68 + length * 51;
+  const digits = Array.from({ length }, (_, index) => {
+    const filled = index < value.length;
+    const x = 34 + index * 51;
+    return `<g class="workbench-digit${filled ? ' is-filled' : ''}">
+      <rect x="${x}" y="80" width="41" height="47" rx="7" fill="${filled ? '#fff5d7' : '#d9e7e9'}" stroke="${filled ? '#c78a56' : '#a7bcc2'}" stroke-width="2"/>
+      <text x="${x + 20.5}" y="113" text-anchor="middle" fill="${filled ? '#8a493d' : '#8b9fa7'}" font-size="29" font-weight="700">${filled ? stageEscape(value[index]) : '·'}</text>
+    </g>`;
+  }).join('');
+  return `<div class="holiday-workbench workbench-code" data-input-count="${value.length}" data-input-limit="${length}">
+    <svg class="workbench-lock" viewBox="0 0 ${width} 146" aria-hidden="true" focusable="false">
+      <path d="M${width / 2 - 30} 69V42a30 30 0 0 1 60 0v27" fill="none" stroke="#aa8b62" stroke-width="11" stroke-linecap="round"/>
+      <rect x="20" y="62" width="${width - 40}" height="76" rx="17" fill="#eacb94" stroke="#a78358" stroke-width="3"/>
+      <path d="M29 70h${width - 58}" stroke="#fff0c9" stroke-width="5" stroke-linecap="round"/>
+      ${digits}
+      <path d="m${width / 2 - 11} 28 11 8 11-8m-22 0h22v15h-22z" fill="#fff5d7" stroke="#a78358" stroke-width="2"/>
+    </svg>
+    <div class="workbench-load workbench-envelopes" aria-hidden="true">${Array.from({ length }, (_, index) => `<span class="workbench-parcel${index < value.length ? ' is-loaded' : ''}"><svg viewBox="0 0 80 56" aria-hidden="true" focusable="false"><rect x="5" y="9" width="70" height="42" rx="5" fill="${index < value.length ? '#fff4d2' : '#e2ebeb'}" stroke="${index < value.length ? '#b58b5d' : '#b4c7ca'}" stroke-width="2"/><path d="m7 11 33 25 33-25" fill="none" stroke="${index < value.length ? '#b58b5d' : '#b4c7ca'}" stroke-width="2"/>${index < value.length ? '<rect x="57" y="16" width="10" height="12" rx="1" fill="#c06d5d"/>' : ''}</svg></span>`).join('')}</div>
+    <p class="workbench-status">Набрано ${value.length} из ${length}. ${value.length === length ? 'Код готов к проверке.' : 'Письма появляются с каждой цифрой.'}</p>
+  </div>`;
+}
+
+function stageSelectionWorkbench(task, input, interactive = false) {
+  const items = Array.isArray(task.items) ? task.items.slice(0, 24) : [];
+  const count = Number.isInteger(task.count) ? Math.min(6, items.length, Math.max(0, task.count)) : 0;
+  if (!count) return '';
+  const value = Array.isArray(input) ? [...new Set(input.slice(0, 128)
+    .filter(id => typeof id === 'string' && items.some(item => item.id === id)))].slice(0, count) : [];
+  const selected = value.map(id => items.find(item => item.id === id));
+  return `<div class="holiday-workbench workbench-selection" data-input-count="${selected.length}" data-input-limit="${count}">
+    <div class="workbench-load" aria-label="${task.type === 'order' ? 'Твой порядок' : 'Твоя загрузка'}">${Array.from({ length: count }, (_, index) => {
+      const item = selected[index];
+      const label = typeof item?.label === 'string' ? item.label.slice(0, 96) : '';
+      const control = interactive && item;
+      const tag = control ? 'button' : 'div';
+      const action = control ? ` type="button" data-action="task-toggle" data-focus="slot-${index}" data-value="${stageEscape(item.id)}" aria-label="Убрать ${task.type === 'order' ? 'шаг' : 'посылку'} ${index + 1}: ${stageEscape(label)}"` : '';
+      return `<${tag} class="workbench-parcel${item ? ' is-loaded' : ''}${control ? ' filled-slot' : ''}"${action}><span class="workbench-position">${index + 1}</span>${stageItemIcon(item)}<span class="workbench-item-label">${item ? stageEscape(label) : 'Свободно'}</span></${tag}>`;
+    }).join('')}</div>
+    <div class="workbench-runner" aria-hidden="true"><svg viewBox="0 0 400 32" aria-hidden="true" focusable="false"><path d="M14 6h354q25 0 19-3M36 6l-8 15m323-15-8 15M21 24h343q25 0 22-13" fill="none" stroke="#b68b56" stroke-width="5" stroke-linecap="round"/></svg></div>
+    <p class="workbench-status">${task.type === 'order' ? 'На столе' : 'В санях'}: ${selected.length} из ${count}. ${selected.length === count ? 'Можно проверить свой выбор.' : 'Добавляй предметы кнопками ниже.'}</p>
+  </div>`;
+}
+
+/** An input preview; full input stays a draft until the existing check action. */
+function holidayWorkbench(mission, input, interactive = false) {
+  const task = mission?.interaction;
+  if (!task) return '';
+  if (task.type === 'code') return stageCodeWorkbench(task, input);
+  if (task.type === 'order' || task.type === 'pick') return stageSelectionWorkbench(task, input, interactive);
+  // The switch puzzle already has lamps that respond to its current state.
+  return '';
+}
+
+/** The host owns the continue button and calls this after a genuine solve. */
+function stationReward(missions, progress) {
+  const state = stageState(missions, progress);
+  if (!['find', 'treasure', 'done'].includes(state.phase)
+    || !state.solved || stageStationIndex(state.tasks[state.index]) < 0
+    || !state.complete[state.current]) return '';
+  const station = stageStations[state.current];
+  return `<section class="station-reward" data-station="${state.current}">
+    <div class="reward-stamp" aria-hidden="true"><svg viewBox="0 0 110 100" aria-hidden="true" focusable="false"><rect x="11" y="9" width="87" height="81" rx="13" fill="#fff2cc" stroke="#b56b54" stroke-width="3" stroke-dasharray="3 5"/><circle cx="55" cy="49" r="28" fill="#e9dcc0" stroke="#b56b54" stroke-width="2"/><path d="m40 49 11 11 21-25" fill="none" stroke="#3d7966" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M27 77h56" stroke="#b56b54" stroke-width="3"/></svg></div>
+    <div><p class="reward-kicker">${station.title} · готово</p><h2>${station.celebration}</h2><p class="reward-fragment">Фрагмент адресной бирки ${state.current + 1} из 4 — в твоём пропуске.</p></div>
+  </section>`;
+}
+
+
+/** Pure, dependency-free quest generation. Treat all returned text as text, never HTML. */
 const LOCATIONS = Object.freeze([
   { id: 'books', title: 'Рядом с книгами', hint: 'Истории стоят плечом к плечу. Поищи у книг.', safety: 'Низкая доступная полка. Книги и тяжёлые предметы не двигать.' },
   { id: 'sofa', title: 'На диване', hint: 'Здесь удобно сидеть всей семьёй. Поищи под лёгкой диванной подушкой.', safety: 'Тайник под лёгкой подушкой. Диван не двигать и не разбирать.' },
@@ -1651,7 +2358,7 @@ function continueScreenQuest(quest, progress) {
 const app = document.querySelector('#app');
 document.body.classList.add('winter-ui');
 const printRoot = document.querySelector('#print-root');
-const RELEASE = { version: '1.11.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
+const RELEASE = { version: '1.12.0-beta.1', feedbackUrl: 'https://t.me/sfycus' };
 const IS_PURCHASED = document.body.dataset.sales === 'full';
 const IS_SHARED = document.body.dataset.shared === 'true';
 const DRAFT_KEY = 'bureau:draft:v1';
@@ -1749,6 +2456,7 @@ const drawings = {
 const icon = (id, cls='') => svg(drawings[id] || drawings.gift, cls);
 const brand = () => `<span class="brand-symbol">${svg('<path d="M6 10l12-4 13 5 11-4v31l-11 4-13-5-12 4zM18 6v31m13-26v31M21 20l7 9m0-9l-7 9"/>')}</span><span class="brand-name">Бюро находок<span class="brand-sub">новогодняя почта</span></span>`;
 function shell(content, mode='home') {
+  questAudio?.setScene({active:false});
   document.body.dataset.screen=mode;
   app.innerHTML=`${!storageAvailable ? '<div class="storage-notice">Сохранение доступно только в этой вкладке. Не закрывайте и не обновляйте вкладку.</div>' : ''}<div class="wrap"><header class="header"><button class="brand" data-action="home" aria-label="Бюро находок, на главную">${brand()}</button><div class="header-right"><span class="quiet beta-label">${IS_PURCHASED?'Полная версия':'Открытый тест · бесплатно'}</span>${IS_PURCHASED&&!IS_SHARED&&location.protocol!=='file:'?'<a class="text-button" href="/access">Моя покупка</a>':''}<button class="text-button" data-action="${mode==='home'?'create':'home'}">${mode==='home'?(draft.name?'Продолжить подготовку':'Собрать квест'):'На главную'}</button></div></header>${content}<footer class="footer"><span>Бюро находок · новогодние приключения дома</span><div class="footer-links">${RELEASE.feedbackUrl?`<a href="${escape(RELEASE.feedbackUrl)}" target="_blank" rel="noopener noreferrer">Оставить отзыв</a>`:'<button class="footer-button" data-action="beta-info">Об открытом тесте</button>'}<button class="footer-button" data-action="data-info">Как хранятся данные</button></div></footer></div>`;
 }
@@ -1863,8 +2571,8 @@ function winterVisual(mission){
   const v=mission.visual;if(!v||v.type==='none')return '';
   let content='',caption='';
   if(v.type==='legend'){
-    content=`<div class="toy-legend">${v.items.map(item=>`<div class="toy-tile">${winterTile(item)}</div>`).join('')}</div><div class="stamped-envelope"><span class="winter-board-label">Оттиски на письме · слева направо</span><div class="toy-target">${v.target.map(item=>`<div>${winterIcon(item)}<span class="visually-hidden">${winterEscape(item.label)}</span></div>`).join('')}</div></div>`;
-  }else if(v.type==='row')content=`<div class="toy-legend houses">${v.items.map(item=>`<div class="toy-tile">${winterTile(item)}</div>`).join('')}</div>`;
+    content=`<p class="inspect-instruction">Нажми на бирку, чтобы рассмотреть её ближе.</p><div class="toy-legend">${v.items.map((item,i)=>`<button type="button" class="toy-tile clue-tile" data-action="inspect-clue" data-clue="${i}" aria-label="Рассмотреть: ${winterEscape(item.label)}" aria-expanded="false" aria-controls="clue-detail">${winterTile(item)}</button>`).join('')}</div><div id="clue-detail" class="clue-detail" role="status" hidden></div><div class="stamped-envelope"><span class="winter-board-label">Оттиски на письме · слева направо</span><div class="toy-target">${v.target.map(item=>`<div>${winterIcon(item)}<span class="visually-hidden">${winterEscape(item.label)}</span></div>`).join('')}</div></div>`;
+  }else if(v.type==='row')content=`<p class="inspect-instruction">Нажми на домик, чтобы рассмотреть детали.</p><div class="toy-legend houses">${v.items.map((item,i)=>`<button type="button" class="toy-tile clue-tile" data-action="inspect-clue" data-clue="${i}" aria-label="Рассмотреть: ${winterEscape(item.label)}" aria-expanded="false" aria-controls="clue-detail">${winterTile(item)}</button>`).join('')}</div><div id="clue-detail" class="clue-detail" role="status" hidden></div>`;
   else if(v.type==='envelope')content=`<div class="stamped-envelope"><span class="winter-board-label">Картинки вместо адреса</span><div class="toy-target">${v.symbols.map(kind=>winterIcon({kind})).join('')}</div></div>`;
   else if(v.type==='garland')content=`<div class="toy-garland">${v.items.map(item=>`<span>${winterIcon(item)}<span class="visually-hidden">${winterEscape(item.label)}; </span></span>`).join('')}<span class="missing-toy" aria-label="Пустое место">?</span></div>`;
   else if(v.type==='shadow')content=`<div class="shadow-tag">${winterIcon(v.item)}</div>`;
@@ -1880,6 +2588,17 @@ function winterVisual(mission){
   else if(v.type==='torn')content=`<div class="winter-mini-scene">${winterIcon({kind:'envelope'})}<span>Адрес снова станет целым</span></div>`;
   else content=`<div class="winter-mini-scene">${winterIcon({kind:v.type==='sleigh'?'sleigh':'gift'})}</div>`;
   return `<div class="winter-puzzle-board">${content}${caption}</div>`;
+}
+function winterClueDetail(mission,index){
+  const visual=mission.visual;if(!['legend','row'].includes(visual?.type)||!Number.isInteger(index)||index<0||index>=visual.items.length)return '';
+  return `<div class="inspected-toy">${winterTile(visual.items[index])}</div><span>Нажми на эту картинку ещё раз или выбери другую.</span>`;
+}
+function inspectWinterClue(mission,target){
+  const detail=document.querySelector('#clue-detail');if(!detail)return;
+  const open=target.getAttribute('aria-expanded')!=='true',html=winterClueDetail(mission,Number(target.dataset.clue));
+  if(!html)return;
+  for(const button of document.querySelectorAll?.('[data-action="inspect-clue"]')||[])button.setAttribute('aria-expanded','false');
+  target.setAttribute('aria-expanded',String(open));detail.hidden=!open;detail.innerHTML=open?html:'';
 }
 function winterDescription(item){
   if(!item)return '';
@@ -1915,7 +2634,7 @@ function winterControls(mission,value){
     const lamps=[...task.initial];for(const id of value){const item=task.items.find(item=>item.id===id);if(item)for(const index of item.mask)lamps[index]=!lamps[index];}
     return `<div class="switch-puzzle"><div class="switch-lamps" aria-live="polite">${lamps.map((on,i)=>`<span class="switch-lamp ${on?'lit':''}" role="img" aria-label="${['Левая','Средняя','Правая'][i]} лампа ${on?'горит':'не горит'}">${winterIcon({kind:'ball',color:on?'gold':'blue'})}<small>${on?'Горит':'Не горит'}</small></span>`).join('')}</div><p class="lamp-status" role="status">${lamps.every(Boolean)?'Все три горят — можно проверить!':`Горят ${lamps.filter(Boolean).length} из 3`}</p><div class="switch-buttons">${task.items.map(item=>`<button class="button paper" type="button" data-action="task-toggle" data-focus="switch-${item.id}" data-value="${item.id}" aria-pressed="${value.includes(item.id)}"><b>${winterEscape(item.label)}</b><span>${item.mask.map(n=>['Левая','Средняя','Правая'][n]).join(' + ')}</span></button>`).join('')}</div><button class="button" type="button" data-action="task-check">Проверить гирлянду</button></div>`;
   }
-  return `<div class="sequence-puzzle"><p class="sequence-instruction">${task.type==='order'?'Нажимай по порядку. Чтобы убрать шаг, нажми на него ещё раз.':`Отметь ${task.count} посылки. Повторное нажатие снимает отметку.`}</p>${task.type==='order'?`<div class="sequence-slots" aria-label="Твой порядок" aria-live="polite">${Array.from({length:task.count},(_,i)=>{const item=task.items.find(item=>item.id===value[i]);return item?`<button type="button" class="filled-slot" data-action="task-toggle" data-focus="slot-${i}" data-value="${item.id}" aria-label="Убрать шаг ${i+1}: ${winterEscape(item.label)}"><span class="slot-number">${i+1}</span><span>${winterEscape(item.label)}</span></button>`:`<span class="empty-slot"><span>${i+1}</span></span>`;}).join('')}</div>`:''}<p class="task-progress" aria-live="polite">${task.type==='order'?'Собрано шагов':'Выбрано посылок'}: ${value.length} из ${task.count}</p><div class="task-items">${task.items.map(item=>`<button type="button" class="task-item ${value.includes(item.id)?'selected':''}" data-focus="item-${item.id}" data-action="task-toggle" data-value="${item.id}" aria-pressed="${value.includes(item.id)}">${winterTile(item)}${value.includes(item.id)?`<span class="item-selected">${task.type==='order'?'Шаг '+(value.indexOf(item.id)+1):'Выбрано'}</span>`:''}</button>`).join('')}</div><div class="task-submit-row"><button type="button" class="button" data-action="task-check">${task.type==='pick'?'Проверить посылки':'Проверить порядок'}</button><button type="button" class="text-button undo-task" data-action="task-undo" data-focus="undo" ${value.length?'':'disabled'}>${task.type==='order'?'Убрать последний шаг':'Снять последнюю отметку'}</button><button type="button" class="text-button" data-action="task-clear" data-focus="reset">Сначала</button></div></div>`;
+  return `<div class="sequence-puzzle"><p class="sequence-instruction">${task.type==='order'?'Нажимай по порядку. Чтобы убрать шаг, нажми на него ещё раз.':`Отметь ${task.count} посылки. Повторное нажатие снимает отметку.`}</p><p class="task-progress" aria-live="polite">${task.type==='order'?'Собрано шагов':'Выбрано посылок'}: ${value.length} из ${task.count}</p><div class="task-items">${task.items.map(item=>`<button type="button" class="task-item ${value.includes(item.id)?'selected':''}" data-focus="item-${item.id}" data-action="task-toggle" data-value="${item.id}" aria-pressed="${value.includes(item.id)}">${winterTile(item)}${value.includes(item.id)?`<span class="item-selected">${task.type==='order'?'Шаг '+(value.indexOf(item.id)+1):'Выбрано'}</span>`:''}</button>`).join('')}</div><div class="task-submit-row"><button type="button" class="button" data-action="task-check">${task.type==='pick'?'Проверить посылки':'Проверить порядок'}</button><button type="button" class="text-button undo-task" data-action="task-undo" data-focus="undo" ${value.length?'':'disabled'}>${task.type==='order'?'Убрать последний шаг':'Снять последнюю отметку'}</button><button type="button" class="text-button" data-action="task-clear" data-focus="reset">Сначала</button></div></div>`;
 }
 function missionReadingText(mission,value){
   const v=mission.visual,task=mission.interaction,parts=[mission.title,mission.prompt];
@@ -2080,7 +2799,11 @@ function createPassportSaver(){
 
 // HOLIDAY_RENDERER_END
 
-const questReader=createQuestReader({onChange:syncReaderControls});
+const questAudio=createHolidayAudio({volume:Math.max(0,Math.min(1,Number(storage.get('bureau:music-volume:v1')??0.32))),onChange:syncQuestAudio});
+const questReader=createQuestReader({onChange(state,kind){syncReaderControls(state,kind);syncQuestSoundscape();}});
+function syncQuestAudio(state){const root=document.querySelector('#quest-audio');if(!root||document.activeElement?.name==='music-volume')return;const focused=document.activeElement?.dataset?.action==='music-toggle';root.innerHTML=holidayAudioControls(state);if(focused)root.querySelector('[data-action="music-toggle"]')?.focus({preventScroll:true});}
+function syncQuestSoundscape(){questAudio.setScene({station:quest?.missions[progress?.index]?.station?.index||0,active:document.body.dataset.screen==='game'&&!!progress&&!['intro','done'].includes(progress.phase)&&!document.hidden&&!document.querySelector('.dialog-backdrop'),ducked:questReader.state().speaking});}
+function syncWorkbench(mission){const root=document.querySelector('#live-workbench');if(root)root.innerHTML=holidayWorkbench(mission,puzzleInput(mission,progress),true);}
 let readerContext='';
 const passportSaver=createPassportSaver();
 function answerRecap(m,open=false){return `<details class="answer-recap" ${open?'open':''}><summary>Загадка разгадана · посмотреть решение</summary><p><b>${escape(m.choices[m.answerIndex])}</b></p><p>${escape(m.explanation)}</p>${m.station?`<p class="stamp-story">${escape(m.station.reward)}</p>`:''}</details>`;}
@@ -2090,8 +2813,9 @@ function gameFrame(content) {
   const solved=['treasure','done'].includes(progress.phase)?count:progress.index+(progress.phase==='find'?1:0);
   const screen=isScreenMode(quest.config);
   const caption=isDemo?'Пробная игра: подарок готовить не нужно.':progress.phase==='done'?'Игра завершена. Можно создать новый квест с другим сюрпризом.':progress.phase==='treasure'?'Проверь указанный тайник вместе со взрослым.':screen?'Играем на экране. Место подарка откроется в финале.':'Ищем карточки спокойно. Взрослый остаётся рядом.';
-  app.innerHTML=`${!storageAvailable?'<div class="storage-notice">Сохранение доступно только в этой вкладке. Не закрывайте и не обновляйте вкладку.</div>':''}<div class="game-shell"><header class="game-header"><div><span class="game-wordmark">Бюро находок</span>${isDemo?'<span class="game-demo">Пробная игра</span>':''}</div><div class="game-tools"><button class="game-tool" data-action="reading-size" aria-pressed="${largeReading}">${largeReading?'Обычный текст':'Крупный текст'}</button><button class="game-tool" data-action="game-help">Как играть</button>${progress.phase!=='done'?'<button class="game-tool" data-action="pause">Пауза</button>':''}</div></header><main class="game-main"><div class="game-topline"><span class="quiet">Разгадано: ${solved} из ${count}</span><div class="dots" aria-label="Разгадано загадок: ${solved} из ${count}">${Array.from({length:count},(_,i)=>`<span class="dot ${i<solved?'complete':i===progress.index?'active':''}"></span>`).join('')}</div></div>${quest.config.edition===3&&quest.config.theme==='winter'?winterPassport(quest.missions,solved):''}${content}<p class="game-caption">${caption}</p></main></div>`;
+  app.innerHTML=`${!storageAvailable?'<div class="storage-notice">Сохранение доступно только в этой вкладке. Не закрывайте и не обновляйте вкладку.</div>':''}<div class="game-shell"><div class="snowfall" aria-hidden="true"><i></i><i></i><i></i></div><header class="game-header"><div><span class="game-wordmark">Бюро находок</span>${isDemo?'<span class="game-demo">Демо · 4 задания</span>':''}<span class="game-build">${RELEASE.version.replace('-beta.1','')}</span></div><div class="game-tools"><button class="game-tool" data-action="reading-size" aria-pressed="${largeReading}">${largeReading?'Обычный текст':'Крупный текст'}</button><button class="game-tool" data-action="game-help">Как играть</button>${progress.phase!=='done'?'<button class="game-tool" data-action="pause">Пауза</button>':''}</div></header><main class="game-main"><div id="quest-audio" class="quest-audio">${holidayAudioControls(questAudio.state())}</div>${quest.config.edition===3&&quest.config.theme==='winter'?holidayStage(quest.missions,progress):''}<div class="game-topline"><span class="quiet">Разгадано: ${solved} из ${count}</span><div class="dots" aria-label="Разгадано загадок: ${solved} из ${count}">${Array.from({length:count},(_,i)=>`<span class="dot ${i<solved?'complete':i===progress.index?'active':''}"></span>`).join('')}</div></div>${quest.config.edition===3&&quest.config.theme==='winter'?winterPassport(quest.missions,solved):''}${content}<p class="game-caption">${caption}</p></main></div>`;
   document.querySelector('.game-card h1, .game-card h2')?.setAttribute('tabindex','-1');
+  syncQuestSoundscape();
 }
 function renderGame(focus=false) {
   const nextContext=`${quest.id}:${progress.index}:${progress.phase}`;if(nextContext!==readerContext){questReader.stop();readerContext=nextContext;}
@@ -2106,17 +2830,17 @@ function renderGame(focus=false) {
     const attempts=m.interaction?(progress.taskAttempts?.[progress.index]||0):tried.length;
     const feedback=attempts>=2?'Давай воспользуемся подсказкой. Можно также разобрать задачу вместе со взрослым.':attempts?'Предыдущий ответ не подошёл. Можно изменить его и проверить ещё раз.':'';
     const legacyFeedback=tried.length===1?'Этот вариант уже проверили. Попробуй другой или открой подсказку.':feedback;
-    gameFrame(`<article class="game-card ${m.station?'holiday-game-card':''}">${m.station?m.station.step===1?`<div class="courier-note"><div class="courier-portrait">${winterIcon({kind:'bird'})}</div><div><span class="courier-label">Снегирь на связи</span><p>${escape(m.station.story)}</p></div></div>`:`<p class="courier-mini">${escape(m.station.story)}</p>`:''}<span class="eyebrow red">${m.station?escape(m.station.title)+' · ':''}Загадка ${progress.index+1}</span><h1>${escape(m.title)}</h1>${readAloudControls()}<p class="game-prompt">${escape(m.prompt)}</p>${winterVisual(m)}<p class="feedback attempt-feedback" id="answer-feedback" tabindex="-1" role="status" aria-live="polite">${escape(m.interaction?feedback:legacyFeedback)}</p>${m.interaction?winterControls(m,puzzleInput(m,progress)):winterChoices(m,tried)}<div class="puzzle-help-area"><div class="puzzle-help"><button class="hint-button" data-action="hint" aria-expanded="${isHintOpen(progress,progress.index)}" aria-controls="mission-hint">${isHintOpen(progress,progress.index)?'Скрыть подсказку':'Нужна подсказка?'}</button><button class="hint-button" data-action="assist">Разобрать вместе</button></div><p class="hint-text" id="mission-hint" ${isHintOpen(progress,progress.index)?'':'hidden'}>${escape(m.hint)}</p>${hintReadingControls(isHintOpen(progress,progress.index))}</div></article>`);
+    gameFrame(`<article class="game-card ${m.station?'holiday-game-card':''}">${m.station?m.station.step===1?`<div class="courier-note"><div class="courier-portrait">${winterIcon({kind:'bird'})}</div><div><span class="courier-label">Снегирь на связи</span><p>${escape(m.station.story)}</p></div></div>`:`<p class="courier-mini">${escape(m.station.story)}</p>`:''}<span class="eyebrow red">${m.station?escape(m.station.title)+' · ':''}Загадка ${progress.index+1}</span><h1>${escape(m.title)}</h1>${readAloudControls()}<p class="game-prompt">${escape(m.prompt)}</p>${winterVisual(m)}<div id="live-workbench">${holidayWorkbench(m,puzzleInput(m,progress),true)}</div><p class="feedback attempt-feedback" id="answer-feedback" tabindex="-1" role="status" aria-live="polite">${escape(m.interaction?feedback:legacyFeedback)}</p>${m.interaction?winterControls(m,puzzleInput(m,progress)):winterChoices(m,tried)}<div class="puzzle-help-area"><div class="puzzle-help"><button class="hint-button" data-action="hint" aria-expanded="${isHintOpen(progress,progress.index)}" aria-controls="mission-hint">${isHintOpen(progress,progress.index)?'Скрыть подсказку':'Нужна подсказка?'}</button><button class="hint-button" data-action="assist">Разобрать вместе</button></div><p class="hint-text" id="mission-hint" ${isHintOpen(progress,progress.index)?'':'hidden'}>${escape(m.hint)}</p>${hintReadingControls(isHintOpen(progress,progress.index))}</div></article>`);
   } else if(progress.phase==='find') {
     if(screen) {
-      gameFrame(`<article class="game-card answer-success"><div class="answer-tick" aria-hidden="true">✓</div><span class="eyebrow red">Загадка ${progress.index+1} разгадана</span><h1>${m.station?'Печать получена!':'Верно!'}</h1>${m.station?`<div class="earned-stamp">${winterIcon({kind:['envelope','tree','gift','sleigh'][m.station.index]})}<b>${escape(m.station.stamp)}</b></div><p class="stamp-story">${escape(m.station.reward)}</p>`:''}<p class="correct-answer">Ответ: <b>${escape(m.choices[m.answerIndex])}</b></p><p class="answer-explanation">${escape(m.explanation)}</p><p class="success-next-note">Впереди ещё ${quest.missions.length-progress.index-1} ${pluralWord(quest.missions.length-progress.index-1,'загадка','загадки','загадок')}. Продолжаем?</p><button class="button" data-action="next-screen">Следующая загадка</button></article>`);
+      gameFrame(`<article class="game-card answer-success">${stationReward(quest.missions,progress)}<div class="answer-tick" aria-hidden="true">✓</div><span class="eyebrow red">Загадка ${progress.index+1} разгадана</span><h1>${m.station?(m.station.isLast?'Фрагмент найден!':'Посылка готова!'):'Верно!'}</h1>${m.station?`<div class="earned-stamp">${winterIcon({kind:['envelope','tree','gift','sleigh'][m.station.index]})}<b>${escape(m.station.stamp)}</b></div><p class="stamp-story">${escape(m.station.reward)}</p>`:''}<p class="correct-answer">Ответ: <b>${escape(m.choices[m.answerIndex])}</b></p><p class="answer-explanation">${escape(m.explanation)}</p><p class="success-next-note">Впереди ещё ${quest.missions.length-progress.index-1} ${pluralWord(quest.missions.length-progress.index-1,'загадка','загадки','загадок')}. Продолжаем?</p><button class="button" data-action="next-screen">Следующая загадка</button></article>`);
     } else {
     const p=place(m.locationId);
     gameFrame(`<article class="game-card">${answerRecap(m)}<span class="eyebrow red">Верно! Вот следующая зацепка</span>${icon(p.id,'location-symbol')}<h1>${escape(p.title)}</h1><p class="game-prompt">${escape(p.hint)}</p>${isDemo?'<div class="notice">В настоящем квесте здесь будет карточка с кодом. Сейчас её можно пропустить.</div><button class="button" data-action="demo-card">Продолжить без карточки</button>':`<p>Найди там карточку № ${progress.index+1}. На ней четыре цифры.</p><form id="code-form" novalidate><label for="card-code" class="label" style="text-align:center;margin-top:24px">Код с карточки</label><input class="input game-code" id="card-code" name="code" type="text" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" aria-describedby="code-feedback" placeholder="····"><p class="feedback" style="text-align:center" id="code-feedback" role="status" aria-live="polite"></p><button class="button" type="submit">Проверить код</button></form>`}</article>`);
     }
   } else if(progress.phase==='treasure') {
     const p=place(m.locationId);
-    gameFrame(`<article class="game-card"><span class="eyebrow red">Последняя загадка разгадана</span>${icon('gift','location-symbol')}<h1>${isDemo?'Здесь будет<br>подарок':'Сюрприз ждёт!'}</h1><h2>${escape(p.title)}</h2>${isDemo?'':`<p class="game-prompt">${escape(p.hint)}</p>`}${quest.config.giftNote?`<p class="hint-text">${escape(quest.config.giftNote)}</p>`:''}${holiday?answerRecap(m,true)+winterPassport(quest.missions,quest.missions.length,true,false)+'<p class="restored-address">Все печати собраны · адрес восстановлен</p>':''}<p>${isDemo?'Это пример финального тайника. В вашей игре здесь будет место, которое выберет взрослый. Настоящий подарок искать сейчас не нужно.':screen?'Все загадки решены! Поищи подарок в указанном месте и возвращайся.':'Больше кодов не нужно. Найди свой подарок и возвращайся!'}</p><button class="button red-button" data-action="finish">${isDemo?'Завершить пробную игру':'Подарок найден!'}</button></article>`);
+    gameFrame(`<article class="game-card"><span class="eyebrow red">Последняя загадка разгадана</span>${icon('gift','location-symbol')}<h1>${isDemo?'Здесь будет<br>подарок':'Сюрприз ждёт!'}</h1><h2>${escape(p.title)}</h2>${isDemo?'':`<p class="game-prompt">${escape(p.hint)}</p>`}${quest.config.giftNote?`<p class="hint-text">${escape(quest.config.giftNote)}</p>`:''}${holiday?stationReward(quest.missions,progress)+answerRecap(m,true)+winterPassport(quest.missions,quest.missions.length,true,false)+'<p class="restored-address">Все печати собраны · адрес восстановлен</p>':''}<p>${isDemo?'Это пример финального тайника. В вашей игре здесь будет место, которое выберет взрослый. Настоящий подарок искать сейчас не нужно.':screen?'Все загадки решены! Поищи подарок в указанном месте и возвращайся.':'Больше кодов не нужно. Найди свой подарок и возвращайся!'}</p><button class="button red-button" data-action="finish">${isDemo?'Завершить пробную игру':'Подарок найден!'}</button></article>`);
   } else if(isDemo) {
     gameFrame(`<article class="game-card ending"><div class="success-ribbon" aria-hidden="true">✦ ✦ ✦</div><span class="eyebrow">Пробный маршрут пройден</span><h1>Теперь —<br>ваше приключение</h1>${completionSummary(quest.missions,progress)}<p class="game-prompt">Вы попробовали загадки на экране. Теперь можно создать свою игру: без карточек или с поиском по домашним тайникам.</p><button class="button" data-action="create">Собрать свой квест</button><button class="hint-button" data-action="demo-restart">Попробовать ещё раз</button><button class="hint-button" data-action="home">На главную</button></article>`);
   } else {
@@ -2202,6 +2926,7 @@ async function copyLink(){
   catch{if(canPresent()){showDialog('Ссылка на квест',isLocalAddress()?'Эта ссылка работает только на этом компьютере. Для другого устройства скачайте файл игры.':'Выделите и скопируйте ссылку. Она содержит имя, маршрут и финальную записку.',`<label class="label" for="share-url">Ссылка для участников</label><input id="share-url" class="input" value="${escape(url.href)}" readonly><div class="actions"><button class="button" data-action="close-dialog">Готово</button></div>`);document.querySelector('#share-url')?.select();}}
 }
 function showDialog(title,text,controls){
+  questAudio.setScene({active:false});
   closeDialog();lastFocus=document.activeElement;
   const wrap=document.createElement('div');wrap.className='dialog-backdrop';wrap.innerHTML=`<section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-title"><h2 id="dialog-title">${escape(title)}</h2><p>${escape(text)}</p>${controls}</section>`;
   document.body.append(wrap);wrap.querySelector('button,input')?.focus();
@@ -2210,6 +2935,8 @@ function closeDialog(){const dialog=document.querySelector('.dialog-backdrop');i
 function handleAction(target){
   const action=target.dataset.action;
   if(IS_SHARED&&['create','new-quest','confirm-new-quest','return-setup','prepare','play','print','download','copy-link','restart-prepared','preview-question','preview-answer','shuffle-puzzles','confirm-shuffle','remember-format','forget-format'].includes(action)){notify('Подготовка доступна взрослому в его покупке. Продолжайте играть по семейной ссылке.');return;}
+  if(action==='music-toggle'){questAudio.setEnabled(!questAudio.state().enabled).then(()=>syncQuestSoundscape());return;}
+  if(action==='inspect-clue'&&progress?.phase==='puzzle'){inspectWinterClue(quest.missions[progress.index],target);return;}
   if(action==='passport'&&quest){questReader.stop();const solved=['treasure','done'].includes(progress.phase)?quest.missions.length:progress.index+(progress.phase==='find'?1:0);showDialog('Твой почтовый пропуск','Четыре станции — четыре части потерянной адресной бирки.',winterPassport(quest.missions,solved,true)+'<button class="button" data-action="close-dialog">Продолжить приключение</button>');const heading=document.querySelector('.dialog h2');heading?.setAttribute('tabindex','-1');heading?.focus({preventScroll:true});const dialog=document.querySelector('.dialog');if(dialog)dialog.scrollTop=0;return;}
   if(action==='save-passport'&&quest){const completed=['treasure','done'].includes(progress.phase)?quest.missions.length:progress.index+(progress.phase==='find'?1:0);return passportSaver.save(quest.missions,completed,target,document.querySelector('#'+target.dataset.exportStatus));}
   if(action==='read-hint'&&progress?.phase==='puzzle'&&isHintOpen(progress,progress.index)){questReader.toggle('Подсказка. '+quest.missions[progress.index].hint,'hint');return;}
@@ -2268,7 +2995,7 @@ function handleAction(target){
     const mission=quest.missions[progress.index],task=mission.interaction;if(!task)return;
     let value=puzzleInput(mission,progress);
     if(action==='task-check'){
-      const result=attemptTask(quest,progress);progress=result.progress;saveProgress();renderGame(result.correct);
+      const result=attemptTask(quest,progress);progress=result.progress;if(result.correct)questAudio.celebrate({stationComplete:!!quest.missions[progress.index]?.station?.isLast});saveProgress();renderGame(result.correct);
       if(result.incomplete){const feedback=document.querySelector('#answer-feedback');feedback.textContent=task.type==='code'?`Нужно ввести ${task.length} цифры. Пока код не полный.`:`Сначала выбери все элементы: ${task.count}.`;feedback.focus();}
       else if(!result.correct)document.querySelector('#answer-feedback')?.focus();
       return;
@@ -2289,7 +3016,7 @@ function handleAction(target){
   if(action==='answer'){
     if(quest.missions[progress.index]?.interaction)return;
     const result=attemptMission(quest,progress,Number(target.dataset.answer));
-    progress=result.progress;saveProgress();renderGame(result.correct);
+    progress=result.progress;if(result.correct)questAudio.celebrate({stationComplete:!!quest.missions[progress.index]?.station?.isLast});saveProgress();renderGame(result.correct);
     if(!result.correct)document.querySelector('#answer-feedback')?.focus();
     return;
   }
@@ -2304,10 +3031,10 @@ function handleAction(target){
   if(action==='pause'){questReader.stop();showDialog('Игра на паузе',storageAvailable?'Прогресс сохраняется в этом браузере. Можно сделать перерыв и вернуться по той же ссылке.':'Прогресс хранится в памяти этой вкладки. Можно вернуться на главную и снова открыть ту же игру. Не закрывайте и не обновляйте вкладку.',`<div class="actions"><button class="button" data-action="close-dialog">Продолжить игру</button><button class="text-button" data-action="home">На главную</button>${!isDemo&&!IS_SHARED?'<button class="text-button" data-action="return-setup">Подготовка для взрослого</button>':''}</div>`);return;}
   if(action==='beta-info'){showDialog('Открытый тест', 'В тестовой версии все функции бесплатны. Попробуйте подготовить квест и пройти его с ребёнком. После игры расскажите тому, кто пригласил вас в тест: был ли понятен запуск, подошла ли сложность и на каком устройстве вы играли. Если что-то не сработало, опишите последний успешный шаг. Имя ребёнка и ссылку на его квест присылать не нужно.', '<button class="button" data-action="close-dialog">Понятно</button>');return;}
   if(action==='data-info'){showDialog('Как хранятся данные', 'Приложение хранит имя или прозвище, настройки и прогресс в вашем браузере. Оно не отправляет введённые данные на сервер. Ссылка и скачанный файл содержат имя, место подарка или маршрут и финальную записку — передавайте их только участникам игры. Достаточно прозвища; фамилия и адрес не нужны. Очистка данных браузера может удалить сохранения. При предупреждении о недоступном сохранении не закрывайте и не обновляйте вкладку.', '<button class="button" data-action="close-dialog">Понятно</button>');return;}
-  if(action==='close-dialog'){closeDialog();return;}
+  if(action==='close-dialog'){closeDialog();syncQuestSoundscape();return;}
 }
 document.addEventListener('click',event=>{const target=event.target.closest('[data-action]');if(!target||target.disabled)return;event.preventDefault();handleAction(target);});
-app.addEventListener('input',event=>{const target=event.target;if(target.name==='puzzle-code'&&progress?.phase==='puzzle'){progress=setPuzzleInput(quest,progress,target.value);target.value=puzzleInput(quest.missions[progress.index],progress);const counter=document.querySelector('#task-progress');if(counter)counter.textContent=`Набрано ${target.value.length} из ${quest.missions[progress.index].interaction.length}`;saveProgress();return;}if(['child-name','gift-note'].includes(target.name)){updateDraftField(target);syncSidebar();target.removeAttribute('aria-invalid');document.querySelector(target.name==='gift-note'?'#note-error':'#name-error').textContent='';}});
+app.addEventListener('input',event=>{const target=event.target;if(target.name==='music-volume'){const volume=Number(target.value)/100;questAudio.setVolume(volume);storage.set('bureau:music-volume:v1',volume);return;}if(target.name==='puzzle-code'&&progress?.phase==='puzzle'){progress=setPuzzleInput(quest,progress,target.value);target.value=puzzleInput(quest.missions[progress.index],progress);const counter=document.querySelector('#task-progress');if(counter)counter.textContent=`Набрано ${target.value.length} из ${quest.missions[progress.index].interaction.length}`;syncWorkbench(quest.missions[progress.index]);saveProgress();return;}if(['child-name','gift-note'].includes(target.name)){updateDraftField(target);syncSidebar();target.removeAttribute('aria-invalid');document.querySelector(target.name==='gift-note'?'#note-error':'#name-error').textContent='';}});
 app.addEventListener('change',event=>{
   const target=event.target;
   if(['age','theme'].includes(target.name)){updateDraftField(target);syncSidebar();}
@@ -2332,12 +3059,12 @@ app.addEventListener('submit',event=>{
 });
 document.addEventListener('keydown',event=>{
   const dialog=document.querySelector('.dialog-backdrop');if(!dialog)return;
-  if(event.key==='Escape'){event.preventDefault();closeDialog();}
+  if(event.key==='Escape'){event.preventDefault();closeDialog();syncQuestSoundscape();}
   if(event.key==='Tab'){const items=[...dialog.querySelectorAll('button,a,input,select,textarea,summary,[tabindex]')].filter(el=>!el.disabled&&el.getAttribute('tabindex')!=='-1'&&(!el.getClientRects||el.getClientRects().length>0));if(!items.length){event.preventDefault();return;}const first=items[0],last=items.at(-1);if(!items.includes(document.activeElement)){event.preventDefault();(event.shiftKey?last:first).focus();}else if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}
 });
 window.addEventListener('hashchange',route);
-window.addEventListener('pagehide',()=>questReader.stop());
-document.addEventListener('visibilitychange',()=>{if(document.hidden)questReader.stop();});
+window.addEventListener('pagehide',()=>{questReader.stop();questAudio.stop();});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)questReader.stop();syncQuestSoundscape();});
 if(document.body.dataset.startQuest&&!location.hash)history.replaceState(null,'','#play='+document.body.dataset.startQuest);
 route();
 </script>
