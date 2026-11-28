@@ -88,9 +88,9 @@
 }
 .adventure-layout {
   display: grid;
-  grid-template-columns: minmax(0, .88fr) minmax(0, 1.12fr);
+  grid-template-columns: minmax(0, .78fr) minmax(0, 1.22fr);
   align-items: start;
-  gap: 25px;
+  gap: 30px;
   min-width: 0;
 }
 .adventure-world { min-width: 0; position: sticky; top: 22px; }
@@ -290,26 +290,16 @@
 .adventure-desk {
   position: relative;
   min-width: 0;
-  padding: 18px;
-  background:
-    repeating-linear-gradient(0deg, #461f1600 0 65px, #4c241c4f 66px, #edbc6a1a 68px, #58281d00 71px),
-    repeating-linear-gradient(91deg, #d28e4912 0 2px, #3f1d150d 3px 7px, transparent 8px 17px),
-    linear-gradient(100deg, #77422c, #8b5031 52%, #643723);
-  border: 1px solid #b7834e;
-  border-radius: 15px;
-  box-shadow: inset 0 0 0 4px #512f2240, 0 7px 0 #061f1b, 0 20px 45px #061b1752;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
-.adventure-desk::before {
-  content: '';
-  position: absolute;
-  inset: 7px;
-  border: 1px solid #d6a3604d;
-  border-radius: 9px;
-  pointer-events: none;
-}
+.adventure-desk::before { display: none; }
 .winter-ui .storybook-game .adventure-desk .game-topline,
 .demo-view .adventure-desk .game-topline {
-  margin: 0 2px 14px;
+  margin: 0 3px 15px;
   min-height: 26px;
   gap: 12px;
   color: #fff0d2;
@@ -328,17 +318,14 @@
 .demo-view .adventure-desk.game-card {
   position: relative;
   min-height: 540px;
-  padding: 31px 31px 34px;
+  padding: clamp(26px, 3.4vw, 48px);
   margin: 0;
-  border: 1px solid #e3c48e;
-  border-radius: 5px 5px 9px 9px;
+  border: 1px solid #d8cba8;
+  border-radius: 14px;
   overflow: hidden;
   color: var(--story-ink);
-  background:
-    radial-gradient(ellipse at 12% 10%, #fffef3b3, transparent 55%),
-    repeating-linear-gradient(1deg, #ba935807 0 1px, transparent 1px 5px),
-    #fff0cf;
-  box-shadow: 0 3px 0 #47291e, inset 0 0 38px #b5792920, 0 8px 18px #37160f2b;
+  background: #fff7e5;
+  box-shadow: 0 14px 36px #061b1740;
 }
 .winter-ui[data-screen="game"] .storybook-game .game-card::before,
 .demo-view .adventure-layout .game-card::before {
@@ -348,7 +335,7 @@
   right: 0;
   top: 0;
   width: auto;
-  height: 7px;
+  height: 4px;
   border-radius: 0;
   transform: none;
   background: repeating-linear-gradient(125deg, #a2382a 0 19px, #fff1d0 19px 30px, #426455 30px 49px, #fff1d0 49px 60px);
@@ -356,21 +343,21 @@
 .winter-ui[data-screen="game"] .storybook-game .adventure-layout .game-card h1,
 .demo-view .adventure-layout .game-card h1,
 .demo-view .adventure-desk h1 {
-  font: 700 clamp(32px, 3vw, 43px)/1.08 var(--story-serif);
+  font: 700 clamp(32px, 3vw, 42px)/1.14 var(--story-serif);
   letter-spacing: -.035em;
   color: #333d2c;
-  margin: 15px 0 18px;
+  margin: 14px 0 20px;
   text-wrap: balance;
 }
 .winter-ui .storybook-game .adventure-layout .game-card h2,
 .demo-view .adventure-layout .game-card h2 { font-family: var(--story-serif); color: #3d4935; letter-spacing: -.025em; }
 .winter-ui .storybook-game .adventure-layout .eyebrow,
-.demo-view .adventure-layout .eyebrow { color: #9b3528; font-size: 11px; font-weight: 800; letter-spacing: .1em; }
+.demo-view .adventure-layout .eyebrow { color: #8e3c35; font-size: 12px; font-weight: 750; letter-spacing: .08em; }
 .winter-ui[data-screen="game"] .storybook-game .adventure-layout .game-card > .game-prompt,
 .demo-view .adventure-layout .demo-prompt {
-  margin: 0 0 21px;
-  max-width: none;
-  font: 400 19px/1.65 var(--story-sans);
+  margin: 0 0 24px;
+  max-width: 58ch;
+  font: 400 18px/1.65 var(--story-sans);
   color: #454532;
 }
 .winter-ui .storybook-game .adventure-layout .game-card > p:not(.game-prompt),
@@ -380,32 +367,32 @@
   display: grid;
   grid-template-columns: 60px minmax(0, 1fr);
   gap: 12px;
-  padding: 10px 13px;
+  padding: 12px 14px;
   min-height: 80px;
-  margin: -3px 0 21px;
-  border: 1px solid #c3c4a0;
-  border-left: 4px solid #7b8b5c;
-  border-radius: 4px 9px 9px 4px;
-  background: #e9e9cf;
-  box-shadow: inset 0 1px 0 #fffaf0;
+  margin: -3px 0 25px;
+  border: 0;
+  border-left: 2px solid #84977e;
+  border-radius: 0 8px 8px 0;
+  background: #edf0df;
+  box-shadow: none;
   text-align: left;
 }
 .adventure-layout .courier-portrait { width: 60px; height: 60px; border: 1px solid #c8b47b; border-radius: 50%; background: #fff3d0; }
 .adventure-layout .courier-portrait .winter-icon { width: 60px; height: 60px; }
-.adventure-layout .courier-label { color: #4d653d; font-size: 11px; letter-spacing: .08em; }
+.adventure-layout .courier-label { color: #4d653d; font-size: 12px; letter-spacing: .06em; }
 .adventure-layout .courier-note p { margin: 4px 0 0; color: #4b573e; font-size: 15px; line-height: 1.5; }
 .winter-ui .storybook-game .adventure-layout .game-card .courier-mini { border-left-color: #8c9968; color: #5c6349; font-size: 16px; }
 .adventure-layout .read-aloud-controls { margin: -2px 0 12px; gap: 8px; }
 .adventure-layout .read-aloud-controls .text-button {
-  background: #f5e4bb;
-  border-color: #cbb17e;
+  background: transparent;
+  border-color: #c9c3a5;
   color: #575d3e;
   min-height: 44px;
   padding: 8px 11px;
   font-size: 14px;
   border-radius: 5px;
 }
-.adventure-layout .read-status { color: #6b6d50; font-size: 13px; }
+.adventure-layout .read-status { color: #6b6d50; font-size: 14px; }
 .winter-ui[data-screen="game"] .storybook-game .adventure-layout .winter-puzzle-board,
 .demo-view .adventure-layout .winter-puzzle-board {
   margin: 19px 0 22px;
@@ -504,16 +491,16 @@
 .adventure-layout .puzzle-keypad button:active { box-shadow: 0 1px 0 #ae945f; transform: translateY(3px); }
 .winter-ui .storybook-game .adventure-layout .button,
 .demo-view .adventure-layout .button {
-  min-height: 53px;
-  border: 1px solid #792b20;
-  border-radius: 7px;
-  background: linear-gradient(#b54532, #953023);
-  box-shadow: inset 0 1px 0 #e9a17380, 0 4px 0 #6b281e, 0 6px 10px #6c35171c;
+  min-height: 52px;
+  border: 1px solid #87313a;
+  border-radius: 8px;
+  background: #a33f49;
+  box-shadow: 0 3px 0 #6d2932;
   color: #fff6df;
   padding: 14px 21px;
   font: 700 17px/1.35 var(--story-sans);
   letter-spacing: .005em;
-  text-shadow: 0 1px 0 #702519;
+  text-shadow: none;
 }
 .winter-ui .storybook-game .adventure-layout .button:hover,
 .demo-view .adventure-layout .button:hover { filter: brightness(1.08); }
@@ -629,7 +616,7 @@
   .adventure-layout { grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: 18px; }
   .winter-ui[data-screen="game"] .storybook-game .game-main { padding: 21px; }
   .winter-ui[data-screen="game"] .storybook-game .game-header { padding-inline: 23px; }
-  .adventure-desk { padding: 13px; }
+  .adventure-desk { padding: 0; }
   .winter-ui[data-screen="game"] .storybook-game .adventure-desk .game-card { padding: 28px 22px 30px; }
   .quest-scene { min-height: 555px; }
   .quest-scene-caption { left: 25px; right: 25px; bottom: 25px; }
@@ -664,7 +651,7 @@
   .adventure-world .holiday-audio label { display: flex; flex: 1; font-size: 13px; gap: 7px; }
   .adventure-world .holiday-audio input[type="range"] { flex: 1; min-width: 60px; width: 85px; min-height: 44px; }
   .adventure-world .holiday-audio .music-status { font-size: 12px; }
-  .adventure-desk { padding: 14px; border-radius: 12px; }
+  .adventure-desk { padding: 0; border-radius: 0; }
   .winter-ui[data-screen="game"] .storybook-game .adventure-desk .game-card,
   .demo-view .adventure-layout .game-card { min-height: 0; padding: 29px 29px 33px; }
   .winter-ui[data-screen="game"] .storybook-game .adventure-layout .game-card h1,
@@ -697,7 +684,7 @@
   .adventure-world .holiday-audio { gap: 5px 10px; }
   .adventure-world .holiday-audio label { font-size: 12px; }
   .adventure-world .holiday-audio input[type="range"] { width: 65px; }
-  .adventure-desk { padding: 10px; border-radius: 9px; }
+  .adventure-desk { padding: 0; border-radius: 0; }
   .adventure-desk::before { inset: 4px; border-radius: 6px; }
   .winter-ui .storybook-game .adventure-desk .game-topline,
   .demo-view .adventure-desk .game-topline { margin: 0 3px 10px; min-height: 24px; }
@@ -705,7 +692,7 @@
   .adventure-desk .dots { gap: 4px; }
   .winter-ui .storybook-game .dot { width: 7px; height: 7px; }
   .winter-ui[data-screen="game"] .storybook-game .adventure-desk .game-card,
-  .demo-view .adventure-layout .game-card { padding: 24px 17px 27px; border-radius: 4px 4px 7px 7px; }
+  .demo-view .adventure-layout .game-card { padding: 25px 20px 29px; border-radius: 11px; }
   .winter-ui[data-screen="game"] .storybook-game .adventure-layout .game-card h1,
   .demo-view .adventure-layout .game-card h1 { font-size: 32px; margin-top: 12px; margin-bottom: 16px; }
   .winter-ui[data-screen="game"] .storybook-game .adventure-layout .game-card > .game-prompt,
@@ -816,4 +803,85 @@
   .quest-scene-art, .quest-scene-art img { object-position: var(--scene-focus, 47%) center; }
   .quest-guide { grid-template-columns: 69px minmax(0, 1fr); padding: 8px 13px; gap: 11px; margin-bottom: 12px; }
   .quest-guide-portrait { width: 69px; height: 69px; }
+}
+
+/* Finish pass: hierarchy first, with the tactile detail concentrated in playable objects. */
+.winter-ui[data-screen="game"] .storybook-game .game-header { border-bottom-color: #d7d8b32e; }
+.storybook-game .game-header > div:first-child { gap: 11px; }
+.winter-ui .storybook-game .game-demo { transform: none; border-color: #b6b88c59; border-radius: 4px; font-size: 12px; color: #e6dcc2; }
+.winter-ui .storybook-game .game-build { font-size: 12px; color: #bdc8b9; }
+.storybook-game .game-tools { align-items: center; }
+.winter-ui[data-screen="game"] .storybook-game .game-tool { border-color: #a4b69a55; background: #24483e; box-shadow: none; border-radius: 7px; font-size: 14px; }
+.storybook-game .quest-scene { border-color: #9da88491; border-radius: 14px 14px 0 0; box-shadow: 0 12px 26px #071a1838; }
+.storybook-game .quest-scene::before,
+.demo-view .quest-scene::before { border-color: #f9e7af3b; }
+.adventure-layout .quest-stops { background: #1c3d34; border-color: #a2af8e70; box-shadow: none; padding-bottom: 8px; }
+.adventure-layout .quest-stop,
+.adventure-layout .quest-stops > li { font-size: 14px; }
+.adventure-layout .quest-stop.is-current::after,
+.adventure-layout .quest-stops > .is-current::after { box-shadow: none; height: 2px; }
+.adventure-layout .quest-chapter { border: 0; border-radius: 10px; padding: 18px; background: #e9eddd; box-shadow: none; }
+.adventure-layout .quest-chapter .chapter-kicker { font-size: 12px; line-height: 1.5; letter-spacing: .045em; }
+.adventure-layout .quest-chapter h2 { font-size: 24px; line-height: 1.2; }
+.adventure-layout .quest-chapter p { font-size: 15px; line-height: 1.6; }
+.adventure-layout .chapter-objective { border-top: 1px solid #bfc7aa; padding-top: 13px; margin-top: 14px; }
+.adventure-layout .quest-guide { border-color: #9cac7d4d; background: #25483d; box-shadow: none; }
+.adventure-layout .quest-guide b { font-size: 13px; letter-spacing: .025em; }
+.adventure-layout .quest-guide p { font-size: 15px; line-height: 1.6; }
+.adventure-layout .object-puzzle { padding: 20px 16px; border: 1px solid #d4c5a1; border-radius: 10px; background: #f1e8d1; box-shadow: none; }
+.adventure-layout .object-instruction { color: #435744; margin-bottom: 20px; line-height: 1.65; }
+.adventure-layout .object-workspace { border: 0; border-radius: 6px; padding: 16px 10px; background: #fff9ea; box-shadow: none; }
+.adventure-layout .object-envelope { border-color: #c9b98f; border-radius: 6px; box-shadow: none; }
+.adventure-layout .object-envelope.is-open { background: #fffcf2; }
+.adventure-layout .object-envelope-body > p { font-size: 16px; line-height: 1.6; }
+.adventure-layout .object-token { box-shadow: 0 2px 0 #c9b386; border-radius: 7px; background: #fff9e8; }
+.adventure-layout .object-token:is(.object-picked,.is-selected,[aria-pressed="true"]) { background: #e9efdc; border-color: #4d7157; box-shadow: 0 0 0 2px #5c7b5b, 0 3px 0 #aabb91; }
+.adventure-layout .object-slot { border-radius: 7px; border-color: #b3b38b; background-color: #f7f1dc; }
+.adventure-layout .object-token small,
+.adventure-layout .object-slot small { font-size: 14px; line-height: 1.4; }
+.adventure-layout .puzzle-help-area { margin-top: 30px; padding-top: 12px; border-top: 1px solid #d4c7a7; }
+.adventure-layout .puzzle-help { gap: 9px 24px; }
+.winter-ui .storybook-game .adventure-layout .hint-button,
+.demo-view .adventure-layout .puzzle-help-area .text-button { color: #4e6553; font-size: 15px; text-decoration: underline; text-decoration-color: #9da887; text-underline-offset: 5px; }
+.adventure-layout .hint-text { background: #edf0dc; border-color: #c3caa7; line-height: 1.65; }
+.adventure-layout .button { transition: background-color .18s ease, box-shadow .18s ease, transform .18s ease; }
+.adventure-layout .button:not(:disabled):hover { background: #923542; filter: none; }
+.adventure-layout .button:not(:disabled):active { transform: translateY(2px); box-shadow: 0 1px 0 #6d2932; }
+.adventure-layout .button:disabled { opacity: .55; box-shadow: none; cursor: default; }
+.adventure-layout .station-reward { box-shadow: none; }
+@media (max-width: 860px) {
+  .winter-ui[data-screen="game"] .storybook-game .game-main,
+  .winter-ui[data-screen="game"] .storybook-game .game-main:has(.holiday-game-card) { padding-inline: 16px; }
+  .adventure-layout { gap: 21px; }
+  .adventure-layout .quest-scene { border-radius: 11px 11px 0 0; }
+  .adventure-layout .quest-stop,
+  .adventure-layout .quest-stops > li { font-size: 13px; }
+}
+@media (max-width: 520px) {
+  .winter-ui[data-screen="game"] .storybook-game .game-main,
+  .winter-ui[data-screen="game"] .storybook-game .game-main:has(.holiday-game-card) { padding-inline: 12px; }
+  .winter-ui .storybook-game .game-demo { font-size: 11px; }
+  .winter-ui[data-screen="game"] .storybook-game .game-tool { font-size: 13px; }
+  .adventure-layout .quest-scene-kicker { font-size: 10px; }
+  .adventure-layout .quest-scene-progress { font-size: 13px; }
+  .adventure-layout .quest-stop,
+  .adventure-layout .quest-stops > li { font-size: 12px; }
+  .adventure-layout .quest-stop-number,
+  .adventure-layout .quest-stop > span:first-child { width: 24px; height: 24px; font-size: 12px; }
+  .adventure-layout .quest-chapter { padding: 16px; }
+  .adventure-layout .quest-chapter h2 { font-size: 23px; }
+  .adventure-layout .quest-chapter p { font-size: 15px; }
+  .adventure-layout .object-puzzle { padding: 17px 10px; margin-block: 20px; }
+  .adventure-layout .object-workspace { padding: 14px 7px; }
+  .adventure-layout .object-instruction { font-size: 16px; margin-bottom: 16px; }
+  .adventure-layout .courier-label { font-size: 11px; }
+  .adventure-layout .courier-note p { font-size: 15px; line-height: 1.55; }
+  .adventure-layout .read-status { font-size: 14px; }
+  .adventure-layout .puzzle-help-area { margin-top: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .adventure-layout .button { transition: none; }
+}
+@media print {
+  .adventure-layout .adventure-desk { padding: 0; box-shadow: none; border: 0; }
 }

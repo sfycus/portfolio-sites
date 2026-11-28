@@ -24,10 +24,10 @@
   top: -9px;
   left: 50%;
   width: max(100%, 940px);
-  height: 58px;
+  height: 51px;
   transform: translateX(-50%);
   overflow: visible;
-  opacity: .97;
+  opacity: .88;
   filter: drop-shadow(0 3px 1px #071d1c30);
 }
 .festive-hanging {
@@ -36,7 +36,7 @@
   width: clamp(88px, 10vw, 150px);
   height: auto;
   color: #eee4c7;
-  opacity: .9;
+  opacity: .72;
   filter: drop-shadow(0 3px 2px #0a241a24);
 }
 .festive-hanging--left { left: -38px; }
@@ -50,15 +50,15 @@
   line-height: 1;
   opacity: .38;
 }
-.festive-paper-star--one { top: 274px; left: 13px; font-size: 32px; transform: rotate(-12deg); }
-.festive-paper-star--two { top: 446px; right: 12px; font-size: 40px; transform: rotate(8deg); }
+.festive-paper-star--one { top: 274px; left: 8px; font-size: 24px; transform: rotate(-12deg); }
+.festive-paper-star--two { top: 446px; right: 8px; font-size: 28px; transform: rotate(8deg); }
 .festive-gift-stack {
   position: absolute;
   right: -23px;
   bottom: 11px;
   width: clamp(140px, 19vw, 238px);
   height: auto;
-  opacity: .46;
+  opacity: .24;
 }
 .festive-decor--home .festive-hanging { top: 83px; opacity: .72; }
 .festive-decor--home .festive-paper-star { color: #9c6e43; opacity: .2; }
@@ -89,39 +89,58 @@
 [data-motion="off"] .festive-decor *,
 .festive-decor[data-motion="off"] * { animation: none !important; transition: none !important; }
 
-/* A calm, framed theatre for the separately implemented personalised finale. */
+/* A small winter cinema: the picture keeps its complete 16:9 composition. */
 .santa-finale {
-  margin: 28px 0;
-  padding: clamp(16px, 2.5vw, 28px);
-  border: 1px solid #c7a86f;
-  border-radius: 14px 14px 5px 5px;
-  background: linear-gradient(145deg, #fff7e2, #f0e1bd);
-  color: #293b31;
-  box-shadow: inset 0 0 0 5px #fff4d94d, 0 5px 0 #8d634f24;
+  position: relative;
+  min-width: 0;
+  margin: 8px 0 32px;
+  padding: clamp(18px, 2.6vw, 30px);
+  border: 1px solid #758878;
+  border-radius: 16px;
+  background:
+    radial-gradient(ellipse at 90% 0%, #c49b4b20, transparent 48%),
+    linear-gradient(145deg, #25483e, #172f2a 78%);
+  color: #f7f1e1;
+  box-shadow: 0 16px 32px #10271f29, inset 0 1px 0 #f7e2ae24;
   text-align: left;
 }
-.santa-finale h2 { margin: 0 0 10px; color: #27483c; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(26px, 3vw, 36px); line-height: 1.12; }
-.santa-copy { max-width: 46ch; margin: 0 0 18px; color: #5f5c4a; font-size: 16px; line-height: 1.55; }
+.santa-finale .eyebrow,
+.adventure-layout .santa-finale .eyebrow,
+.winter-ui .storybook-game .game-card .santa-finale .eyebrow.red,
+.demo-view .adventure-layout .santa-finale .eyebrow.red { display: block; margin: 0 0 11px; color: #e6c78d; font-size: 12px; letter-spacing: .09em; line-height: 1.5; }
+.santa-finale h2,
+.winter-ui .storybook-game .adventure-layout .santa-finale h2,
+.demo-view .adventure-layout .santa-finale h2 { margin: 0 0 12px; color: #fff4da; font-family: Georgia, 'Times New Roman', serif; font-size: clamp(29px, 3.2vw, 40px); line-height: 1.15; letter-spacing: -.025em; }
+.santa-copy { max-width: 48ch; margin: 0 0 22px; color: #e1e6d7; font-size: 16px; line-height: 1.6; }
 .santa-stage {
   position: relative;
   min-width: 0;
-  aspect-ratio: 16/10;
+  width: 100%;
+  aspect-ratio: 16/9;
   overflow: hidden;
-  border: 4px solid #6b4331;
+  border: 1px solid #bba478;
   border-radius: 9px;
-  background: #173d35;
-  box-shadow: 0 0 0 1px #c2a471, inset 0 0 35px #0a292b66;
+  background: #10251f;
+  box-shadow: 0 10px 22px #0b1b184d;
   isolation: isolate;
 }
-.santa-stage > :is(video,canvas,svg,img) { width: 100%; height: 100%; display: block; object-fit: cover; }
-.santa-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 16px; margin-top: 18px; }
-.santa-controls :is(button,a) { min-height: 44px; }
-.game-card .santa-controls .button { width: auto; margin-top: 0; flex: 1 1 180px; }
-.santa-status { min-height: 1.5em; margin: 12px 0 0; color: #48674f; font-size: 14px; line-height: 1.5; }
-.santa-transcript { margin-top: 18px; border-top: 1px dashed #bfa775; padding-top: 12px; color: #4d594a; font-size: 15px; }
-.santa-transcript summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
-.santa-transcript p { margin: 8px 0 0; font-size: 16px; line-height: 1.6; color: inherit; }
-.santa-finale :focus-visible { outline: 3px solid #446b86; outline-offset: 4px; }
+.santa-stage > :is(video,canvas,svg,img) { width: 100%; height: 100%; display: block; object-fit: contain; }
+.santa-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 18px; margin-top: 22px; }
+.santa-controls :is(button,a) { min-height: 48px; }
+.game-card .santa-controls .button { width: auto; margin-top: 0; flex: 1 1 200px; }
+.winter-ui .storybook-game .adventure-layout .santa-controls .button,
+.demo-view .adventure-layout .santa-controls .button { background: #a84247; border: 1px solid #dc8a83; box-shadow: 0 3px 0 #6f2e34; color: #fff8e8; text-shadow: none; }
+.santa-controls .text-button { color: #f7e6c1; font-weight: 600; font-size: 15px; line-height: 1.4; text-decoration-color: #cdb47e; text-underline-offset: 5px; }
+.santa-controls button:disabled { opacity: .46; cursor: default; }
+.santa-controls .button:disabled { box-shadow: none; }
+.santa-status { min-height: 1.6em; margin: 15px 0 0; color: #d8e2ce; font-size: 14px; line-height: 1.6; }
+.santa-transcript { margin-top: 22px; border-top: 1px solid #8e9b7959; padding-top: 8px; color: #e3e8da; font-size: 15px; }
+.santa-transcript summary,
+.santa-voice-note summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; text-decoration: underline; text-underline-offset: 5px; text-decoration-color: #899c84; font-size: 15px; line-height: 1.5; color: #f1e3c3; }
+.santa-transcript p,
+.santa-voice-note p { margin: 6px 0 0; font-size: 16px; line-height: 1.7; color: inherit; }
+.santa-voice-note { margin-top: 10px; color: #cad6c8; }
+.santa-finale :focus-visible { outline: 3px solid #f0ca7d; outline-offset: 4px; }
 
 @media (max-width: 760px) {
   .festive-garland { top: -11px; height: 48px; width: 960px; opacity: .94; }
@@ -140,15 +159,41 @@
   .festive-decor--scene .festive-hanging--right { right: -37px; }
   .festive-decor--scene .festive-garland { top: -11px; height: 37px; }
   .festive-tracks { bottom: 22%; opacity: .4; }
-  .santa-finale { margin: 24px 0; padding: 16px; }
-  .santa-stage { aspect-ratio: 4/3; border-width: 3px; }
-  .santa-copy { font-size: 16px; margin-bottom: 14px; }
-  .santa-controls { gap: 9px; }
-  .santa-controls .button { width: 100%; }
+  .santa-finale { margin: 4px 0 26px; padding: 18px 15px; border-radius: 12px; }
+  .santa-stage { aspect-ratio: 16/9; border-width: 1px; border-radius: 6px; }
+  .santa-copy { font-size: 16px; margin-bottom: 18px; }
+  .santa-controls { gap: 9px 18px; margin-top: 18px; }
+  .santa-controls .button { width: 100%; flex-basis: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .festive-decor *, .santa-finale * { animation: none !important; transition: none !important; }
 }
 @media print {
   .festive-decor, .santa-finale { display: none !important; }
+}
+
+/* The seal stays outside the face and remains part of the frame, never a control. */
+.santa-stage-label {
+  position: absolute;
+  z-index: 2;
+  left: 12px;
+  bottom: 11px;
+  padding: 6px 9px;
+  border: 1px solid #eadbb94d;
+  border-radius: 4px;
+  background: #172f2add;
+  color: #f8e7bc;
+  font: 600 11px/1.3 -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  letter-spacing: .055em;
+  pointer-events: none;
+}
+.santa-finale[data-santa-state="playing"] .santa-stage { border-color: #e5c88c; box-shadow: 0 9px 28px #0a1d1859, 0 0 0 3px #e8d09713; }
+.santa-finale[data-santa-state="playing"] .santa-stage-label { opacity: .5; }
+.santa-finale[data-santa-state="ended"] .santa-status { color: #eddb9e; }
+.santa-finale[data-santa-state="error"] .santa-status { color: #ffe1cb; }
+@media (max-width: 520px) {
+  .santa-stage-label { left: 8px; bottom: 8px; font-size: 10px; padding: 4px 6px; }
+  .santa-finale h2,
+  .winter-ui .storybook-game .adventure-layout .santa-finale h2,
+  .demo-view .adventure-layout .santa-finale h2 { font-size: 29px; }
 }
